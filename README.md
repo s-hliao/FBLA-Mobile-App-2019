@@ -6,4 +6,5 @@ The app must include: App Name, About FBLA, Join FBLA (form), Calendar, links to
   The app must be designed for a phone/tablet.
   The operating system must be mobile based such as Android or iO.
   The app should state its licensing and terms of use.
+
 Skills: Mobile Applications are necessary to provide users with the ability to be productive while away from their computers. This event recognizes FBLA members who show an understanding in developing mobile apps.
