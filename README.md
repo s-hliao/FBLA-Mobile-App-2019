@@ -1,4 +1,6 @@
 # FBLA-Mobile-App-2019
+Resource: https://www.fbla-pbl.org/competitive-event/mobile-application-development-fbla/
+
 Topic: Develop an app for local chapters to manage their chapters.
 
 The app must include: App Name, About FBLA, Join FBLA (form), Calendar, links to FBLA websites, Local Officer Team, links to Social Media, Competitive Events, Current Events, Sign-up for a current event (form for either competitive event, fundraiser, or community service), Q & A, and Contact Us.
