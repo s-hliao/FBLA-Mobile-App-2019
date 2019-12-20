@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/FBLA-Mobile-App-2019.iml" filepath="$PROJECT_DIR$/FBLA-Mobile-App-2019.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MAD.iml" filepath="$PROJECT_DIR$/MAD.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
 </project>
