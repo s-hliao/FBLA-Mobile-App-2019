@@ -11,17 +11,41 @@
         android:id="@+id/text_auth_ui"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Auth_Ui_Activity"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
+        android:text="@string/welcome_message"
+        android:textColor="@color/colorAccent"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.38" />
 
     <Button
         android:id="@+id/button_sign_in"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign In"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="@string/sign_in_button_txt"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/text_auth_ui"
+        app:layout_constraintStart_toStartOf="@+id/text_auth_ui"
+        app:layout_constraintTop_toBottomOf="@+id/text_auth_ui"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <TextView
+        android:id="@+id/text_TOC"
+        android:layout_width="304dp"
+        android:layout_height="36dp"
+        android:autoSizeTextType="uniform"
+        android:text="@string/TOU_txt"
+        android:gravity="center"
+        android:linksClickable="true"
+        app:layout_constraintBottom_toTopOf="@+id/button_sign_in"
+        app:layout_constraintEnd_toEndOf="@+id/text_auth_ui"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/text_auth_ui"
+        app:layout_constraintTop_toBottomOf="@+id/text_auth_ui"
+        app:layout_constraintVertical_bias=".9" />
 </androidx.constraintlayout.widget.ConstraintLayout>
