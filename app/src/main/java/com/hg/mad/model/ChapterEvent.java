@@ -83,17 +83,15 @@ public class ChapterEvent {
                             if (task.getResult()!= null && task.getResult().size() > 0){
                                 for(QueryDocumentSnapshot result: task.getResult()) {
                                     DatabaseUser user = result.toObject(DatabaseUser.class);
-                                    user
+                                    if(user.getEventsSignedUp().contains(eventName)) {
+                                        user.removeEvent(eventName);
+                                    }
                                     
                                 }
                             }
                         }
                     }
                 });
-        }
-
-
-
         signedUp = new HashMap<>();
     }
 }

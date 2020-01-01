@@ -62,6 +62,10 @@ public class DatabaseUser {
         return (HashSet<String>) eventsSignedUp.keySet();
     }
 
+    public void removeEvent(String eventName){
+        eventsSignedUp.remove(eventName);
+    }
+
     public void setEventsSignedUp(HashMap<String, Integer> eventsSignedUp){
         this.eventsSignedUp = eventsSignedUp;
     }

@@ -31,6 +31,13 @@ public class Chapter {
         this.admin = admin;
 
         this.usersInChapter = usersInChapter;
+       /* CollectionReference chapters = FirebaseFirestore.getInstance().collection("Chapter");
+
+        chapters.whereEqualTo("chapterName", chapterName).get()
+                @Override
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>(){
+
+                }*/
     }
 
     public String getChapterName() {
