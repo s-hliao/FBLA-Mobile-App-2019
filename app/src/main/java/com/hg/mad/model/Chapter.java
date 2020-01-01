@@ -7,6 +7,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
@@ -22,8 +23,8 @@ public class Chapter {
     private final String chapterName;
     private HashMap<String, Integer> usersInChapter;
     private String admin;
-    private CollectionReference competitiveEventReference;
-    private CollectionReference chapterEventReference;
+    private CollectionReference competitiveEvents;
+    private CollectionReference chapterEvents;
 
 
     public Chapter(String chapterName, String admin, HashMap<String, Integer>usersInChapter) {
@@ -31,13 +32,26 @@ public class Chapter {
         this.admin = admin;
 
         this.usersInChapter = usersInChapter;
-       /* CollectionReference chapters = FirebaseFirestore.getInstance().collection("Chapter");
+       CollectionReference chapters = FirebaseFirestore.getInstance().collection("Chapter");
+        final String[] chapterID = new String[1];
+        chapters.whereEqualTo("chapterName", chapterName)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful() && task.getResult()!=null  && task.getResult().size()>0) {
+                            if (task.getResult()!= null && task.getResult().size() > 0){
+                                chapterID[0] = task.getResult().getDocuments().get(0).getId();
+                            }
 
-        chapters.whereEqualTo("chapterName", chapterName).get()
-                @Override
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>(){
+                        }
+                    }
 
-                }*/
+
+                });
+
+        competitiveEvents = FirebaseFirestore.getInstance().collection("Chapter").document(chapterID[0]).collection("competitiveEvents");
+        chapterEvents = FirebaseFirestore.getInstance().collection("Chapter").document(chapterID[0]).collection("chapterEvents");
     }
 
     public String getChapterName() {
@@ -68,7 +82,15 @@ public class Chapter {
 
     }
 
+    public void removeCompetitiveEvent(){
+
+    }
+
     public void addChapterEvent() {
+
+    }
+
+    public void removeChapterEvent(){
 
     }
 
