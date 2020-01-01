@@ -45,16 +45,14 @@ public class AuthUiActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         // If the user is signed in, show the signed in activity
         auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null){
             user = auth.getCurrentUser();
-            addUserToDatabase();
             startActivity(SignedInActivity.createIntent(this, null));
             finish();
         }
-        // If the user is not signed in, show the authuiactivity
+        // If the user is not signed in, show the auth ui activity
         setContentView(R.layout.auth_ui_activity);
         btn_sign_in = findViewById(R.id.button_sign_in);
         btn_sign_in.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +63,7 @@ public class AuthUiActivity extends AppCompatActivity {
         });
 
         // Enable Terms of Use Hyperlinks
-        TextView textView =findViewById(R.id.text_TOC);
+        TextView textView = findViewById(R.id.text_TOC);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
 
         // A list of providers enabled for sign in
@@ -96,14 +94,14 @@ public class AuthUiActivity extends AppCompatActivity {
             // If sign in succeeded, go to signed in activity
             if (resultCode == RESULT_OK){
                 user = FirebaseAuth.getInstance().getCurrentUser();
-                addUserToDatabase();
+                addUserToDatabase(false, false, null);
                 startActivity(SignedInActivity.createIntent(this, response));
             }
         }
     }
 
     // Adding the user to the database if they aren't in it
-    private void addUserToDatabase(){
+    private void addUserToDatabase(final Boolean isAdmin, final Boolean inChapter, final String chapterName){
 
         // Initializing database
         firestore = FirebaseFirestore.getInstance();
@@ -118,14 +116,19 @@ public class AuthUiActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
 
                         // If the list is empty, add the new user
+                        // SIGN UP STAGE
                         if (task.getResult()!= null && task.getResult().size() == 0){
                             users.add(new DatabaseUser(
                                     user.getUid(),
                                     user.getDisplayName(),
-                                    false,
-                                    false,
-                                    "default"
+                                    isAdmin,
+                                    inChapter,
+                                    chapterName
                             ));
+                        }
+                        // LOG IN STAGE
+                        else {
+
                         }
                     }
                 }
