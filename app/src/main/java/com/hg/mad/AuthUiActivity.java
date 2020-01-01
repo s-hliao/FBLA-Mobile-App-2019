@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hg.mad.model.DatabaseUser;
 
@@ -33,7 +34,7 @@ public class AuthUiActivity extends AppCompatActivity {
     FirebaseAuth auth;
     Button btn_sign_in;
     FirebaseUser user;
-    FirebaseFirestore firestore;
+    FirebaseFirestore fireStore;
     CollectionReference users;
 
     @NonNull
@@ -45,13 +46,13 @@ public class AuthUiActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // If the user is signed in, show the signed in activity
+        // If the user is signed in, automatically redirect the user
         auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null){
             user = auth.getCurrentUser();
-            startActivity(SignedInActivity.createIntent(this, null));
-            finish();
+            redirectUser();
         }
+
         // If the user is not signed in, show the auth ui activity
         setContentView(R.layout.auth_ui_activity);
         btn_sign_in = findViewById(R.id.button_sign_in);
@@ -61,11 +62,9 @@ public class AuthUiActivity extends AppCompatActivity {
                 showSignInOptions();
             }
         });
-
         // Enable Terms of Use Hyperlinks
         TextView textView = findViewById(R.id.text_TOC);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
-
         // A list of providers enabled for sign in
         providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),
@@ -91,21 +90,20 @@ public class AuthUiActivity extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN){
             IdpResponse response = IdpResponse.fromResultIntent(data);
 
-            // If sign in succeeded, go to signed in activity
+            // If sign in succeeded, redirect the user
             if (resultCode == RESULT_OK){
                 user = FirebaseAuth.getInstance().getCurrentUser();
-                addUserToDatabase(false, false, null);
-                startActivity(SignedInActivity.createIntent(this, response));
+                redirectUser();
             }
         }
     }
 
-    // Adding the user to the database if they aren't in it
-    private void addUserToDatabase(final Boolean isAdmin, final Boolean inChapter, final String chapterName){
+    // Adding the user to the database
+    private void redirectUser(){
 
         // Initializing database
-        firestore = FirebaseFirestore.getInstance();
-        users = firestore.collection("DatabaseUser");
+        fireStore = FirebaseFirestore.getInstance();
+        users = fireStore.collection("DatabaseUser");
 
         // Get a list of users
         users.whereEqualTo("userID", user.getUid())
@@ -113,25 +111,42 @@ public class AuthUiActivity extends AppCompatActivity {
             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
+                    if (task.isSuccessful() && task.getResult()!= null) {
 
-                        // If the list is empty, add the new user
-                        // SIGN UP STAGE
-                        if (task.getResult()!= null && task.getResult().size() == 0){
+                        // If it's a new user (not in a chapter yet)
+                        if (task.getResult().isEmpty()){
                             users.add(new DatabaseUser(
                                     user.getUid(),
                                     user.getDisplayName(),
-                                    isAdmin,
-                                    inChapter,
-                                    chapterName
+                                    false,
+                                    "",
+                                    null
                             ));
+                            // redirect to select chapter activity
+                            redirectSelectChapter();
                         }
-                        // LOG IN STAGE
-                        else {
 
+                        // If the user already exists
+                        else {
+                            DatabaseUser databaseUser = task.getResult().getDocuments().get(0).toObject(DatabaseUser.class);
+                            if (!databaseUser.getInChapter()) {
+                                redirectSelectChapter();
+                            } else {
+                                redirectSignedIn();
+                            }
                         }
                     }
                 }
             });
+    }
+
+    private void redirectSelectChapter(){
+        startActivity(SelectChapterActivity.createIntent(this));
+        finish();
+    }
+
+    private void redirectSignedIn(){
+        startActivity(SignedInActivity.createIntent(this, null));
+        finish();
     }
 }
