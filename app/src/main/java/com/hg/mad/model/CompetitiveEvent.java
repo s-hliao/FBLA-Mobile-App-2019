@@ -9,17 +9,20 @@ public class CompetitiveEvent {
     public static final String FIELD_STATECAPPED = "isStateCapped";
     public static final String FIELD_STATECAP = "stateCap";
     public static final String FIELD_USERS = "signedUp";
+    public static final String FIELD_CHAPTERNAME = "chapterName";
 
     private String eventName;
     private boolean isStateCapped;
     private int stateCap;
     private HashMap<String, Integer> signedUp;
+    private final String chapterName;
 
-    public CompetitiveEvent(String eventName, boolean isStateCapped, int stateCap, HashMap<String, Integer> signedUp){
+    public CompetitiveEvent(String eventName, boolean isStateCapped, int stateCap, HashMap<String, Integer> signedUp, String chapterName){
         this.eventName = eventName;
         this.isStateCapped = isStateCapped;
         this.stateCap = stateCap;
         this.signedUp = signedUp;
+        this.chapterName = chapterName;
 
     }
     public String getEventName(){
@@ -35,6 +38,9 @@ public class CompetitiveEvent {
         this.isStateCapped = isStateCapped;
     }
 
+    public String getChapterName() {
+        return chapterName;
+    }
     public int getStateCap(){
         return stateCap;
     }

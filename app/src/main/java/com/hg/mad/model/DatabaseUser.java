@@ -2,6 +2,7 @@ package com.hg.mad.model;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 @IgnoreExtraProperties
 public class DatabaseUser {
@@ -57,8 +58,8 @@ public class DatabaseUser {
         this.chapterName = chapterName;
     }
 
-    public HashMap<String, Integer> getEventsSignedUp(){
-        return eventsSignedUp;
+    public HashSet<String> getEventsSignedUp(){
+        return (HashSet<String>) eventsSignedUp.keySet();
     }
 
     public void setEventsSignedUp(HashMap<String, Integer> eventsSignedUp){
