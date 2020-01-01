@@ -2,6 +2,7 @@
     <string name="app_name">MAD</string>
     <string name="welcome_message">Welcome to APPNAME</string>
     <string name="sign_in_button_txt">Continue</string>
+    <string name="sign_out_button_txt">Sign Out</string>
     <string name="TOU_txt">By clicking CONTINUE, you agree to our <a href="https://www.google.com/">Terms of Use</a> and <a href="https://www.google.com/">Licensing</a></string>
-    <string name="select_chapter_text">Please select an existing chapter to join or </string>
+    <string name="select_chapter_text">Select an Existing Chapter or Create a New One</string>
 </resources>
