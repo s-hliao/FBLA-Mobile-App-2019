@@ -26,12 +26,11 @@ public class Chapter {
     private CollectionReference chapterEventReference;
 
 
-    public Chapter(String chapterName, String admin) {
+    public Chapter(String chapterName, String admin, HashMap<String, Integer>usersInChapter) {
         this.chapterName = chapterName;
         this.admin = admin;
 
-        usersInChapter = new HashMap<>();
-        this.addUser(admin);
+        this.usersInChapter = usersInChapter;
     }
 
     public String getChapterName() {
@@ -46,7 +45,7 @@ public class Chapter {
         return (HashSet<String>) usersInChapter.keySet();
     }
 
-    public void reset() {
+    public void resetUsers() {
         usersInChapter = new HashMap<>();
     }
 
@@ -63,6 +62,10 @@ public class Chapter {
     }
 
     public void addChapterEvent() {
+
+    }
+
+    public void resetEvents(){
 
     }
 
