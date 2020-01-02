@@ -20,11 +20,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.hg.mad.model.DatabaseUser;
+import com.hg.mad.Model.DatabaseUser;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class AuthUiActivity extends AppCompatActivity {
@@ -78,6 +78,7 @@ public class AuthUiActivity extends AppCompatActivity {
                 AuthUI.getInstance().createSignInIntentBuilder()
                 .setAvailableProviders(providers)
                 .setTheme(R.style.AppTheme)
+                .setIsSmartLockEnabled(false)
                 .build(),RC_SIGN_IN
                 //.setLogo(R.drawable.logo)
         );
@@ -120,7 +121,7 @@ public class AuthUiActivity extends AppCompatActivity {
                                     user.getDisplayName(),
                                     false,
                                     "",
-                                    null
+                                    new HashMap<String, Integer>()
                             ));
                             // redirect to select chapter activity
                             redirectSelectChapter();

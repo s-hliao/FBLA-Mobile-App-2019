@@ -34,7 +34,7 @@
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="@+id/text_auth_ui"
         app:layout_constraintTop_toBottomOf="@+id/text_auth_ui"
-        app:layout_constraintVertical_bias="0.828" />
+        app:layout_constraintVertical_bias="0.828"/>
 
     <TextView
         android:id="@+id/text_TOC"
