@@ -5,7 +5,9 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
@@ -76,12 +78,21 @@ public class Chapter {
         adminID = newAdminID;
     }
 
-    public void addCompetitiveEvent() {
-
+    public void addCompetitiveEvent(final CompetitiveEvent comp) {
+        competitiveEvents.whereEqualTo("eventName", comp.getEventName())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (!(task.isSuccessful() && (task.getResult() != null))) {
+                            competitiveEvents.add(comp);
+                        }
+                    }
+                });
     }
 
     public void removeCompetitiveEvent(){
-
+        //competitiveEvents.
     }
 
     public void addChapterEvent() {
