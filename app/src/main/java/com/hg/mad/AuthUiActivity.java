@@ -46,14 +46,14 @@ public class AuthUiActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // If the user is signed in, automatically redirect the user
+        // if the user is signed in, automatically redirect the user
         auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null){
             user = auth.getCurrentUser();
             redirectUser();
         }
 
-        // If the user is not signed in, show the auth ui activity
+        // if the user is not signed in, show the auth ui activity
         setContentView(R.layout.auth_ui_activity);
         btn_sign_in = findViewById(R.id.button_sign_in);
         btn_sign_in.setOnClickListener(new View.OnClickListener() {
@@ -62,17 +62,17 @@ public class AuthUiActivity extends AppCompatActivity {
                 showSignInOptions();
             }
         });
-        // Enable Terms of Use Hyperlinks
+        // enable Terms of Use Hyperlinks
         TextView textView = findViewById(R.id.text_TOC);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
-        // A list of providers enabled for sign in
+        // a list of providers enabled for sign in
         providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),
                 new AuthUI.IdpConfig.GoogleBuilder().build()
         );
     }
 
-    // Displays sign in options
+    // displays sign in options
     private void showSignInOptions(){
         startActivityForResult(
                 AuthUI.getInstance().createSignInIntentBuilder()
@@ -84,14 +84,14 @@ public class AuthUiActivity extends AppCompatActivity {
         );
     }
 
-    // When sign in flow is complete
+    // when sign in flow is complete
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN){
             IdpResponse response = IdpResponse.fromResultIntent(data);
 
-            // If sign in succeeded, redirect the user
+            // if sign in succeeded, redirect the user
             if (resultCode == RESULT_OK){
                 user = FirebaseAuth.getInstance().getCurrentUser();
                 redirectUser();
@@ -99,14 +99,14 @@ public class AuthUiActivity extends AppCompatActivity {
         }
     }
 
-    // Adding the user to the database
+    // adding the user to the database
     private void redirectUser(){
 
-        // Initializing database
+        // initializing database
         fireStore = FirebaseFirestore.getInstance();
         users = fireStore.collection("DatabaseUser");
 
-        // Get a list of users
+        // get a list of users
         users.whereEqualTo("userID", user.getUid())
             .get()
             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -114,8 +114,9 @@ public class AuthUiActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful() && task.getResult()!= null) {
 
-                        // If it's a new user (not in a chapter yet)
+                        // if it's a new user (not in a chapter yet)
                         if (task.getResult().isEmpty()){
+                            // add the user to the database
                             users.add(new DatabaseUser(
                                     user.getUid(),
                                     user.getDisplayName(),
@@ -127,12 +128,16 @@ public class AuthUiActivity extends AppCompatActivity {
                             redirectSelectChapter();
                         }
 
-                        // If the user already exists
+                        // if the user already exists
                         else {
                             DatabaseUser databaseUser = task.getResult().getDocuments().get(0).toObject(DatabaseUser.class);
+
+                            // if the user isn't in a chapter, redirect to select chapter
                             if (!databaseUser.getInChapter()) {
                                 redirectSelectChapter();
-                            } else {
+                            }
+                            // otherwise go to signed in activity
+                            else {
                                 redirectSignedIn();
                             }
                         }
@@ -141,11 +146,13 @@ public class AuthUiActivity extends AppCompatActivity {
             });
     }
 
+    // go to select chapter activity
     private void redirectSelectChapter(){
         startActivity(SelectChapterActivity.createIntent(this));
         finish();
     }
 
+    // go to signed in activity
     private void redirectSignedIn(){
         startActivity(SignedInActivity.createIntent(this, null));
         finish();

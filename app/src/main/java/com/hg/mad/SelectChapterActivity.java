@@ -49,6 +49,7 @@ public class SelectChapterActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_chapter_activity);
 
+        // set up the chapter spinner
         chapterSpinner = findViewById(R.id.spinner_select_chapter);
         fireStore = FirebaseFirestore.getInstance();
         chapterNames = new ArrayList<>();
@@ -67,15 +68,18 @@ public class SelectChapterActivity extends AppCompatActivity{
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, chapterNames);
         chapterSpinner.setAdapter(adapter);
 
+        // set up views
         join = findViewById(R.id.button_join);
         create = findViewById(R.id.button_create);
         selectChapter = findViewById(R.id.select_chapter);
         chapterName = findViewById(R.id.text_chapter_name);
         selectChapterBtn = findViewById(R.id.button_select_chapter);
 
+        // start with both selections turned off
         chapterName.setVisibility(View.GONE);
         selectChapter.setVisibility(View.GONE);
 
+        // toggle join chapter selections
         join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,6 +88,7 @@ public class SelectChapterActivity extends AppCompatActivity{
             }
         });
 
+        // toggle select chapter selections
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
