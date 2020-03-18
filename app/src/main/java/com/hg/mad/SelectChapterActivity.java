@@ -148,6 +148,9 @@ public class SelectChapterActivity extends AppCompatActivity{
                     if (chapterName.getText().toString().equals("")){
                         Toast.makeText(getApplicationContext(), "Please enter a chapter name", Toast.LENGTH_LONG).show();
                     } else {
+                        // TODO handle duplicate chapters
+                        // TODO create chapter database item
+
                         databaseUser.update("chapterName", chapterName.getText().toString());
                         databaseUser.update("inChapter", true);
                         databaseUser.update("isAdmin", true);
