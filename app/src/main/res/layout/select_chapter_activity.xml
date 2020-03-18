@@ -30,7 +30,6 @@
                 android:layout_height="wrap_content"
                 android:autoSizeTextType="uniform"
                 android:text="@string/select_chapter_text"
-                android:textColor="@color/colorText"
                 android:textSize="30sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -52,15 +51,13 @@
                 android:id="@+id/button_join"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Join an Existing Chapter"
-                android:textColor="@color/colorText" />
+                android:text="Join an Existing Chapter"/>
 
             <RadioButton
                 android:id="@+id/button_create"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Create a New Chapter"
-                android:textColor="@color/colorText" />
+                android:text="Create a New Chapter"/>
 
         </RadioGroup>
 
@@ -82,7 +79,6 @@
                 android:gravity="center"
                 android:paddingLeft="4dp"
                 android:text="Select a Chapter:"
-                android:textColor="@color/colorText"
                 android:textSize="18sp"
                 android:visibility="visible" />
 
@@ -100,7 +96,6 @@
             android:layout_height="wrap_content"
             android:hint="Chapter Name"
             android:inputType="textPersonName"
-            android:textColor="@color/colorText"
             tools:visibility="gone" />
 
     </LinearLayout>
@@ -114,6 +109,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.651" />
+        app:layout_constraintVertical_bias="0.519" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

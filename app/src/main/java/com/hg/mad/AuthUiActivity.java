@@ -30,12 +30,13 @@ import java.util.List;
 public class AuthUiActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 100;
-    List<AuthUI.IdpConfig> providers;
-    FirebaseAuth auth;
-    Button btn_sign_in;
-    FirebaseUser user;
-    FirebaseFirestore fireStore;
-    CollectionReference users;
+    private List<AuthUI.IdpConfig> providers;
+    private FirebaseAuth auth;
+    private Button btn_sign_in;
+    private FirebaseUser user;
+    private FirebaseFirestore fireStore;
+    private CollectionReference users;
+    private Context context;
 
     @NonNull
     public static Intent createIntent(@NonNull Context context) {
@@ -46,9 +47,11 @@ public class AuthUiActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        context = getApplicationContext();
+
         // if the user is signed in, automatically redirect the user
         auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() != null){
+        if (auth.getCurrentUser() != null) {
             user = auth.getCurrentUser();
             redirectUser();
         }
@@ -73,13 +76,13 @@ public class AuthUiActivity extends AppCompatActivity {
     }
 
     // displays sign in options
-    private void showSignInOptions(){
+    private void showSignInOptions() {
         startActivityForResult(
                 AuthUI.getInstance().createSignInIntentBuilder()
-                .setAvailableProviders(providers)
-                .setTheme(R.style.AppTheme)
-                .setIsSmartLockEnabled(false)
-                .build(),RC_SIGN_IN
+                        .setAvailableProviders(providers)
+                        .setTheme(R.style.AppTheme)
+                        .setIsSmartLockEnabled(false)
+                        .build(), RC_SIGN_IN
                 //.setLogo(R.drawable.logo)
         );
     }
@@ -88,11 +91,11 @@ public class AuthUiActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN){
+        if (requestCode == RC_SIGN_IN) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
 
             // if sign in succeeded, redirect the user
-            if (resultCode == RESULT_OK){
+            if (resultCode == RESULT_OK) {
                 user = FirebaseAuth.getInstance().getCurrentUser();
                 redirectUser();
             }
@@ -100,7 +103,7 @@ public class AuthUiActivity extends AppCompatActivity {
     }
 
     // adding the user to the database
-    private void redirectUser(){
+    private void redirectUser() {
 
         // initializing database
         fireStore = FirebaseFirestore.getInstance();
@@ -108,53 +111,45 @@ public class AuthUiActivity extends AppCompatActivity {
 
         // get a list of users
         users.whereEqualTo("userID", user.getUid())
-            .get()
-            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful() && task.getResult()!= null) {
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful() && task.getResult() != null) {
 
-                        // if it's a new user (not in a chapter yet)
-                        if (task.getResult().isEmpty()){
-                            // add the user to the database
-                            users.add(new DatabaseUser(
-                                    user.getUid(),
-                                    user.getDisplayName(),
-                                    false,
-                                    "",
-                                    new HashMap<String, Integer>()
-                            ));
-                            // redirect to select chapter activity
-                            redirectSelectChapter();
-                        }
-
-                        // if the user already exists
-                        else {
-                            DatabaseUser databaseUser = task.getResult().getDocuments().get(0).toObject(DatabaseUser.class);
-
-                            // if the user isn't in a chapter, redirect to select chapter
-                            if (!databaseUser.getInChapter()) {
-                                redirectSelectChapter();
+                            // if it's a new user (not in a chapter yet)
+                            if (task.getResult().isEmpty()) {
+                                // add the user to the database
+                                users.add(new DatabaseUser(
+                                        user.getUid(),
+                                        user.getDisplayName(),
+                                        false,
+                                        false,
+                                        "",
+                                        new HashMap<String, Integer>()
+                                ));
+                                // redirect to select chapter activity
+                                startActivity(SelectChapterActivity.createIntent(context));
+                                finish();
                             }
-                            // otherwise go to signed in activity
+
+                            // if the user already exists
                             else {
-                                redirectSignedIn();
+                                DatabaseUser databaseUser = task.getResult().getDocuments().get(0).toObject(DatabaseUser.class);
+
+                                // if the user isn't in a chapter, redirect to select chapter
+                                if (!databaseUser.getInChapter()) {
+                                    startActivity(SelectChapterActivity.createIntent(context));
+                                    finish();
+                                }
+                                // otherwise go to signed in activity
+                                else {
+                                    startActivity(SignedInActivity.createIntent(context, null));
+                                    finish();
+                                }
                             }
                         }
                     }
-                }
-            });
-    }
-
-    // go to select chapter activity
-    private void redirectSelectChapter(){
-        startActivity(SelectChapterActivity.createIntent(this));
-        finish();
-    }
-
-    // go to signed in activity
-    private void redirectSignedIn(){
-        startActivity(SignedInActivity.createIntent(this, null));
-        finish();
+                });
     }
 }

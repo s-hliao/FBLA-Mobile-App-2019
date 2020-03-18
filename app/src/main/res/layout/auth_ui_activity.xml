@@ -16,7 +16,6 @@
         android:autoSizeTextType="uniform"
         android:gravity="center"
         android:text="@string/welcome_message"
-        android:textColor="@color/colorText"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -34,7 +33,7 @@
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="@+id/text_auth_ui"
         app:layout_constraintTop_toBottomOf="@+id/text_auth_ui"
-        app:layout_constraintVertical_bias="0.828"/>
+        app:layout_constraintVertical_bias="0.757" />
 
     <TextView
         android:id="@+id/text_TOC"
@@ -49,8 +48,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/text_auth_ui"
         app:layout_constraintTop_toBottomOf="@+id/text_auth_ui"
-        app:layout_constraintVertical_bias=".9"
-        android:textColor="@color/colorText" />
+        app:layout_constraintVertical_bias=".9"/>
 
     <ImageView
         android:id="@+id/imageView"
