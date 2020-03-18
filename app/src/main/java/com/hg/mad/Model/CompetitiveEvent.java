@@ -78,14 +78,12 @@ public class CompetitiveEvent {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
 
-                            // If the list is empty, add the new user
-                            // SIGN UP STAGE
                             if (task.getResult()!= null && task.getResult().size() > 0){
                                 for(QueryDocumentSnapshot result: task.getResult()) {
                                     DatabaseUser user = result.toObject(DatabaseUser.class);
                                     if(user.getEventsSignedUp().containsValue(eventName)) {
                                         user.removeEvent(eventName);
-                                    }
+                                    } // remove event from all users
 
                                 }
                             }

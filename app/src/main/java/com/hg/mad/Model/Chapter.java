@@ -44,7 +44,7 @@ public class Chapter {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful() && task.getResult()!=null  && task.getResult().size()>0) {
                             if (task.getResult()!= null && task.getResult().size() > 0){
-                                chapterID[0] = task.getResult().getDocuments().get(0).getId();
+                                chapterID[0] = task.getResult().getDocuments().get(0).getId(); // retrive chapter ID
                             }
 
                         }
@@ -55,6 +55,7 @@ public class Chapter {
 
         competitiveEvents = FirebaseFirestore.getInstance().collection("Chapter").document(chapterID[0]).collection("competitiveEvents");
         chapterEvents = FirebaseFirestore.getInstance().collection("Chapter").document(chapterID[0]).collection("chapterEvents");
+        //use chapter ID to initialize events
     }
 
     public String getChapterName() {
@@ -160,7 +161,7 @@ public class Chapter {
                     }
                 }
             }
-        });;
+        });
     }
 
 
