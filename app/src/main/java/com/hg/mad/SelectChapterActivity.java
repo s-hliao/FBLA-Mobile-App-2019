@@ -40,7 +40,8 @@ public class SelectChapterActivity extends AppCompatActivity{
 
     FirebaseUser user;
     CollectionReference users;
-    DocumentReference databaseUser;
+    DatabaseUser databaseUser;
+    DocumentReference databaseUserRef;
 
     SearchableSpinner chapterSpinner;
     FirebaseFirestore fireStore;
@@ -120,8 +121,10 @@ public class SelectChapterActivity extends AppCompatActivity{
             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful() && task.getResult()!= null) {
-                        databaseUser = task.getResult().getDocuments().get(0).getReference();
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot ss = task.getResult().getDocuments().get(0);
+                        databaseUserRef = ss.getReference();
+                        databaseUser = ss.toObject(DatabaseUser.class);
                     }
                 }
             });
@@ -136,8 +139,8 @@ public class SelectChapterActivity extends AppCompatActivity{
                     if (chapterSpinner.getSelectedItem() == null) {
                         Toast.makeText(getApplicationContext(), "Please select a chapter", Toast.LENGTH_LONG).show();
                     } else {
-                        databaseUser.update("chapterName", chapterSpinner.getSelectedItem().toString());
-                        databaseUser.update("inChapter", true);
+                        databaseUserRef.update("chapterName", chapterSpinner.getSelectedItem().toString());
+                        databaseUserRef.update("inChapter", true);
                         startActivity(SignedInActivity.createIntent(context, null));
                         finish();
                     }
@@ -147,13 +150,28 @@ public class SelectChapterActivity extends AppCompatActivity{
                 else if (create.isChecked()) {
                     if (chapterName.getText().toString().equals("")){
                         Toast.makeText(getApplicationContext(), "Please enter a chapter name", Toast.LENGTH_LONG).show();
-                    } else {
-                        // TODO handle duplicate chapters
-                        // TODO create chapter database item
+                    }
 
-                        databaseUser.update("chapterName", chapterName.getText().toString());
-                        databaseUser.update("inChapter", true);
-                        databaseUser.update("isAdmin", true);
+                    // TODO handle duplicate chapters
+                    //else if (){
+
+                    //}
+
+                    else {
+                        // Get a collection of users named DatabaseUser
+                        CollectionReference chapters = fireStore.collection("DatabaseUser");
+
+                        // Adding a new user to DatabaseUser
+                        HashMap<String, Integer> usersInChapter = new HashMap<String, Integer>();
+                        usersInChapter.put(databaseUser.getUserID(), 0);
+                        chapters.add(new Chapter(chapterName.getText().toString(),
+                                databaseUser.getUserID(),
+                                usersInChapter
+                        ));
+
+                        databaseUserRef.update("chapterName", chapterName.getText().toString());
+                        databaseUserRef.update("inChapter", true);
+                        databaseUserRef.update("isAdmin", true);
                         startActivity(SignedInActivity.createIntent(context, null));
                         finish();
                     }

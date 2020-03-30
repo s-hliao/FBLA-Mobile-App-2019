@@ -74,7 +74,6 @@ public class DatabaseLibrary extends AppCompatActivity {
     }
 
     // FIRESTORE MANAGEMENT
-
     void fireStoreManagement(){
 
         // Get FireStore instance
