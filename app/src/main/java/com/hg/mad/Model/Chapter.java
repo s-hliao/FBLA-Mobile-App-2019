@@ -15,6 +15,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 public class Chapter {
 
@@ -36,7 +37,7 @@ public class Chapter {
 
         this.usersInChapter = usersInChapter;
        CollectionReference chapters = FirebaseFirestore.getInstance().collection("Chapter");
-        final String[] chapterID = new String[1];
+        /*final String[] chapterID = new String[1];
         chapters.whereEqualTo("chapterName", chapterName)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -51,11 +52,21 @@ public class Chapter {
                     }
 
 
-                });
+                });*/
+        Map<String, Object> newChapter = new HashMap<>();
+        newChapter.put("chapterName", chapterName);
+        newChapter.put("usersInChapter", usersInChapter);
+        newChapter.put("adminID", adminID); //storing new Chapter into firebase
 
-        competitiveEvents = FirebaseFirestore.getInstance().collection("Chapter").document(chapterID[0]).collection("competitiveEvents");
-        chapterEvents = FirebaseFirestore.getInstance().collection("Chapter").document(chapterID[0]).collection("chapterEvents");
-        //use chapter ID to initialize events
+        chapters.document(chapterName).set(newChapter); //storing
+
+        FirebaseFirestore.getInstance().collection("Chapter").document(chapterName).collection("competitiveEvents").document();
+            //initializing chapters
+        FirebaseFirestore.getInstance().collection("Chapter").document(chapterName).collection("chapterEvents").document();
+
+        competitiveEvents = FirebaseFirestore.getInstance().collection("Chapter").document(chapterName).collection("competitiveEvents");
+        chapterEvents = FirebaseFirestore.getInstance().collection("Chapter").document(chapterName).collection("chapterEvents");
+        //makes collectionReferences
     }
 
     public String getChapterName() {
