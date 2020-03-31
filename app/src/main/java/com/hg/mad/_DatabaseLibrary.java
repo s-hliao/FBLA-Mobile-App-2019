@@ -23,13 +23,14 @@ import com.hg.mad.Model.DatabaseUser;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class DatabaseLibrary extends AppCompatActivity {
+public class _DatabaseLibrary extends AppCompatActivity {
 
     // Current user
     FirebaseUser user;
     // Collection of users
-    CollectionReference users;
+    CollectionReference usersCollection;
     // FireStore
     FirebaseFirestore fireStore;
 
@@ -64,7 +65,6 @@ public class DatabaseLibrary extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100) {
-            IdpResponse response = IdpResponse.fromResultIntent(data);
 
             // if sign in succeeded, redirect the user
             if (resultCode == RESULT_OK) {
@@ -80,19 +80,21 @@ public class DatabaseLibrary extends AppCompatActivity {
         fireStore = FirebaseFirestore.getInstance();
 
         // Get a collection of users named DatabaseUser
-        users = fireStore.collection("DatabaseUser");
+        usersCollection = fireStore.collection("DatabaseUser");
 
         // Adding a new user to DatabaseUser
-        users.add(new DatabaseUser(
-                user.getDisplayName(),
-                false,
-                false,
-                "",
-                new HashMap<String, Integer>()
-        ));
+        Map<String, Object> data = new HashMap<>();
+        // Data should contain mappings of fields to values
+        usersCollection.add(data);
+
+        // Get a specific document using the id
+        DocumentReference databaseUserRef = usersCollection.document("id");
+
+        // To update fields, use DocumentReference
+        databaseUserRef.update("field", "new value");
 
         // Get a list of users in DatabaseUser where the field "userId" is equal to the user's id
-        users.whereEqualTo("userID", user.getUid())
+        usersCollection.whereEqualTo("userID", user.getUid())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -106,10 +108,6 @@ public class DatabaseLibrary extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
 
                             }
-
-                            // To update fields, use DocumentReference
-                            DocumentReference databaseUserRef = task.getResult().getDocuments().get(0).getReference();
-                            databaseUserRef.update("field", "new value");
                         }
                     }
                 });

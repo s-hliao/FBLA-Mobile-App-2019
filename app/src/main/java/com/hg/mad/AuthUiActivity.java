@@ -106,7 +106,7 @@ public class AuthUiActivity extends AppCompatActivity {
         // Initializing database
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
         usersCollection = fireStore.collection("DatabaseUser");
-        DocumentReference databaseUserRef = fireStore.collection("DatabaseUser").document(user.getUid());
+        DocumentReference databaseUserRef = usersCollection.document(user.getUid());
 
         databaseUserRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
