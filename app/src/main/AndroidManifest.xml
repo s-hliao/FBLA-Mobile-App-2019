@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.hg.mad" >
+    package="com.hg.mad">
 
     <application
         android:allowBackup="true"
@@ -8,16 +8,19 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
-        <activity android:name=".AuthUiActivity" >
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".SignedInActivity"
+            android:label="@string/title_activity_signed_in"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".AuthUiActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SelectChapterActivity" ></activity>
-        <activity android:name=".SignedInActivity" ></activity>
+        <activity android:name=".SelectChapterActivity" />
     </application>
 
 </manifest>
