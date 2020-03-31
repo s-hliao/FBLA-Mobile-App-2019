@@ -19,8 +19,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.hg.mad.Model.DatabaseUser;
 
 import java.util.Arrays;
@@ -31,12 +32,9 @@ public class AuthUiActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 100;
     private List<AuthUI.IdpConfig> providers;
-    private FirebaseAuth auth;
-    private Button btn_sign_in;
     private FirebaseUser user;
-    private FirebaseFirestore fireStore;
-    private CollectionReference users;
     private Context context;
+    private CollectionReference usersCollection;
 
     @NonNull
     public static Intent createIntent(@NonNull Context context) {
@@ -49,33 +47,35 @@ public class AuthUiActivity extends AppCompatActivity {
 
         context = getApplicationContext();
 
-        // if the user is signed in, automatically redirect the user
-        auth = FirebaseAuth.getInstance();
+        // If the user is signed in, automatically redirect the user
+        FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             user = auth.getCurrentUser();
             redirectUser();
         }
 
-        // if the user is not signed in, show the auth ui activity
+        // If a user is not signed in, show the auth ui activity on click
         setContentView(R.layout.auth_ui_activity);
-        btn_sign_in = findViewById(R.id.button_sign_in);
+        Button btn_sign_in = findViewById(R.id.button_sign_in);
         btn_sign_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showSignInOptions();
             }
         });
-        // enable Terms of Use Hyperlinks
+
+        // Enable Terms of Use Hyperlinks
         TextView textView = findViewById(R.id.text_TOC);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
-        // a list of providers enabled for sign in
+
+        // A list of providers enabled for sign in
         providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),
                 new AuthUI.IdpConfig.GoogleBuilder().build()
         );
     }
 
-    // displays sign in options
+    // Displays sign in options
     private void showSignInOptions() {
         startActivityForResult(
                 AuthUI.getInstance().createSignInIntentBuilder()
@@ -83,18 +83,16 @@ public class AuthUiActivity extends AppCompatActivity {
                         .setTheme(R.style.AppTheme)
                         .setIsSmartLockEnabled(false)
                         .build(), RC_SIGN_IN
-                //.setLogo(R.drawable.logo)
         );
     }
 
-    // when sign in flow is complete
+    // When sign in flow is complete
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
-            IdpResponse response = IdpResponse.fromResultIntent(data);
 
-            // if sign in succeeded, redirect the user
+            // If sign in succeeded, redirect the user
             if (resultCode == RESULT_OK) {
                 user = FirebaseAuth.getInstance().getCurrentUser();
                 redirectUser();
@@ -102,54 +100,55 @@ public class AuthUiActivity extends AppCompatActivity {
         }
     }
 
-    // adding the user to the database
+    // Adding the user to the database
     private void redirectUser() {
 
-        // initializing database
-        fireStore = FirebaseFirestore.getInstance();
-        users = fireStore.collection("DatabaseUser");
+        // Initializing database
+        FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
+        usersCollection = fireStore.collection("DatabaseUser");
+        DocumentReference databaseUserRef = fireStore.collection("DatabaseUser").document(user.getUid());
 
-        // get a list of users
-        users.whereEqualTo("userID", user.getUid())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful() && task.getResult() != null) {
+        databaseUserRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
 
-                            // if it's a new user (not in a chapter yet)
-                            if (task.getResult().isEmpty()) {
-                                // add the user to the database
-                                users.add(new DatabaseUser(
-                                        user.getUid(),
-                                        user.getDisplayName(),
-                                        false,
-                                        false,
-                                        "",
-                                        new HashMap<String, Integer>()
-                                ));
-                                // redirect to select chapter activity
-                                startActivity(SelectChapterActivity.createIntent(context));
-                                finish();
-                            }
+                    // If the user exists
+                    if (document.exists()) {
 
-                            // if the user already exists
-                            else {
-                                DatabaseUser databaseUser = task.getResult().getDocuments().get(0).toObject(DatabaseUser.class);
+                        DatabaseUser databaseUser = document.toObject(DatabaseUser.class);
+                        // If the user isn't in a chapter, redirect to select chapter
+                        if (!databaseUser.getInChapter()) {
+                            startActivity(SelectChapterActivity.createIntent(context));
+                            finish();
+                        }
 
-                                // if the user isn't in a chapter, redirect to select chapter
-                                if (!databaseUser.getInChapter()) {
-                                    startActivity(SelectChapterActivity.createIntent(context));
-                                    finish();
-                                }
-                                // otherwise go to signed in activity
-                                else {
-                                    startActivity(SignedInActivity.createIntent(context, null));
-                                    finish();
-                                }
-                            }
+                        // Otherwise go to signed in activity
+                        else {
+                            startActivity(SignedInActivity.createIntent(context, null));
+                            finish();
                         }
                     }
-                });
+
+                    // If the user doesn't exist
+                    else {
+
+                        // add the user to the database
+                        usersCollection.document(user.getUid()).set(new DatabaseUser(
+                                user.getDisplayName(),
+                                false,
+                                false,
+                                "",
+                                new HashMap<String, Integer>()
+                        ));
+
+                        // redirect to select chapter activity
+                        startActivity(SelectChapterActivity.createIntent(context));
+                        finish();
+                    }
+                }
+            }
+        });
     }
 }

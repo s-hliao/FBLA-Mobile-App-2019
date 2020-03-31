@@ -32,14 +32,14 @@ import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
 public class SelectChapterActivity extends AppCompatActivity{
 
     private Context context;
 
     FirebaseUser user;
-    CollectionReference users;
+    CollectionReference usersCollection;
     DatabaseUser databaseUser;
     DocumentReference databaseUserRef;
 
@@ -65,7 +65,7 @@ public class SelectChapterActivity extends AppCompatActivity{
 
         context = getApplicationContext();
 
-        // set up the chapter spinner
+        // Set up the chapter spinner
         chapterSpinner = findViewById(R.id.spinner_select_chapter);
         fireStore = FirebaseFirestore.getInstance();
         chapterNames = new ArrayList<>();
@@ -73,29 +73,29 @@ public class SelectChapterActivity extends AppCompatActivity{
         fireStore.collection("Chapter").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-            if (task.isSuccessful()) {
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    chapterNames.add(document.toObject(Chapter.class).getChapterName());
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        chapterNames.add(document.toObject(Chapter.class).getChapterName());
+                    }
                 }
-            }
             }
         });
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, chapterNames);
         chapterSpinner.setAdapter(adapter);
 
-        // set up views
+        // Set up views
         join = findViewById(R.id.button_join);
         create = findViewById(R.id.button_create);
         selectChapter = findViewById(R.id.select_chapter);
         chapterName = findViewById(R.id.text_chapter_name);
         selectChapterBtn = findViewById(R.id.button_select_chapter);
 
-        // start with both selections turned off
+        // Start with both selections turned off
         chapterName.setVisibility(View.GONE);
         selectChapter.setVisibility(View.GONE);
 
-        // toggle join chapter selections
+        // Toggle join chapter selections
         join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,7 +104,7 @@ public class SelectChapterActivity extends AppCompatActivity{
             }
         });
 
-        // toggle select chapter selections
+        // Toggle select chapter selections
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,23 +113,12 @@ public class SelectChapterActivity extends AppCompatActivity{
             }
         });
 
-        // get the database user
-        users = fireStore.collection("DatabaseUser");
+        // Get the current user & database user reference
         user = FirebaseAuth.getInstance().getCurrentUser();
-        users.whereEqualTo("userID", user.getUid())
-            .get()
-            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot ss = task.getResult().getDocuments().get(0);
-                        databaseUserRef = ss.getReference();
-                        databaseUser = ss.toObject(DatabaseUser.class);
-                    }
-                }
-            });
+        usersCollection = fireStore.collection("DatabaseUser");
+        databaseUserRef = usersCollection.document(user.getUid());
 
-        // when the continue button is clicked
+        // When the continue button is clicked
         selectChapterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,17 +147,21 @@ public class SelectChapterActivity extends AppCompatActivity{
                     //}
 
                     else {
-                        // Get a collection of users named DatabaseUser
-                        CollectionReference chapters = fireStore.collection("DatabaseUser");
+                        // Get a collection of chapters
+                        CollectionReference chaptersCollection = fireStore.collection("Chapter");
 
-                        // Adding a new user to DatabaseUser
-                        HashMap<String, Integer> usersInChapter = new HashMap<String, Integer>();
-                        usersInChapter.put(databaseUser.getUserID(), 0);
-                        chapters.add(new Chapter(chapterName.getText().toString(),
-                                databaseUser.getUserID(),
-                                usersInChapter
-                        ));
+                        // Adding a new chapter
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("chapterName", chapterName.getText().toString());
+                        data.put("adminID", user.getUid());
 
+                        Map<String, Integer> usersInChapter = new HashMap<String, Integer>();
+                        usersInChapter.put(user.getUid(), 1);
+                        data.put("usersInChapter", usersInChapter);
+
+                        chaptersCollection.add(data);
+
+                        // Updating the user's information
                         databaseUserRef.update("chapterName", chapterName.getText().toString());
                         databaseUserRef.update("inChapter", true);
                         databaseUserRef.update("isAdmin", true);

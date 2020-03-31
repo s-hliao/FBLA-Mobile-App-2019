@@ -1,13 +1,5 @@
 package com.hg.mad.Model;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -15,8 +7,8 @@ import java.util.Set;
 public class Chapter {
 
     public static final String FIELD_CHAPTERNAME = "chapterName";
-    public static final String FIELD_USERSINCHAPTER = "usersInChapter";
     public static final String FIELD_ADMINID = "adminID";
+    public static final String FIELD_USERSINCHAPTER = "usersInChapter";
     public static final String FIELD_COMPETITIVEEVENTS = "competitiveEvents";
     public static final String FIELD_CHAPTEREVENTS = "chapterEvents";
 
