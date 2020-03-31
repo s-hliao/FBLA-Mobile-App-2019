@@ -8,31 +8,48 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.hg.mad.SignedInActivity;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 public class ChapterEvent {
     public static final String FIELD_EVENTNAME = "eventName";
     public static final String FIELD_EVENTTYPE = "eventType";
     public static final String FIELD_DESCRIPTION = "Description";
     public static final String FIELD_SIGNEDUP = "signedUp";
+    public static final String FIELD_DATE = "date";
     public static final String FIELD_CHAPTERNAME = "chapterName";
+    public static final String FIELD_SIGNINKEY = "signInKey";
+    public static final String FIELD_SIGNEDIN = "signedIn";
+    public static final String FIELD_ATTENDANCEACTIVE = "attendanceActive";
 
     private String eventName;
     private String eventType;
     private String description;
-    private HashMap<String, Integer> signedUp;
+    private Map<String, String> signedUp;
+    private Date date;
     private String chapterName;
+    private String signInKey;
+    private Map<String, String> signedIn;
+    private boolean attendanceActive;
 
     public ChapterEvent() {}
 
-    public ChapterEvent(String eventName, String eventType, String description, HashMap<String, Integer> signedUp, String chapterName){
+    public ChapterEvent(String eventName, String eventType, String description, HashMap<String, String> signedUp, Date date, String chapterName,
+                        String signInKey, HashMap<String, String>signedIn, boolean attendanceActive){
         this.eventName = eventName;
         this.eventType = eventType;
         this.description = description;
         this.signedUp = signedUp;
         this.chapterName = chapterName;
+        this.date = date;
+        this.signInKey = signInKey;
+        this.signedIn = signedIn;
+        this.attendanceActive = attendanceActive;
+
     }
 
     public String getEventName(){
@@ -64,8 +81,56 @@ public class ChapterEvent {
         return chapterName;
     }
 
-    public void addUser(String user){
-        signedUp.put(user, signedUp.size());
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public void addSignedUp(String userID, String userName){
+        signedUp.put(userID, userName);
+    }
+
+    public void removeSignedUp(String userID){
+        signedUp.remove(userID);
+    }
+
+    public void clearSignedUp(){
+        signedUp.clear();
+    }
+
+    public String getSignInKey() {
+        return signInKey;
+    }
+
+    public void setSignInKey(String signInKey){
+        this.signInKey = signInKey;
+    }
+
+    public Map<String, String> getSignedIn() {
+        return signedIn;
+    }
+
+    public void addSignedIn(String userID, String userName){
+        signedIn.put(userID, userName);
+    }
+
+    public void removeSignedIn(String userID){
+        signedIn.remove(userID);
+    }
+
+    public void clearSignedIn(){
+        signedIn.clear();
+    }
+
+    public boolean getAttendanceActive() {
+        return attendanceActive;
+    }
+
+    public void setAttendanceActive(boolean attendanceActive) {
+        this.attendanceActive = attendanceActive;
     }
 
     public void resetUsers(){

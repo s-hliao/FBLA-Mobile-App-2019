@@ -63,11 +63,17 @@ public class DatabaseUser {
     }
 
     public HashMap<String, Integer> getEventsSignedUp(){
+
         return eventsSignedUp;
     }
 
     public void removeEvent(String eventName){
+
         eventsSignedUp.remove(eventName);
+    }
+
+    public void addEvent(String event){
+        eventsSignedUp.put(event, eventsSignedUp.size());
     }
 
     public void setEventsSignedUp(HashMap<String, Integer> eventsSignedUp){

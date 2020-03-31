@@ -23,12 +23,12 @@ public class CompetitiveEvent {
     private String eventName;
     private boolean isStateCapped;
     private int stateCap;
-    private HashMap<String, Integer> signedUp;
+    private HashMap<String, String> signedUp;
     private String chapterName;
 
     public CompetitiveEvent() {}
 
-    public CompetitiveEvent(String eventName, boolean isStateCapped, int stateCap, HashMap<String, Integer> signedUp, String chapterName){
+    public CompetitiveEvent(String eventName, boolean isStateCapped, int stateCap, HashMap<String, String> signedUp, String chapterName){
         this.eventName = eventName;
         this.isStateCapped = isStateCapped;
         this.stateCap = stateCap;
@@ -63,8 +63,12 @@ public class CompetitiveEvent {
         return (HashSet<String>)signedUp.keySet();
     }
 
-    public void addUser(String user){
-        signedUp.put(user, signedUp.size());
+    public void addUser(String userID, String userName){
+        signedUp.put(userID, userName);
+    }
+
+    public void addSignedUp(String userID, String userName){
+        signedUp.put(userID, userName);
     }
 
     public void resetUsers(){
