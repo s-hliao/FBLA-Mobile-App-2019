@@ -7,14 +7,12 @@ import java.util.HashSet;
 @IgnoreExtraProperties
 public class DatabaseUser {
 
-    public static final String FIELD_USERID = "userID";
     public static final String FIELD_NAME = "name";
     public static final String FIELD_INCHAPTER = "inChapter";
     public static final String FIELD_ISADMIN = "isAdmin";
     public static final String FIELD_CHAPTERNAME = "chapterName";
     public static final String FIELD_EVENTSSIGNEDDUP = "eventsSignedUp";
 
-    private String userID;
     private String name;
     private Boolean inChapter;
     private Boolean isAdmin;
@@ -23,19 +21,14 @@ public class DatabaseUser {
 
     public DatabaseUser() {}
 
-    public DatabaseUser(String userID, String name, boolean inChapter, boolean isAdmin,
+    public DatabaseUser(String name, boolean inChapter, boolean isAdmin,
                         String chapterName, HashMap<String, Integer> eventsSignedUp) {
-        this.userID = userID;
         this.name = name;
         this.inChapter = inChapter;
         this.isAdmin = isAdmin;
         this.chapterName = chapterName;
         this.eventsSignedUp = eventsSignedUp;
     }
-
-    public String getUserID(){return userID;}
-
-    public void setUserID(String userID) {this.userID = userID;}
 
     public String getName() {
         return name;
