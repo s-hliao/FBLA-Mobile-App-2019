@@ -23,8 +23,8 @@ public class Chapter {
     private String chapterName;
     private Map<String, Integer> usersInChapter;
     private String adminID;
-    private CollectionReference competitiveEvents;
-    private CollectionReference chapterEvents;
+    private Map<String, CompetitiveEvent> competitiveEvents;
+    private Map<String, ChapterEvent> chapterEvents;
 
     public Chapter() {}
 
@@ -32,6 +32,8 @@ public class Chapter {
         this.chapterName = chapterName;
         this.adminID = adminID;
         this.usersInChapter = usersInChapter;
+        competitiveEvents = new HashMap<>();
+        chapterEvents = new HashMap<>();
     }
 
     public String getChapterName() {
@@ -58,86 +60,27 @@ public class Chapter {
         adminID = newAdminID;
     }
 
-    public void addCompetitiveEvent(final CompetitiveEvent compEvent) {
-        competitiveEvents.whereEqualTo("eventName", compEvent.getEventName()) //search for event with same name
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (!(task.isSuccessful() && (task.getResult() != null))) {
-                                //if an event with that name doesn't exist yet
-                            competitiveEvents.add(compEvent);
-                        }
-                    }
-                });
+    public void addCompetitiveEvent(CompetitiveEvent compEvent) {
+        if(!competitiveEvents.containsKey(compEvent.getEventName()))
+            competitiveEvents.put(compEvent.getEventName(), compEvent);
     }
 
     public void removeCompetitiveEvent(String eventName){ // remove competitive event by name
-        competitiveEvents.whereEqualTo("eventName",eventName) //search for event with same name
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful() && (task.getResult() != null)) {
-                            for(DocumentSnapshot result: task.getResult().getDocuments()) { //get results from query
-                               result.getReference().delete();
-                            }
-                        }
-                    }
-                });
+        competitiveEvents.remove(eventName);
     }
 
-    public void addChapterEvent(final ChapterEvent chapEvent) {
-        chapterEvents.whereEqualTo("eventName", chapEvent.getEventName()) //search for event with same name
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (!(task.isSuccessful() && (task.getResult() != null))) {
-                            //if an event with that name doesn't exist yet
-                            competitiveEvents.add(chapEvent);
-                        }
-                    }
-                });
+    public void addChapterEvent(ChapterEvent chapEvent) {
+        if(!chapterEvents.containsKey(chapEvent.getEventName()))
+            chapterEvents.put(chapEvent.getEventName(), chapEvent);
     }
 
     public void removeChapterEvent(String eventName){
-        chapterEvents.whereEqualTo("eventName",eventName) //search for event with same name
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful() && (task.getResult() != null)) {
-                            for(DocumentSnapshot result: task.getResult().getDocuments()) { //get results from query
-                                result.getReference().delete();
-                            }
-                        }
-                    }
-                });
+        chapterEvents.remove(eventName);
     }
 
     public void resetEvents(){
-        competitiveEvents.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful() && (task.getResult() != null)) {
-                    for(DocumentSnapshot result: task.getResult().getDocuments()) { //get results from query
-                        result.getReference().delete();
-                    }
-                }
-            }
-        });;
-
-        chapterEvents.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful() && (task.getResult() != null)) {
-                    for(DocumentSnapshot result: task.getResult().getDocuments()) { //get results from query
-                        result.getReference().delete();
-                    }
-                }
-            }
-        });
+        competitiveEvents.clear();
+        chapterEvents.clear();
     }
 
 
