@@ -1,72 +1,37 @@
 package com.hg.mad.Model;
 
-import android.provider.DocumentsContract;
-
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class Chapter {
 
     public static final String FIELD_CHAPTERNAME = "chapterName";
     public static final String FIELD_USERSINCHAPTER = "usersInChapter";
-    public static final String FIELD_adminID = "adminID";
+    public static final String FIELD_ADMINID = "adminID";
+    public static final String FIELD_COMPETITIVEEVENTS = "competitiveEvents";
+    public static final String FIELD_CHAPTEREVENTS = "chapterEvents";
 
     private String chapterName;
-    private HashMap<String, Integer> usersInChapter;
+    private Map<String, Integer> usersInChapter;
     private String adminID;
     private CollectionReference competitiveEvents;
     private CollectionReference chapterEvents;
 
     public Chapter() {}
 
-    public Chapter(String chapterName, String adminID, HashMap<String, Integer>usersInChapter) {
+    public Chapter(String chapterName, String adminID, Map<String, Integer>usersInChapter) {
         this.chapterName = chapterName;
         this.adminID = adminID;
-
         this.usersInChapter = usersInChapter;
-       CollectionReference chapters = FirebaseFirestore.getInstance().collection("Chapter");
-        /*final String[] chapterID = new String[1];
-        chapters.whereEqualTo("chapterName", chapterName)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful() && task.getResult()!=null  && task.getResult().size()>0) {
-                            if (task.getResult()!= null && task.getResult().size() > 0){
-                                chapterID[0] = task.getResult().getDocuments().get(0).getId(); // retrive chapter ID
-                            }
-
-                        }
-                    }
-
-
-                });*/
-        Map<String, Object> newChapter = new HashMap<>();
-        newChapter.put("chapterName", chapterName);
-        newChapter.put("usersInChapter", usersInChapter);
-        newChapter.put("adminID", adminID); //storing new Chapter into firebase
-
-        chapters.document(chapterName).set(newChapter); //storing
-
-        FirebaseFirestore.getInstance().collection("Chapter").document(chapterName).collection("competitiveEvents").document();
-            //initializing chapters
-        FirebaseFirestore.getInstance().collection("Chapter").document(chapterName).collection("chapterEvents").document();
-
-        competitiveEvents = FirebaseFirestore.getInstance().collection("Chapter").document(chapterName).collection("competitiveEvents");
-        chapterEvents = FirebaseFirestore.getInstance().collection("Chapter").document(chapterName).collection("chapterEvents");
-        //makes collectionReferences
     }
 
     public String getChapterName() {
@@ -77,8 +42,8 @@ public class Chapter {
         usersInChapter.put(user, usersInChapter.size());
     }
 
-    public HashSet<String> getUsers() {
-        return (HashSet<String>) usersInChapter.keySet();
+    public Set<String> getUsers() {
+        return (Set<String>) usersInChapter.keySet();
     }
 
     public void resetUsers() {
