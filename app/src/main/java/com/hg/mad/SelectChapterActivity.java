@@ -155,8 +155,8 @@ public class SelectChapterActivity extends AppCompatActivity{
                         data.put("chapterName", chapterName.getText().toString());
                         data.put("adminID", user.getUid());
 
-                        Map<String, Integer> usersInChapter = new HashMap<String, Integer>();
-                        usersInChapter.put(user.getUid(), 1);
+                        Map<String, String> usersInChapter = new HashMap<String, String>();
+                        usersInChapter.put(user.getUid(), user.getDisplayName());
                         data.put("usersInChapter", usersInChapter);
 
                         chaptersCollection.add(data);

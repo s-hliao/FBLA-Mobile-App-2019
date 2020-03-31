@@ -84,7 +84,6 @@ public class DatabaseLibrary extends AppCompatActivity {
 
         // Adding a new user to DatabaseUser
         users.add(new DatabaseUser(
-                user.getUid(),
                 user.getDisplayName(),
                 false,
                 false,

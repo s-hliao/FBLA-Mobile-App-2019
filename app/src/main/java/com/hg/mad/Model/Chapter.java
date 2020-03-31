@@ -13,14 +13,14 @@ public class Chapter {
     public static final String FIELD_CHAPTEREVENTS = "chapterEvents";
 
     private String chapterName;
-    private Map<String, Integer> usersInChapter;
+    private Map<String, String> usersInChapter;
     private String adminID;
     private Map<String, CompetitiveEvent> competitiveEvents;
     private Map<String, ChapterEvent> chapterEvents;
 
     public Chapter() {}
 
-    public Chapter(String chapterName, String adminID, Map<String, Integer>usersInChapter) {
+    public Chapter(String chapterName, String adminID, Map<String, String>usersInChapter) {
         this.chapterName = chapterName;
         this.adminID = adminID;
         this.usersInChapter = usersInChapter;
@@ -32,8 +32,8 @@ public class Chapter {
         return chapterName;
     }
 
-    public void addUser(String user) {
-        usersInChapter.put(user, usersInChapter.size());
+    public void addUser(String Uid, String user) {
+        usersInChapter.put(Uid, user);
     }
 
     public Set<String> getUsers() {
