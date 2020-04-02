@@ -25,9 +25,6 @@ import com.hg.mad.R;
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
-    FirebaseUser currentUser;
-    Button btn_sign_out;
-    TextView textUsername;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -39,28 +36,6 @@ public class HomeFragment extends Fragment {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
-            }
-        });
-
-        // Sign out when the sign out button is clicked
-        btn_sign_out = root.findViewById(R.id.button_sign_out);
-        btn_sign_out.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AuthUI.getInstance()
-                        .signOut(getContext())
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-
-                            // Show sign in screen
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    startActivity(AuthUiActivity.createIntent(getContext()));
-                                } else {
-                                    // TODO
-                                }
-                            }
-                        });
             }
         });
 

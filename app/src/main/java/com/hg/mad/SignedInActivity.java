@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.widget.Button;
@@ -86,6 +87,25 @@ public class SignedInActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.signed_in, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_signout){
+            AuthUI.getInstance()
+                    .signOut(getApplicationContext())
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                        // Show sign in screen
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                startActivity(AuthUiActivity.createIntent(getApplicationContext()));
+                            }
+                        }
+                    });
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
