@@ -1,4 +1,4 @@
-package com.hg.mad.ui.questions;
+package com.hg.mad.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
