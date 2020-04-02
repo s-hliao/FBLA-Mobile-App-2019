@@ -9,13 +9,13 @@
 
     <TextView
         android:id="@+id/text_auth_ui"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="346dp"
+        android:layout_height="86dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:autoSizeTextType="uniform"
         android:gravity="center"
-        android:text="@string/welcome_message"
+        android:text="Welcome to the FBLA Chapter Management System"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
