@@ -3,6 +3,7 @@ package com.hg.mad;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
@@ -33,8 +34,7 @@ import androidx.appcompat.widget.Toolbar;
 public class SignedInActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    Button btn_sign_out;
-    TextView textUsername;
+    private FirebaseUser currentUser;
 
     @NonNull
     public static Intent createIntent(@NonNull Context context, @Nullable IdpResponse response) {
@@ -69,41 +69,16 @@ public class SignedInActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         // Get the current user
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
             startActivity(AuthUiActivity.createIntent(this));
             finish();
         }
 
-        LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
-        View v = inflater.inflate(R.layout.fragment_home, null);
-
         // Set the username
-        textUsername = v.findViewById(R.id.text_username);
-        textUsername.setText(currentUser.getDisplayName());
-
-        // Sign out when the sign out button is clicked
-        btn_sign_out = v.findViewById(R.id.button_sign_out);
-        btn_sign_out.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AuthUI.getInstance()
-                        .signOut(SignedInActivity.this)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-
-                            // Show sign in screen
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    startActivity(AuthUiActivity.createIntent(SignedInActivity.this));
-                                    finish();
-                                } else {
-                                    // TODO
-                                }
-                            }
-                        });
-            }
-        });
+        View headerView = navigationView.getHeaderView(0);
+        TextView navUsername = headerView.findViewById(R.id.nav_username);
+        navUsername.setText(currentUser.getDisplayName());
     }
 
     @Override
