@@ -36,8 +36,8 @@ public class Chapter {
         usersInChapter.put(Uid, user);
     }
 
-    public Set<String> getUsers() {
-        return (Set<String>) usersInChapter.keySet();
+    public Map<String, String> getUsers() {
+        return usersInChapter;
     }
 
     public void resetUsers() {

@@ -3,6 +3,7 @@ package com.hg.mad;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -31,6 +32,7 @@ import com.hg.mad.Model.DatabaseUser;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +44,7 @@ public class SelectChapterActivity extends AppCompatActivity{
     CollectionReference usersCollection;
     DatabaseUser databaseUser;
     DocumentReference databaseUserRef;
+    CollectionReference chapterCollection;
 
     SearchableSpinner chapterSpinner;
     FirebaseFirestore fireStore;
@@ -116,7 +119,9 @@ public class SelectChapterActivity extends AppCompatActivity{
         // Get the current user & database user reference
         user = FirebaseAuth.getInstance().getCurrentUser();
         usersCollection = fireStore.collection("DatabaseUser");
+
         databaseUserRef = usersCollection.document(user.getUid());
+        chapterCollection = fireStore.collection("Chapter");
 
         // When the continue button is clicked
         selectChapterBtn.setOnClickListener(new View.OnClickListener() {
@@ -130,6 +135,27 @@ public class SelectChapterActivity extends AppCompatActivity{
                     } else {
                         databaseUserRef.update("chapterName", chapterSpinner.getSelectedItem().toString());
                         databaseUserRef.update("inChapter", true);
+                        chapterCollection.whereEqualTo("chapterName", chapterSpinner.getSelectedItem().toString()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful() && task.getResult() != null) {
+
+                                    DocumentSnapshot chapterSnapshot =task.getResult().getDocuments().get(0);
+                                    DocumentReference chapterDoc = chapterCollection.document(chapterSnapshot.getId());
+                                    Chapter chapterJoined = chapterSnapshot.toObject(Chapter.class);
+                                    chapterJoined.addUser(user.getUid().toString(), user.getDisplayName());
+                                    chapterDoc.update("usersInChapter", chapterJoined.getUsers());
+
+                                    // You can also iterate through each document
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                    }
+                                }
+                            }
+                        });
+
+
+
                         startActivity(SignedInActivity.createIntent(context, null));
                         finish();
                     }
