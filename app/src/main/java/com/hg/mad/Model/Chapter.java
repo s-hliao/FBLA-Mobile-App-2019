@@ -32,24 +32,22 @@ public class Chapter {
         return chapterName;
     }
 
-    public void addUser(String Uid, String user) {
-        usersInChapter.put(Uid, user);
-    }
-
-    public Map<String, String> getUsers() {
-        return usersInChapter;
-    }
-
-    public void resetUsers() {
-        usersInChapter = new HashMap<>();
-    }
-
     public String getAdminID() {
         return adminID;
     }
 
     public void setAdminID(String newAdminID) {
         adminID = newAdminID;
+    }
+
+    public Map<String, String> getUsersInChapter() {return usersInChapter;}
+
+    public void setUsersInChapter(Map<String, String> usersInChapter) {this.usersInChapter = usersInChapter;}
+
+    public void addUser(String Uid, String user) {usersInChapter.put(Uid, user);}
+
+    public void resetUsers() {
+        usersInChapter = new HashMap<>();
     }
 
     public void addCompetitiveEvent(CompetitiveEvent compEvent) {

@@ -133,28 +133,26 @@ public class SelectChapterActivity extends AppCompatActivity{
                     if (chapterSpinner.getSelectedItem() == null) {
                         Toast.makeText(getApplicationContext(), "Please select a chapter", Toast.LENGTH_LONG).show();
                     } else {
+
+                        // Update the user
                         databaseUserRef.update("chapterName", chapterSpinner.getSelectedItem().toString());
                         databaseUserRef.update("inChapter", true);
+
+                        // Update the chapter
                         chapterCollection.whereEqualTo("chapterName", chapterSpinner.getSelectedItem().toString()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful() && task.getResult() != null) {
+                                if (task.isSuccessful()) {
 
-                                    DocumentSnapshot chapterSnapshot =task.getResult().getDocuments().get(0);
-                                    DocumentReference chapterDoc = chapterCollection.document(chapterSnapshot.getId());
+                                    DocumentSnapshot chapterSnapshot = task.getResult().getDocuments().get(0);
                                     Chapter chapterJoined = chapterSnapshot.toObject(Chapter.class);
-                                    chapterJoined.addUser(user.getUid().toString(), user.getDisplayName());
-                                    chapterDoc.update("usersInChapter", chapterJoined.getUsers());
+                                    chapterJoined.addUser(user.getUid(), user.getDisplayName());
 
-                                    // You can also iterate through each document
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-
-                                    }
+                                    DocumentReference chapterRef = chapterCollection.document(chapterSnapshot.getId());
+                                    chapterRef.update("usersInChapter", chapterJoined.getUsersInChapter());
                                 }
                             }
                         });
-
-
 
                         startActivity(SignedInActivity.createIntent(context, null));
                         finish();
