@@ -51,7 +51,7 @@
         app:layout_constraintVertical_bias=".9"/>
 
     <ImageView
-        android:id="@+id/nave_icon"
+        android:id="@+id/nav_icon"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="32dp"
