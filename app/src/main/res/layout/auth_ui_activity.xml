@@ -9,8 +9,8 @@
 
     <TextView
         android:id="@+id/text_auth_ui"
-        android:layout_width="346dp"
-        android:layout_height="86dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:autoSizeTextType="uniform"
@@ -41,15 +41,13 @@
         android:layout_width="304dp"
         android:layout_height="36dp"
         android:autoSizeTextType="uniform"
-        android:text="@string/TOU_txt"
-        android:gravity="center"
         android:linksClickable="true"
+        android:text="@string/TOU_txt"
         app:layout_constraintBottom_toTopOf="@+id/button_sign_in"
         app:layout_constraintEnd_toEndOf="@+id/text_auth_ui"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/text_auth_ui"
         app:layout_constraintTop_toBottomOf="@+id/text_auth_ui"
-        app:layout_constraintVertical_bias=".9"/>
+        app:layout_constraintVertical_bias="0.878" />
 
     <ImageView
         android:id="@+id/nav_icon"
