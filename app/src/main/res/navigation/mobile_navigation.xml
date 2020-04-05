@@ -8,36 +8,31 @@
     <fragment
         android:id="@+id/nav_home"
         android:name="com.hg.mad.ui.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home">
-
-        <action
-            android:id="@+id/action_HomeFragment_to_HomeSecondFragment"
-            app:destination="@id/nav_home_second" />
-    </fragment>
-    <fragment
-        android:id="@+id/nav_home_second"
-        android:name="com.hg.mad.ui.home.HomeSecondFragment"
-        android:label="@string/home_second"
-        tools:layout="@layout/fragment_home_second">
-        <action
-            android:id="@+id/action_HomeSecondFragment_to_HomeFragment"
-            app:destination="@id/nav_home" />
-
-        <argument
-            android:name="myArg"
-            app:argType="string" />
-    </fragment>
+        android:label="Home"
+        tools:layout="@layout/fragment_home"/>
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.hg.mad.ui.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_chapter"
+        android:name="com.hg.mad.ui.ChapterFragment"
+        android:label="Chapter"
+        tools:layout="@layout/fragment_chapter" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.hg.mad.ui.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_events"
+        android:name="com.hg.mad.ui.EventsFragment"
+        android:label="Events"
+        tools:layout="@layout/fragment_events" />
+
+    <fragment
+        android:id="@+id/nav_abtfbla"
+        android:name="com.hg.mad.ui.AbtFBLAFragment"
+        android:label="Events"
+        tools:layout="@layout/fragment_abtfbla" />
+
+    <fragment
+        android:id="@+id/nav_questions"
+        android:name="com.hg.mad.ui.QuestionsFragment"
+        android:label="Events"
+        tools:layout="@layout/fragment_questions" />
+
 </navigation>

@@ -10,10 +10,10 @@ import androidx.fragment.app.Fragment;
 
 import com.hg.mad.R;
 
-public class EventSignupFragment extends Fragment {
+public class EventsFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_event_signup, container, false);
+        View root = inflater.inflate(R.layout.fragment_events, container, false);
         return root;
     }
 }

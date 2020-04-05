@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.hg.mad">
 
     <application
@@ -9,10 +10,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
-            android:name=".SignedInActivity"
-            android:label="@string/title_activity_signed_in"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
+            tools:replace="android:launchMode"
+            android:launchMode="standard" />
+
         <activity android:name=".AuthUiActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,7 +23,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".SelectChapterActivity" />
+
+        <activity
+            android:name=".SignedInActivity"
+            android:label="@string/title_activity_signed_in"
+            android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 
 </manifest>
