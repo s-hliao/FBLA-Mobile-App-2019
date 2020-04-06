@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -89,6 +90,16 @@ public class _DatabaseLibrary extends AppCompatActivity {
 
         // Get a specific document using the id
         DocumentReference databaseUserRef = usersCollection.document("id");
+
+        // Get fields from a specific document
+        databaseUserRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DatabaseUser databaseUserClass = task.getResult().toObject(DatabaseUser.class);
+                }
+            }
+        });
 
         // To update fields, use DocumentReference
         databaseUserRef.update("field", "new value");

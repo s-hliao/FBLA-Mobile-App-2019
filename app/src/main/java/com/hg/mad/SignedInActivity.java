@@ -21,6 +21,13 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.hg.mad.Model.DatabaseUser;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,10 +39,16 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import org.w3c.dom.Document;
+
 public class SignedInActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private FirebaseUser currentUser;
+
+    private View headerView;
+    private String chapterName;
+
 
     @NonNull
     public static Intent createIntent(@NonNull Context context, @Nullable IdpResponse response) {
@@ -77,9 +90,29 @@ public class SignedInActivity extends AppCompatActivity {
         }
 
         // Set the username
-        View headerView = navigationView.getHeaderView(0);
+        headerView = navigationView.getHeaderView(0);
         TextView navUsername = headerView.findViewById(R.id.nav_username);
         navUsername.setText(currentUser.getDisplayName());
+
+        // Set the chapter
+        FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
+        CollectionReference usersCollection = fireStore.collection("DatabaseUser");
+        DocumentReference databaseUserRef = usersCollection.document(currentUser.getUid());
+
+        databaseUserRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    chapterName = task.getResult().toObject(DatabaseUser.class).getChapterName();
+                    updateChapterName(chapterName);
+                }
+            }
+        });
+    }
+
+    private void updateChapterName(String chapterName){
+        TextView navChapter = headerView.findViewById(R.id.nav_chapter);
+        navChapter.setText(chapterName);
     }
 
     @Override
@@ -91,6 +124,8 @@ public class SignedInActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        // Sign out
         if (item.getItemId() == R.id.action_signout){
             AuthUI.getInstance()
                     .signOut(getApplicationContext())
