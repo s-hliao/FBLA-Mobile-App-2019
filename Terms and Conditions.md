@@ -52,20 +52,20 @@ The Application is not tailored to comply with industry-specific regulations (He
 3.4  Licensor reserves the right to modify the technical specifications as it sees appropriate at any time.
 
 
-# 4. MAINTENANCE OR SUPPORT
+## 4. MAINTENANCE OR SUPPORT
 
 4.1  The Licensor is solely responsible for providing any maintenance and support services for this licensed Application. You can reach the Licensor at the email address listed in the Google Play Overview for this licensed Application.
 
 4.2 Riot Robotics and the End-User acknowledge that Google LLC has no obligation whatsoever to furnish any maintenance and support services with respect to the licensed Application.
 
 
-# 5. LIABILITY
+## 5. LIABILITY
 
 5.1  Licensor's responsibility in the case of violation of obligations and tort shall be limited to intent and gross negligence. Only in case of a breach of essential contractual duties (cardinal obligations), Licensor shall also be liable in case of slight negligence. In any case, liability shall be limited to the foreseeable, contractually typical damages. The limitation mentioned above does not apply to injuries to life, limb, or health.
 
 5.2  Licensor takes no accountability or responsibility for any damages caused due to a breach of duties according to Section 2 of this Agreement. To avoid data loss, You are required to make use of backup functions of the Application to the extent allowed by applicable third-party terms and conditions of use. You are aware that in case of alterations or manipulations of the Application, You will not have access to licensed Application.
 
-# 6. WARRANTY
+## 6. WARRANTY
 
 6.1  Licensor warrants that the Application is free of spyware, trojan horses, viruses, or any other malware at the time of Your download. Licensor warrants that the Application works as described in the user documentation.
 
@@ -80,7 +80,7 @@ The Application is not tailored to comply with industry-specific regulations (He
 6.6  If the user is an entrepreneur, any claim based on faults expires after a statutory period of limitation amounting to twelve (12) months after the Application was made available to the user. The statutory periods of limitation given by law apply for users who are consumers.
 
 
-# 7. PRODUCT CLAIMS
+## 7. PRODUCT CLAIMS
  
 Riot Robotics and the End-User acknowledge that Riot Robotics, and not Google LLC, is responsible for addressing any claims of the End-User or any third party relating to the licensed Application or the End-User’s possession and/or use of that licensed Application, including, but not limited to:
  
@@ -91,12 +91,12 @@ Riot Robotics and the End-User acknowledge that Riot Robotics, and not Google LL
 	(iii) claims arising under consumer protection, privacy, or similar legislation, including in connection with Your Licensed Application’s use of the HealthKit and HomeKit.
 
    
-# 8. LEGAL COMPLIANCE
+## 8. LEGAL COMPLIANCE
     
 You represent and warrant that You are not located in a country that is subject to a U.S. Government embargo, or that has been designated by the U.S. Government as a "terrorist supporting" country; and that You are not listed on any U.S. Government list of prohibited or restricted parties.
 
    
-# 9. CONTACT INFORMATION                  
+## 9. CONTACT INFORMATION                  
      
 For general inquiries, complaints, questions or claims concerning the licensed Application, please contact:
      
@@ -107,27 +107,27 @@ United States
 s-jiazhang@lwsd.org
 
 
-# 10. TERMINATION
+## 10. TERMINATION
     
 The license is valid until terminated by Riot Robotics or by You. Your rights under this license will terminate automatically and without notice from Riot Robotics if You fail to adhere to any term(s) of this license. Upon License termination, You shall stop all use of the Application, and destroy all copies, full or partial, of the Application.
 
 
-# 11. THIRD-PARTY TERMS OF AGREEMENTS AND BENEFICIARY
+## 11. THIRD-PARTY TERMS OF AGREEMENTS AND BENEFICIARY
  
 Riot Robotics represents and warrants that Riot Robotics will comply with applicable third-party terms of agreement when using licensed Application.
  
 
-# 12. INTELLECTUAL PROPERTY RIGHTS
+## 12. INTELLECTUAL PROPERTY RIGHTS
  
 Riot Robotics and the End-User acknowledge that, in the event of any third-party claim that the licensed Application or the End-User's possession and use of that licensed Application infringes on the third party's intellectual property rights, Riot Robotics, and not Google LLC, will be solely responsible for the investigation, defense, settlement and discharge or any such intellectual property infringement claims.
  
 
-# 13. APPLICABLE LAW
+## 13. APPLICABLE LAW
  
 This license agreement is governed by the laws of State of Washington excluding its conflicts of law rules.
  
 
-# 14. MISCELLANEOUS
+## 14. MISCELLANEOUS
           
 14.1  If any of the terms of this agreement should be or become invalid, the validity of the remaining provisions shall not be affected. Invalid terms will be replaced by valid ones formulated in a way that will achieve the primary purpose.
              
