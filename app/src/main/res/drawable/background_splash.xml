@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item>
+        <color
+            android:color="@color/cardview_light_background"/>
+    </item>
+
+    <item
+        android:gravity="center">
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/icon_new"/>
+    </item>
+
+    <item
+        android:gravity="bottom"
+        android:bottom="100dp">
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/load_text"/>
+    </item>
+
+</layer-list>
