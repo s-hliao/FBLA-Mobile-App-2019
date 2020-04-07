@@ -21,8 +21,8 @@
             android:icon="@drawable/ic_menu_abtfbla"
             android:title="About FBLA" />
         <item
-            android:id="@+id/nav_questions"
+            android:id="@+id/nav_help"
             android:icon="@drawable/ic_menu_questions"
-            android:title="Questions" />
+            android:title="Help" />
     </group>
 </menu>
