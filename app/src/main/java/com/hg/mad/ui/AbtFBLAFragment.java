@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -23,6 +24,8 @@ public class AbtFBLAFragment extends Fragment {
 
         WebView webView = root.findViewById(R.id.webView);
         webView.loadUrl("https://www.fbla-pbl.org/about/");
+        WebSettings webSettings= webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
 
         return root;
     }
