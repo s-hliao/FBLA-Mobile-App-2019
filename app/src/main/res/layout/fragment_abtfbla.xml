@@ -7,10 +7,9 @@
     android:orientation="vertical"
     tools:context="com.hg.mad.SignedInActivity">
 
-    <VideoView
-        android:id="@+id/videoView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
 
 </LinearLayout>
