@@ -10,18 +10,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".TermsActivity"
-            android:label="@string/title_activity_terms"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity
-            android:name=".FaqActivity"
-            android:label="@string/title_activity_faq"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ContactUsActivity"
-            android:label="@string/title_activity_contact_us"
-            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".TermsActivity"></activity>
+        <activity android:name=".FaqActivity" />
+        <activity android:name=".ContactUsActivity" />
         <activity
             android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
             android:launchMode="standard"
