@@ -34,12 +34,12 @@
 
             <EditText
                 android:id="@+id/editText6"
-                android:layout_width="wrap_content"
+                android:layout_width="380dp"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Preferred E-mail"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
+                android:ems="10"
+                android:hint="Subject"
                 android:inputType="textPersonName"
                 tools:layout_editor_absoluteX="16dp"
                 tools:layout_editor_absoluteY="48dp" />
@@ -64,7 +64,7 @@
                 android:text="Send"
                 tools:layout_editor_absoluteX="307dp"
                 tools:layout_editor_absoluteY="410dp"
-                android:layout_marginLeft="10dp"/>
+                android:layout_marginHorizontal="160dp"/>
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
