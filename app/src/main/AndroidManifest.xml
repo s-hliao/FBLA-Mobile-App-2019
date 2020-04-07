@@ -10,9 +10,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".TermsActivity"></activity>
         <activity android:name=".FaqActivity" />
-        <activity android:name=".ContactUsActivity" />
+        <activity android:name=".ContactUsActivity"
+            android:windowSoftInputMode="stateVisible|adjustPan"
+
+            />
         <activity
             android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
             android:launchMode="standard"
