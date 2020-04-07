@@ -2,7 +2,8 @@
 
 **Last updated April 07, 2020**
 
- 
+
+
 MyChapter is licensed to You (End-User) by Riot Robotics, located at 4301 228th Ave NE, Redmond, Washington 98053, United States (hereinafter: Licensor), for use only under the terms of this License Agreement.
  
 By downloading the Application from the Google LLC Google Play, and any update thereto (as permitted by this License Agreement), You indicate that You agree to be bound by all of the terms and conditions of this License Agreement, and that You accept this License Agreement.
@@ -19,6 +20,7 @@ All rights not expressly granted to You are reserved.
 MyChapter (hereinafter: Application) is a piece of software created to allow FBLA members to coordinate with each other - and customized for Android mobile devices. It is used to manage chapters, sign up for events, and record attendances.
 
 The Application is not tailored to comply with industry-specific regulations (Health Insurance Portability and Accountability Act (HIPAA), Federal Information Security Management Act (FISMA), etc.), so if your interactions would be subjected to such laws, you may not use this Application. You may not use the Application in a way that would violate the Gramm-Leach-Bliley Act (GLBA).
+
 
 ## 2. SCOPE OF LICENSE
    
@@ -38,14 +40,23 @@ The Application is not tailored to comply with industry-specific regulations (He
 
 2.8  Nothing in this license should be interpreted to restrict third-party terms. When using the Application, You must ensure that You comply with applicable third-party terms and conditions.
 
+
 ## 3. TECHNICAL REQUIREMENTS
 
+3.1  The Application requires a firmware version 9.0 or higher. Licensor recommends using the latest version of the firmware.
 
-4. NO MAINTENANCE OR SUPPORT
+3.2  Licensor attempts to keep the Application updated so that it complies with modified/new versions of the firmware and new hardware. You are not granted rights to claim such an update.
 
-4.1  __________ is not obligated, expressed or implied, to provide any maintenance, technical or other support for the Application.
+3.3  You acknowledge that it is Your responsibility to confirm and determine that the app end-user device on which You intend to use the Application satisfies the technical  specifications mentioned above.
 
-4.2  __________ and the End-User acknowledge that Apple has no obligation whatsoever to furnish any maintenance and support services with respect to the licensed Application.
+3.4  Licensor reserves the right to modify the technical specifications as it sees appropriate at any time.
+
+
+# 4. MAINTENANCE OR SUPPORT
+
+4.1  The Licensor is solely responsible for providing any maintenance and support services for this licensed Application. You can reach the Licensor at the email address listed in the Google Play Overview for this licensed Application.
+
+4.2 Riot Robotics and the End-User acknowledge that Google LLC has no obligation whatsoever to furnish any maintenance and support services with respect to the licensed Application.
 
 
 5. LIABILITY
