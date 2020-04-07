@@ -11,6 +11,5 @@ public class LoadActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         StaticMethods.redirect(this);
-        finish();
     }
 }
