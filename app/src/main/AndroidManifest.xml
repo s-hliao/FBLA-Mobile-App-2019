@@ -10,12 +10,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity
+            android:name=".TermsActivity"
+            android:label="@string/title_activity_terms"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".FaqActivity"
+            android:label="@string/title_activity_faq"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ContactUsActivity"
+            android:label="@string/title_activity_contact_us"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
-            tools:replace="android:launchMode"
-            android:launchMode="standard" />
-
+            android:launchMode="standard"
+            tools:replace="android:launchMode" />
         <activity android:name=".AuthUiActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,14 +33,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".SelectChapterActivity" />
-
         <activity
             android:name=".SignedInActivity"
             android:label="@string/title_activity_signed_in"
             android:theme="@style/AppTheme.NoActionBar" />
-
     </application>
 
 </manifest>
