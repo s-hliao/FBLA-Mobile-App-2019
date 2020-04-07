@@ -31,22 +31,17 @@ public class AuthUiActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 100;
     private List<AuthUI.IdpConfig> providers;
-    private FirebaseUser user;
-    private Context context;
-    private CollectionReference usersCollection;
 
     @NonNull
     public static Intent createIntent(@NonNull Context context) {
         return new Intent(context, AuthUiActivity.class);
     }
 
-    // When the user is not signed in
+    // When the user is NOT signed in
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.auth_ui_activity);
-
-        context = getApplicationContext();
 
         // Enable Terms of Use Hyperlinks
         TextView textView = findViewById(R.id.text_TOC);
@@ -87,61 +82,8 @@ public class AuthUiActivity extends AppCompatActivity {
 
             // If sign in succeeded, redirect the user
             if (resultCode == RESULT_OK) {
-                user = FirebaseAuth.getInstance().getCurrentUser();
-                redirectUser();
+                StaticMethods.redirect(this);
             }
         }
-    }
-
-    // Adding the user to the database
-    private void redirectUser() {
-
-        // Initializing database
-        FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
-        usersCollection = fireStore.collection("DatabaseUser");
-        DocumentReference databaseUserRef = usersCollection.document(user.getUid());
-
-        databaseUserRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-
-                    // If the user exists
-                    if (document.exists()) {
-
-                        DatabaseUser databaseUser = document.toObject(DatabaseUser.class);
-                        // If the user isn't in a chapter, redirect to select chapter
-                        if (!databaseUser.getInChapter()) {
-                            startActivity(SelectChapterActivity.createIntent(context));
-                            finish();
-                        }
-
-                        // Otherwise go to signed in activity
-                        else {
-                            startActivity(SignedInActivity.createIntent(context, null));
-                            finish();
-                        }
-                    }
-
-                    // If the user doesn't exist
-                    else {
-
-                        // add the user to the database
-                        usersCollection.document(user.getUid()).set(new DatabaseUser(
-                                user.getDisplayName(),
-                                false,
-                                false,
-                                "",
-                                new HashMap<String, Integer>()
-                        ));
-
-                        // redirect to select chapter activity
-                        startActivity(SelectChapterActivity.createIntent(context));
-                        finish();
-                    }
-                }
-            }
-        });
     }
 }
