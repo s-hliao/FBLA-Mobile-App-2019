@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,28 +40,13 @@ public class AuthUiActivity extends AppCompatActivity {
         return new Intent(context, AuthUiActivity.class);
     }
 
+    // When the user is not signed in
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.auth_ui_activity);
 
         context = getApplicationContext();
-
-        // If the user is signed in, automatically redirect the user
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() != null) {
-            user = auth.getCurrentUser();
-            redirectUser();
-        }
-
-        // If a user is not signed in, show the auth ui activity on click
-        setContentView(R.layout.auth_ui_activity);
-        Button btn_sign_in = findViewById(R.id.button_sign_in);
-        btn_sign_in.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSignInOptions();
-            }
-        });
 
         // Enable Terms of Use Hyperlinks
         TextView textView = findViewById(R.id.text_TOC);
@@ -73,6 +57,15 @@ public class AuthUiActivity extends AppCompatActivity {
                 new AuthUI.IdpConfig.EmailBuilder().build(),
                 new AuthUI.IdpConfig.GoogleBuilder().build()
         );
+
+        // When the continue button is clicked, show sign in options
+        Button btn_sign_in = findViewById(R.id.button_sign_in);
+        btn_sign_in.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSignInOptions();
+            }
+        });
     }
 
     // Displays sign in options
