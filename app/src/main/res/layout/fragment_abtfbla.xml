@@ -8,7 +8,7 @@
     tools:context="com.hg.mad.SignedInActivity">
 
     <WebView
-        android:id="@+id/webView"
+        android:id="@+id/abtFBLAWeb"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
 

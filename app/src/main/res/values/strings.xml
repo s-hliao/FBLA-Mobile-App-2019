@@ -3,7 +3,7 @@
     <string name="welcome_message">Customizable.\n\nIndependent.\n\nYours.</string>
     <string name="sign_in_button_txt">Continue</string>
     <string name="sign_out_button_txt">Sign Out</string>
-    <string name="TOU_txt">By clicking CONTINUE, you agree to our <a href="https://www.google.com/">Terms of Use</a> and <a href="https://www.google.com/">Licensing</a></string>
+    <string name="TOU_txt">By clicking CONTINUE, you agree to our <a href="https://github.com/s-hliao/FBLA-Mobile-App-2019/blob/master/Terms%20and%20Conditions.md">Terms of Use and Licensing</a></string>
     <string name="select_chapter_text">Please Select a Chapter</string>
     <string name="title_activity_signed_in">signed_in</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
