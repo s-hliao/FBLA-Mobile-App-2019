@@ -1,70 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ContactUsActivity"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ContactUsActivity">
+    android:layout_height="match_parent">
 
-    <ScrollView
-        android:layout_width="409dp"
-        android:layout_height="729dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/contact_us"
+        android:textSize="24sp"
+        android:layout_gravity="center"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+    <EditText
+        android:id="@+id/editText6"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:hint="Subject"
+        android:inputType="textPersonName" />
 
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/contact_us"
-                android:textSize="24sp"
-                android:layout_marginHorizontal="55dp"
-                android:layout_marginTop = "40dp"
-                tools:layout_editor_absoluteX="61dp"
-                tools:layout_editor_absoluteY="16dp"
+    <EditText
+        android:id="@+id/editText5"
+        android:layout_width="380dp"
+        android:layout_height="253dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:layout_gravity="center"
+        android:hint="@string/AMA"
+        android:inputType="textMultiLine"
+        android:visibility="visible" />
 
-                />
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send"
+        android:layout_gravity="center"/>
 
-            <EditText
-                android:id="@+id/editText6"
-                android:layout_width="380dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:ems="10"
-                android:hint="Subject"
-                android:inputType="textPersonName"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="48dp" />
-
-            <EditText
-                android:id="@+id/editText5"
-                android:layout_width="386dp"
-                android:layout_height="253dp"
-                android:layout_marginLeft="10dp"
-                android:ems="10"
-                android:gravity="start|top"
-                android:hint="@string/AMA"
-                android:inputType="textMultiLine"
-                android:visibility="visible"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="102dp" />
-
-            <Button
-                android:id="@+id/button3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Send"
-                tools:layout_editor_absoluteX="307dp"
-                tools:layout_editor_absoluteY="410dp"
-                android:layout_marginHorizontal="160dp"/>
-        </LinearLayout>
-    </ScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
