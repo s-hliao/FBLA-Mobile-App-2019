@@ -1,99 +1,53 @@
 package com.hg.mad.model;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.HashMap;
-import java.util.HashSet;
-
 public class CompetitiveEvent {
 
     public static final String FIELD_EVENTNAME = "eventName";
-    public static final String FIELD_STATECAPPED = "isStateCapped";
-    public static final String FIELD_STATECAP = "stateCap";
-    public static final String FIELD_CHAPTERNAME = "chapterName";
+    public static final String FIELD_TYPE = "type";
+    public static final String FIELD_CATEGORY = "category";
+    public static final String FIELD_INTRO = "intro";
 
     private String eventName;
-    private boolean isStateCapped;
-    private int stateCap;
-    private HashMap<String, String> signedUp;
-    private String chapterName;
+    private String type;
+    private String category;
+    private Boolean intro;
 
-    public CompetitiveEvent() {}
-
-    public CompetitiveEvent(String eventName, boolean isStateCapped, int stateCap, HashMap<String, String> signedUp, String chapterName){
+    public CompetitiveEvent(String eventName, String type, String category, Boolean intro){
         this.eventName = eventName;
-        this.isStateCapped = isStateCapped;
-        this.stateCap = stateCap;
-        this.signedUp = signedUp;
-        this.chapterName = chapterName;
+        this.type = type;
+        this.category = category;
+        this.intro = intro;
     }
 
     public String getEventName(){
         return eventName;
     }
+
     public void setEventName(String eventName){
         this.eventName = eventName;
     }
-    public boolean getStateCapped(){
-        return isStateCapped;
-    }
-    public void setStateCapped(boolean isStateCapped){
-        this.isStateCapped = isStateCapped;
+
+    public String getType() {
+        return type;
     }
 
-    public String getChapterName() {
-        return chapterName;
-    }
-    public int getStateCap(){
-        return stateCap;
-    }
-    public void setStateCap(int stateCap){
-        this.stateCap = stateCap;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public HashSet<String> getSignedUp(){
-        return (HashSet<String>)signedUp.keySet();
+    public String getCategory() {
+        return category;
     }
 
-    public void addUser(String userID, String userName){
-        signedUp.put(userID, userName);
+    public void setCategory(String category) {
+        this.category = category;
     }
 
-    public void addSignedUp(String userID, String userName){
-        signedUp.put(userID, userName);
+    public Boolean getIntro() {
+        return intro;
     }
 
-    public void resetUsers(){
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        CollectionReference users = firestore.collection("DatabaseUser");
-
-        users.whereEqualTo("inChapter", chapterName)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-
-                            if (task.getResult()!= null && task.getResult().size() > 0){
-                                for(QueryDocumentSnapshot result: task.getResult()) {
-                                    DatabaseUser user = result.toObject(DatabaseUser.class);
-                                    if(user.getEventsSignedUp().containsValue(eventName)) {
-                                        user.removeEvent(eventName);
-                                    } // remove event from all users
-
-                                }
-                            }
-                        }
-                    }
-                });
-        signedUp = new HashMap<>();
+    public void setIntro(Boolean intro) {
+        this.intro = intro;
     }
-
 }

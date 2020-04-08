@@ -10,23 +10,23 @@ public class DatabaseUser {
     public static final String FIELD_INCHAPTER = "inChapter";
     public static final String FIELD_ISADMIN = "isAdmin";
     public static final String FIELD_CHAPTERNAME = "chapterName";
-    public static final String FIELD_EVENTSSIGNEDDUP = "eventsSignedUp";
+    public static final String FIELD_COMPETITIVEEVENTS = "competitiveEvents";
+    public static final String FIELD_CHAPTEREVENTS = "chapterEvents";
 
     private String name;
     private Boolean inChapter;
     private Boolean isAdmin;
     private String chapterName;
-    private HashMap<String,Integer> eventsSignedUp;
+    private HashMap<String, Integer> competitiveEvents;
+    private HashMap<String, Integer> chapterEvents;
 
-    public DatabaseUser() {}
-
-    public DatabaseUser(String name, boolean inChapter, boolean isAdmin,
-                        String chapterName, HashMap<String, Integer> eventsSignedUp) {
+    public DatabaseUser(String name, boolean inChapter, boolean isAdmin, String chapterName) {
         this.name = name;
         this.inChapter = inChapter;
         this.isAdmin = isAdmin;
         this.chapterName = chapterName;
-        this.eventsSignedUp = eventsSignedUp;
+        this.competitiveEvents = new HashMap<>();
+        this.chapterEvents = new HashMap<>();
     }
 
     public String getName() {
@@ -61,21 +61,20 @@ public class DatabaseUser {
         this.chapterName = chapterName;
     }
 
-    public HashMap<String, Integer> getEventsSignedUp(){
-
-        return eventsSignedUp;
+    public HashMap<String, Integer> getCompetitiveEvents(){
+        return competitiveEvents;
     }
 
-    public void removeEvent(String eventName){
-
-        eventsSignedUp.remove(eventName);
+    public void setCompetitiveEvents(HashMap<String, Integer> competitiveEvents){
+        this.competitiveEvents = competitiveEvents;
     }
 
-    public void addEvent(String event){
-        eventsSignedUp.put(event, eventsSignedUp.size());
+    public HashMap<String, Integer> getChapterEvents(){
+        return chapterEvents;
     }
 
-    public void setEventsSignedUp(HashMap<String, Integer> eventsSignedUp){
-        this.eventsSignedUp = eventsSignedUp;
+    public void setChapterEvents(HashMap<String, Integer> chapterEvents){
+        this.chapterEvents = chapterEvents;
     }
+
 }

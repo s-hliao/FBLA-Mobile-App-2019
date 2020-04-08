@@ -64,8 +64,7 @@ public class StaticMethods {
                                     user.getDisplayName(),
                                     false,
                                     false,
-                                    "",
-                                    new HashMap<String, Integer>()
+                                    ""
                             ));
 
                             // Redirect to select chapter activity

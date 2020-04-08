@@ -1,10 +1,5 @@
 package com.hg.mad.model;
 
-import android.view.ViewGroup;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,10 +14,8 @@ public class Chapter {
     private String chapterName;
     private Map<String, String> usersInChapter;
     private String adminID;
-    private Map<String, CompetitiveEvent> competitiveEvents;
-    private Map<String, ChapterEvent> chapterEvents;
-
-    public Chapter() {}
+    private Map<String, Map<String, String>> competitiveEvents;
+    private Map<String, Map<String, String>> chapterEvents;
 
     public Chapter(String chapterName, String adminID, Map<String, String>usersInChapter) {
         this.chapterName = chapterName;
@@ -32,68 +25,47 @@ public class Chapter {
         chapterEvents = new HashMap<>();
     }
 
-    class officerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-        @Override
-        public int getItemCount() {
-            return 0;
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
-        }
-
-        @NonNull
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return null;
-        }
-    }
-
     public String getChapterName() {
         return chapterName;
     }
 
-    public String getAdminID() {
-        return adminID;
-    }
-
-    public void setAdminID(String newAdminID) {
-        adminID = newAdminID;
+    public void setChapterName(String chapterName) {
+        this.chapterName = chapterName;
     }
 
     public Map<String, String> getUsersInChapter() {return usersInChapter;}
 
     public void setUsersInChapter(Map<String, String> usersInChapter) {this.usersInChapter = usersInChapter;}
 
+    public String getAdminID() {
+        return adminID;
+    }
+
+    public void setAdminID(String adminID) {
+        this.adminID = adminID;
+    }
+
+    public Map<String, Map<String, String>> getCompetitiveEvents(){
+        return competitiveEvents;
+    }
+
+    public void setCompetitiveEvents(Map competitiveEvents){
+        this.competitiveEvents = competitiveEvents;
+    }
+
+    public Map<String, Map<String, String>> getChapterEvents(){
+        return chapterEvents;
+    }
+
+    public void setChapterEvents(Map chapterEvents){
+        this.chapterEvents = chapterEvents;
+    }
+
+
+    // NON GETTER AND SETTER
     public void addUser(String Uid, String user) {usersInChapter.put(Uid, user);}
 
     public void resetUsers() {
         usersInChapter = new HashMap<>();
     }
-
-    public void addCompetitiveEvent(CompetitiveEvent compEvent) {
-        if(!competitiveEvents.containsKey(compEvent.getEventName()))
-            competitiveEvents.put(compEvent.getEventName(), compEvent);
-    }
-
-    public void removeCompetitiveEvent(String eventName){ // remove competitive event by name
-        competitiveEvents.remove(eventName);
-    }
-
-    public void addChapterEvent(ChapterEvent chapEvent) {
-        if(!chapterEvents.containsKey(chapEvent.getEventName()))
-            chapterEvents.put(chapEvent.getEventName(), chapEvent);
-    }
-
-    public void removeChapterEvent(String eventName){
-        chapterEvents.remove(eventName);
-    }
-
-    public void resetEvents(){
-        competitiveEvents.clear();
-        chapterEvents.clear();
-    }
-
-
 }
