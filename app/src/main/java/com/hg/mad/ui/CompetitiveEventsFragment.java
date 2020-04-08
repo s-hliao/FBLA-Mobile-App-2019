@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.hg.mad.R;
 
@@ -16,4 +17,5 @@ public class CompetitiveEventsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_competitive_events, container, false);
         return root;
     }
+
 }

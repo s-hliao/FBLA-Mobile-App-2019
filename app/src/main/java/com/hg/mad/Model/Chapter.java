@@ -1,5 +1,10 @@
 package com.hg.mad.Model;
 
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -26,6 +31,24 @@ public class Chapter {
         this.usersInChapter = usersInChapter;
         competitiveEvents = new HashMap<>();
         chapterEvents = new HashMap<>();
+    }
+
+    class officerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+        @Override
+        public int getItemCount() {
+            return 0;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+
+        }
+
+        @NonNull
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return null;
+        }
     }
 
     public String getChapterName() {
