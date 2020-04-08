@@ -38,7 +38,7 @@
     <fragment
         android:id="@+id/nav_help"
         android:name="com.hg.mad.ui.HelpFragment"
-        android:label="Questions"
+        android:label="Help"
         tools:layout="@layout/fragment_help" />
 
 </navigation>
