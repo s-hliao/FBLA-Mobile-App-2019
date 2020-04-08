@@ -32,7 +32,7 @@ public class AuthUiActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.auth_ui_activity);
+        setContentView(R.layout.activity_auth_ui);
 
         // Enable Terms of Use Hyperlinks
         TextView textView = findViewById(R.id.text_TOC);

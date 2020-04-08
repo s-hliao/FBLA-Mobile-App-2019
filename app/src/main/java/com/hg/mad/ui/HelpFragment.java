@@ -74,7 +74,7 @@ public class HelpFragment extends Fragment {
         int rImgs[];
 
         MyAdapter(Context c, String title[], String description[], int imgs[]) {
-            super(c, R.layout.category_row, R.id.textView1, title);
+            super(c, R.layout.item_help, R.id.textView1, title);
             this.context = c;
             this.rTitle = title;
             this.rDescription = description;
@@ -87,7 +87,7 @@ public class HelpFragment extends Fragment {
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             LayoutInflater layoutInflater = (LayoutInflater) context.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            row = layoutInflater.inflate(R.layout.category_row, parent, false);
+            row = layoutInflater.inflate(R.layout.item_help, parent, false);
             ImageView images = row.findViewById(R.id.image);
             TextView myTitle = row.findViewById(R.id.rowText1);
             TextView myDescription = row.findViewById(R.id.rowText2);

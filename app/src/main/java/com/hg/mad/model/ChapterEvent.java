@@ -131,29 +131,4 @@ public class ChapterEvent {
     public void setAttendanceActive(boolean attendanceActive) {
         this.attendanceActive = attendanceActive;
     }
-
-    public void resetUsers(){
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        CollectionReference users = firestore.collection("DatabaseUser");
-
-        users.whereEqualTo("inChapter", chapterName)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            if (task.getResult()!= null && task.getResult().size() > 0){
-                                for(QueryDocumentSnapshot result: task.getResult()) {
-                                    DatabaseUser user = result.toObject(DatabaseUser.class);
-                                    if(user.getEventsSignedUp().containsKey(eventName)) {
-                                        user.removeEvent(eventName);
-                                    }
-                                    
-                                }
-                            }
-                        }
-                    }
-                });
-        signedUp = new HashMap<>();
-    }
 }
