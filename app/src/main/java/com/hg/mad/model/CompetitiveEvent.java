@@ -12,6 +12,8 @@ public class CompetitiveEvent {
     private String category;
     private Boolean intro;
 
+    public CompetitiveEvent() {}
+
     public CompetitiveEvent(String eventName, String type, String category, Boolean intro){
         this.eventName = eventName;
         this.type = type;

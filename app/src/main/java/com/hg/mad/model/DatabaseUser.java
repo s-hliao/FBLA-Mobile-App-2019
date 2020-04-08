@@ -20,6 +20,8 @@ public class DatabaseUser {
     private HashMap<String, Integer> competitiveEvents;
     private HashMap<String, Integer> chapterEvents;
 
+    public DatabaseUser() {}
+
     public DatabaseUser(String name, boolean inChapter, boolean isAdmin, String chapterName) {
         this.name = name;
         this.inChapter = inChapter;

@@ -11,6 +11,8 @@ public class Officer {
     private String contact;
     private byte[] profileImage;
 
+    public Officer() {}
+
     public Officer(String name, String position, String contact){
         this.name = name;
         this.position = position;
