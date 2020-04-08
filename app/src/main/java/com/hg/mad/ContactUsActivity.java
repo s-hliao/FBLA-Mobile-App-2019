@@ -49,7 +49,7 @@ public class ContactUsActivity extends AppCompatActivity {
 
     protected void sendEmail(String messageText, String subjectText) {
 
-        String[] TO = {"s-hliao@lwsd.org, s-jiazhang@gmail.com"};
+        String[] TO = {"s-hliao@lwsd.org, s-jiazhang@lwsd.org"};
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setData(Uri.parse("mailto:"));
         emailIntent.setType("text/plain");
@@ -66,7 +66,7 @@ public class ContactUsActivity extends AppCompatActivity {
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
             finish();
             Toast.makeText(ContactUsActivity.this,
-                    "Email Sent", Toast.LENGTH_SHORT).show();
+                    "Select Email to Use", Toast.LENGTH_SHORT).show();
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(ContactUsActivity.this,
                     "There is no email client installed.", Toast.LENGTH_SHORT).show();

@@ -26,7 +26,7 @@
                 android:text="@string/contact_us"
                 android:textSize="24sp"
                 android:layout_marginHorizontal="55dp"
-                android:layout_marginTop = "30dp"
+                android:layout_marginTop = "40dp"
                 tools:layout_editor_absoluteX="61dp"
                 tools:layout_editor_absoluteY="16dp"
 
