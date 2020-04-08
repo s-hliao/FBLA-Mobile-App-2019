@@ -84,11 +84,9 @@ The Application is not tailored to comply with industry-specific regulations (He
  
 Riot Robotics and the End-User acknowledge that Riot Robotics, and not Google LLC, is responsible for addressing any claims of the End-User or any third party relating to the licensed Application or the End-User’s possession and/or use of that licensed Application, including, but not limited to:
  
-	(i) product liability claims;
+	(i) product liability claims; and
            
-	(ii) any claim that the licensed Application fails to conform to any applicable legal or regulatory requirement; and
-           
-	(iii) claims arising under consumer protection, privacy, or similar legislation, including in connection with Your Licensed Application’s use of the HealthKit and HomeKit.
+	(ii) any claim that the licensed Application fails to conform to any applicable legal or regulatory requirement.
 
    
 ## 8. LEGAL COMPLIANCE
