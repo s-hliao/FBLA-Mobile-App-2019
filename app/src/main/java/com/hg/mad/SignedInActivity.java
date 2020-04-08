@@ -67,7 +67,7 @@ public class SignedInActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_chapter, R.id.nav_events, R.id.nav_abtfbla, R.id.nav_help)
+                R.id.nav_home, R.id.nav_chapter, R.id.nav_chapter_events, R.id.nav_competitive_events, R.id.nav_abtfbla, R.id.nav_help)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);

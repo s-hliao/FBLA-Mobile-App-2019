@@ -13,9 +13,13 @@
             android:icon="@drawable/ic_menu_chapter"
             android:title="Chapter" />
         <item
-            android:id="@+id/nav_events"
+            android:id="@+id/nav_chapter_events"
             android:icon="@drawable/ic_menu_events"
-            android:title="Events" />
+            android:title="Chapter Events" />
+        <item
+            android:id="@+id/nav_competitive_events"
+            android:icon="@drawable/ic_menu_competition"
+            android:title="Competitive Events" />
         <item
             android:id="@+id/nav_abtfbla"
             android:icon="@drawable/ic_menu_abtfbla"

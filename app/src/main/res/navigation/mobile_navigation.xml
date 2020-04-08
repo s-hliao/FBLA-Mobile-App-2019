@@ -18,10 +18,16 @@
         tools:layout="@layout/fragment_chapter" />
 
     <fragment
-        android:id="@+id/nav_events"
-        android:name="com.hg.mad.ui.EventsFragment"
-        android:label="Events"
-        tools:layout="@layout/fragment_events" />
+        android:id="@+id/nav_chapter_events"
+        android:name="com.hg.mad.ui.ChapterEventsFragment"
+        android:label="Chapter Events"
+        tools:layout="@layout/fragment_chapter_events" />
+
+    <fragment
+        android:id="@+id/nav_competitive_events"
+        android:name="com.hg.mad.ui.CompetitiveEventsFragment"
+        android:label="Competitive Events"
+        tools:layout="@layout/fragment_competitive_events" />
 
     <fragment
         android:id="@+id/nav_abtfbla"
