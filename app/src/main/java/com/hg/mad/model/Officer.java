@@ -1,4 +1,4 @@
-package com.hg.mad.Model;
+package com.hg.mad.model;
 
 public class Officer {
     public static final String FIELD_NAME = "name";

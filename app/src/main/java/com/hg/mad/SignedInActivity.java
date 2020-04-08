@@ -3,12 +3,9 @@ package com.hg.mad;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
@@ -16,8 +13,6 @@ import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.util.ExtraConstants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,9 +20,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.hg.mad.Model.DatabaseUser;
+import com.hg.mad.model.DatabaseUser;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,11 +32,11 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import org.w3c.dom.Document;
-
 public class SignedInActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
+    private NavigationView navigationView;
+
     private FirebaseUser currentUser;
 
     private View headerView;
@@ -60,10 +53,13 @@ public class SignedInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signed_in);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -82,10 +78,21 @@ public class SignedInActivity extends AppCompatActivity {
         }
 
         // Set the username
+        updateUsername();
+
+        // Set the chapter name
+        updateChapterName();
+
+
+    }
+
+    private void updateUsername(){
         headerView = navigationView.getHeaderView(0);
         TextView navUsername = headerView.findViewById(R.id.nav_username);
         navUsername.setText(currentUser.getDisplayName());
+    }
 
+    private void updateChapterName(){
         // Set the chapter
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
         CollectionReference usersCollection = fireStore.collection("DatabaseUser");
@@ -96,15 +103,11 @@ public class SignedInActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     chapterName = task.getResult().toObject(DatabaseUser.class).getChapterName();
-                    updateChapterName(chapterName);
+                    TextView navChapter = headerView.findViewById(R.id.nav_chapter);
+                    navChapter.setText(chapterName);
                 }
             }
         });
-    }
-
-    private void updateChapterName(String chapterName){
-        TextView navChapter = headerView.findViewById(R.id.nav_chapter);
-        navChapter.setText(chapterName);
     }
 
     @Override

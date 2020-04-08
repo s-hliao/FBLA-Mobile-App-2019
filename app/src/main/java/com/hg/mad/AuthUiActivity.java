@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
+import com.hg.mad.util.StaticMethods;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.hg.mad.Model;
+package com.hg.mad.model;
 
 import android.view.ViewGroup;
 
@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class Chapter {
 

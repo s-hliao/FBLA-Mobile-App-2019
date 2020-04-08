@@ -1,4 +1,4 @@
-package com.hg.mad.Model;
+package com.hg.mad.model;
 
 import androidx.annotation.NonNull;
 
@@ -17,7 +17,6 @@ public class CompetitiveEvent {
     public static final String FIELD_EVENTNAME = "eventName";
     public static final String FIELD_STATECAPPED = "isStateCapped";
     public static final String FIELD_STATECAP = "stateCap";
-    public static final String FIELD_USERS = "signedUp";
     public static final String FIELD_CHAPTERNAME = "chapterName";
 
     private String eventName;

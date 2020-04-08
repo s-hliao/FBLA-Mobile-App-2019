@@ -3,20 +3,17 @@ package com.hg.mad;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,12 +24,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.hg.mad.Model.Chapter;
-import com.hg.mad.Model.DatabaseUser;
+import com.hg.mad.model.Chapter;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +37,6 @@ public class SelectChapterActivity extends AppCompatActivity{
 
     FirebaseUser user;
     CollectionReference usersCollection;
-    DatabaseUser databaseUser;
     DocumentReference databaseUserRef;
     CollectionReference chapterCollection;
 
@@ -68,7 +62,78 @@ public class SelectChapterActivity extends AppCompatActivity{
 
         context = getApplicationContext();
 
-        // Set up the chapter spinner
+        // Set up views
+        join = findViewById(R.id.button_join);
+        create = findViewById(R.id.button_create);
+        selectChapter = findViewById(R.id.select_chapter);
+        chapterName = findViewById(R.id.text_chapter_name);
+        selectChapterBtn = findViewById(R.id.button_select_chapter);
+
+        initializeSpinner();
+        initializeToggle();
+
+        obtainUserAndChapter();
+
+        // When the continue button is clicked
+        selectChapterBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                // If the user is joining an existing chapter
+                if (join.isChecked()) {
+                    if (chapterSpinner.getSelectedItem() == null) {
+                        Toast.makeText(getApplicationContext(), "Please select a chapter", Toast.LENGTH_LONG).show();
+                    }
+
+                    // Update the user and chapter, then go to signed in activity
+                    else {
+                        updateUser(chapterSpinner.getSelectedItem().toString(), true, false);
+                        updateChapter(chapterSpinner.getSelectedItem().toString(), user.getUid(), user.getDisplayName());
+
+                        startActivity(SignedInActivity.createIntent(context, null));
+                        finish();
+                    }
+                }
+
+                // If the user is creating a new chapter
+                else if (create.isChecked()) {
+                    final String cName = chapterName.getText().toString();
+
+                    if (cName.equals("")){
+                        Toast.makeText(getApplicationContext(), "Please enter a chapter name", Toast.LENGTH_LONG).show();
+                    } else {
+
+                        // Handle duplicate chapters
+                        chapterCollection.whereEqualTo("chapterName", cName).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    if (task.getResult().size() > 0) {
+                                        Toast.makeText(getApplicationContext(), "This chapter name is already taken" + task.getResult().size(), Toast.LENGTH_LONG).show();
+                                    } else {
+                                        // Create the chapter, add the user as admin, then go to signed in activity
+                                        createChapter(cName, user.getUid(), user.getDisplayName());
+                                        updateUser(cName, true, true);
+
+                                        startActivity(SignedInActivity.createIntent(context, null));
+                                        finish();
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+
+                // if the user hasn't selected anything
+                else {
+                    Toast.makeText(getApplicationContext(), "Please select or join a chapter", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    // Set up the chapter spinner
+    private void initializeSpinner(){
         chapterSpinner = findViewById(R.id.spinner_select_chapter);
         fireStore = FirebaseFirestore.getInstance();
         chapterNames = new ArrayList<>();
@@ -86,13 +151,10 @@ public class SelectChapterActivity extends AppCompatActivity{
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, chapterNames);
         chapterSpinner.setAdapter(adapter);
+    }
 
-        // Set up views
-        join = findViewById(R.id.button_join);
-        create = findViewById(R.id.button_create);
-        selectChapter = findViewById(R.id.select_chapter);
-        chapterName = findViewById(R.id.text_chapter_name);
-        selectChapterBtn = findViewById(R.id.button_select_chapter);
+    // Set up the toggle
+    private void initializeToggle(){
 
         // Start with both selections turned off
         chapterName.setVisibility(View.GONE);
@@ -115,88 +177,49 @@ public class SelectChapterActivity extends AppCompatActivity{
                 selectChapter.setVisibility(View.GONE);
             }
         });
+    }
 
-        // Get the current user & database user reference
+    // Get the current user & database user reference
+    private void obtainUserAndChapter(){
         user = FirebaseAuth.getInstance().getCurrentUser();
         usersCollection = fireStore.collection("DatabaseUser");
 
         databaseUserRef = usersCollection.document(user.getUid());
         chapterCollection = fireStore.collection("Chapter");
+    }
 
-        // When the continue button is clicked
-        selectChapterBtn.setOnClickListener(new View.OnClickListener() {
+    private void updateUser(String chapterName, Boolean inChapter, Boolean isAdmin){
+        databaseUserRef.update("chapterName", chapterName);
+        databaseUserRef.update("inChapter", inChapter);
+        databaseUserRef.update("isAdmin", isAdmin);
+    }
+
+    // Creating a new chapter using chapter name and admin info
+    private void createChapter(String name, String adminID, String adminName){
+        Map<String, Object> data = new HashMap<>();
+        data.put("chapterName", name);
+        data.put("adminID", adminID);
+
+        Map<String, String> usersInChapter = new HashMap<String, String>();
+        usersInChapter.put(adminID, adminName);
+        data.put("usersInChapter", usersInChapter);
+
+        fireStore.collection("Chapter").add(data);
+    }
+
+    // Updating a chapter with a new user
+    private void updateChapter(String chapterName, final String userID, final String userName){
+        chapterCollection.whereEqualTo("chapterName", chapterName).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onClick(View v) {
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
-                // if the user is joining an existing chapter
-                if (join.isChecked()) {
-                    if (chapterSpinner.getSelectedItem() == null) {
-                        Toast.makeText(getApplicationContext(), "Please select a chapter", Toast.LENGTH_LONG).show();
-                    } else {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot chapterSnapshot = task.getResult().getDocuments().get(0);
+                    Chapter chapterJoined = chapterSnapshot.toObject(Chapter.class);
+                    chapterJoined.addUser(userID, userName);
 
-                        // Update the user
-                        databaseUserRef.update("chapterName", chapterSpinner.getSelectedItem().toString());
-                        databaseUserRef.update("inChapter", true);
-
-                        // Update the chapter
-                        chapterCollection.whereEqualTo("chapterName", chapterSpinner.getSelectedItem().toString()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-
-                                    DocumentSnapshot chapterSnapshot = task.getResult().getDocuments().get(0);
-                                    Chapter chapterJoined = chapterSnapshot.toObject(Chapter.class);
-                                    chapterJoined.addUser(user.getUid(), user.getDisplayName());
-
-                                    DocumentReference chapterRef = chapterCollection.document(chapterSnapshot.getId());
-                                    chapterRef.update("usersInChapter", chapterJoined.getUsersInChapter());
-                                }
-                            }
-                        });
-
-                        startActivity(SignedInActivity.createIntent(context, null));
-                        finish();
-                    }
-                }
-
-                // if the user is creating a new chapter
-                else if (create.isChecked()) {
-                    if (chapterName.getText().toString().equals("")){
-                        Toast.makeText(getApplicationContext(), "Please enter a chapter name", Toast.LENGTH_LONG).show();
-                    }
-
-                    // TODO handle duplicate chapters
-                    //else if (){
-
-                    //}
-
-                    else {
-                        // Get a collection of chapters
-                        CollectionReference chaptersCollection = fireStore.collection("Chapter");
-
-                        // Adding a new chapter
-                        Map<String, Object> data = new HashMap<>();
-                        data.put("chapterName", chapterName.getText().toString());
-                        data.put("adminID", user.getUid());
-
-                        Map<String, String> usersInChapter = new HashMap<String, String>();
-                        usersInChapter.put(user.getUid(), user.getDisplayName());
-                        data.put("usersInChapter", usersInChapter);
-
-                        chaptersCollection.add(data);
-
-                        // Updating the user's information
-                        databaseUserRef.update("chapterName", chapterName.getText().toString());
-                        databaseUserRef.update("inChapter", true);
-                        databaseUserRef.update("isAdmin", true);
-                        startActivity(SignedInActivity.createIntent(context, null));
-                        finish();
-                    }
-                }
-
-                // if the user hasn't selected anything
-                else {
-                    Toast.makeText(getApplicationContext(), "Please select or join a chapter", Toast.LENGTH_LONG).show();
+                    DocumentReference chapterRef = chapterCollection.document(chapterSnapshot.getId());
+                    chapterRef.update("usersInChapter", chapterJoined.getUsersInChapter());
                 }
             }
         });

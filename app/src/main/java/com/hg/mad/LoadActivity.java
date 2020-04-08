@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.hg.mad.util.StaticMethods;
+
 public class LoadActivity extends AppCompatActivity {
 
     @Override

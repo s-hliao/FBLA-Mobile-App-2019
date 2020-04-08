@@ -1,4 +1,4 @@
-package com.hg.mad.Model;
+package com.hg.mad.model;
 
 import androidx.annotation.NonNull;
 

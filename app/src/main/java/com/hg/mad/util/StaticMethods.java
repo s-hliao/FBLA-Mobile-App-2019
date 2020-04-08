@@ -1,4 +1,4 @@
-package com.hg.mad;
+package com.hg.mad.util;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +11,10 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.hg.mad.Model.DatabaseUser;
+import com.hg.mad.AuthUiActivity;
+import com.hg.mad.SelectChapterActivity;
+import com.hg.mad.SignedInActivity;
+import com.hg.mad.model.DatabaseUser;
 
 import java.util.HashMap;
 

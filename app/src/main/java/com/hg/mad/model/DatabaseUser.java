@@ -1,8 +1,7 @@
-package com.hg.mad.Model;
+package com.hg.mad.model;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 @IgnoreExtraProperties
 public class DatabaseUser {
