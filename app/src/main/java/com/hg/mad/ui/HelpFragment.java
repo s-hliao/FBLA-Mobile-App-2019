@@ -89,8 +89,8 @@ public class HelpFragment extends Fragment {
 
             row = layoutInflater.inflate(R.layout.category_row, parent, false);
             ImageView images = row.findViewById(R.id.image);
-            TextView myTitle = row.findViewById(R.id.textView1);
-            TextView myDescription = row.findViewById(R.id.textView2);
+            TextView myTitle = row.findViewById(R.id.rowText1);
+            TextView myDescription = row.findViewById(R.id.rowText2);
 
             images.setImageResource(rImgs[position]);
             myTitle.setText(rTitle[position]);
