@@ -1,9 +1,11 @@
 package com.hg.mad.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -60,11 +62,6 @@ public class CompetitiveEventsFragment extends Fragment implements
 
         // Initialize Firestore and the main RecyclerView
         initFirestore();
-        initRecyclerView();
-
-        // Filter Dialog
-        filterDialog = new FilterDialogFragment();
-        filters = Filters.getDefault();
 
         // Only show manage to admins
         DocumentReference databaseUserRef = firestore.collection("DatabaseUser").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -80,6 +77,12 @@ public class CompetitiveEventsFragment extends Fragment implements
                 }
             }
         });
+
+        initRecyclerView();
+
+        // Filter Dialog
+        filterDialog = new FilterDialogFragment();
+        filters = Filters.getDefault();
 
         return root;
     }
@@ -118,6 +121,13 @@ public class CompetitiveEventsFragment extends Fragment implements
         super.onStop();
         if (adapter != null) {
             adapter.stopListening();
+        }
+
+        // Hide the keyboard
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
+                    .hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
@@ -173,7 +183,7 @@ public class CompetitiveEventsFragment extends Fragment implements
 
     @Override
     public void onCompetitiveSelected(DocumentSnapshot competitiveEvent) {
-        // TODO
+        String eventName = competitiveEvent.get("eventName").toString();
     }
 
 }
