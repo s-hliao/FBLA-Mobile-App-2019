@@ -13,6 +13,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -20,6 +24,7 @@ import com.hg.mad.Filters;
 import com.hg.mad.R;
 import com.hg.mad.FilterDialogFragment;
 import com.hg.mad.adapter.CompetitiveAdapter;
+import com.hg.mad.model.DatabaseUser;
 
 
 public class CompetitiveEventsFragment extends Fragment implements
@@ -60,6 +65,21 @@ public class CompetitiveEventsFragment extends Fragment implements
         // Filter Dialog
         filterDialog = new FilterDialogFragment();
         filters = Filters.getDefault();
+
+        // Only show manage to admins
+        DocumentReference databaseUserRef = firestore.collection("DatabaseUser").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        databaseUserRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DatabaseUser databaseUserClass = task.getResult().toObject(DatabaseUser.class);
+
+                    if (databaseUserClass.getIsAdmin()){
+                        manageButton.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
 
         return root;
     }
