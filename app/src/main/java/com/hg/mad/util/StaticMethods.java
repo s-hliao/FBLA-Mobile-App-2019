@@ -41,10 +41,8 @@ public class StaticMethods {
                         // If the user exists in firebase
                         if (document.exists()) {
 
-                            DatabaseUser databaseUser = document.toObject(DatabaseUser.class);
-
                             // If the user isn't in a chapter, redirect to select chapter
-                            if (!databaseUser.getInChapter()) {
+                            if (! (Boolean) document.get("inChapter")) {
                                 thisActivity.startActivity(SelectChapterActivity.createIntent(thisActivity.getApplicationContext()));
                                 thisActivity.finish();
                             }

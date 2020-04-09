@@ -32,6 +32,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import org.w3c.dom.Document;
+
 public class SignedInActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
@@ -102,7 +104,8 @@ public class SignedInActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    chapterName = task.getResult().toObject(DatabaseUser.class).getChapterName();
+                    DocumentSnapshot snapshot = task.getResult();
+                    String chapterName = snapshot.get("chapterName").toString();
                     TextView navChapter = headerView.findViewById(R.id.nav_chapter);
                     navChapter.setText(chapterName);
                 }
