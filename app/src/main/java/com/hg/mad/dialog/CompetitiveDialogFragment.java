@@ -65,6 +65,9 @@ import java.util.Map;
 
     public void onYesClicked() {
 
+        dismiss();
+        Toast.makeText(getContext(), "Signed up", Toast.LENGTH_SHORT).show();
+
         final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
 
@@ -101,10 +104,6 @@ import java.util.Map;
                                 currentEventsChap.get(eventName).put(currentUser.getUid(), currentUser.getDisplayName());
 
                                 chapter.getReference().update("competitiveEvents", currentEventsChap);
-
-                                dismiss();
-                                Toast.makeText(getContext(), "Sign up success", Toast.LENGTH_SHORT).show();
-
                             }
                         }
                     });
