@@ -1,4 +1,4 @@
-package com.hg.mad;
+package com.hg.mad.dialog;
 
 import android.text.TextUtils;
 

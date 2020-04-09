@@ -22,9 +22,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.hg.mad.Filters;
+import com.hg.mad.dialog.CompetitiveDialogFragment;
+import com.hg.mad.dialog.Filters;
 import com.hg.mad.R;
-import com.hg.mad.FilterDialogFragment;
+import com.hg.mad.dialog.FilterDialogFragment;
 import com.hg.mad.adapter.CompetitiveAdapter;
 import com.hg.mad.model.DatabaseUser;
 
@@ -46,6 +47,8 @@ public class CompetitiveEventsFragment extends Fragment implements
     private CompetitiveAdapter adapter;
     private Filters filters;
     private String searchText;
+
+    private CompetitiveDialogFragment competitiveDialog;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_competitive_events, container, false);
@@ -87,6 +90,9 @@ public class CompetitiveEventsFragment extends Fragment implements
 
         initSearch();
 
+        // Competitive Dialog
+        competitiveDialog = new CompetitiveDialogFragment();
+
         return root;
     }
 
@@ -109,7 +115,7 @@ public class CompetitiveEventsFragment extends Fragment implements
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-
+                searchView.clearFocus();
                 return false;
             }
 
@@ -217,11 +223,13 @@ public class CompetitiveEventsFragment extends Fragment implements
         // TODO
     }
 
+    // TODO
     @Override
     public void onCompetitiveSelected(DocumentSnapshot competitiveEvent) {
         String eventName = competitiveEvent.get("eventName").toString();
+        competitiveDialog.setEventName(eventName);
+        competitiveDialog.show(getFragmentManager(), "CompetitiveDialog");
 
-        // TODO
     }
 
 }
