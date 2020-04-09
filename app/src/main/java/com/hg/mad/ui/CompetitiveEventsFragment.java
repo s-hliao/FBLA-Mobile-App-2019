@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -109,6 +110,7 @@ public class CompetitiveEventsFragment extends Fragment implements
 
         competitiveRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         competitiveRecycler.setAdapter(adapter);
+        competitiveRecycler.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
     }
 
     private void initSearch() {
