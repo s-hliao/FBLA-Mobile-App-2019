@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.firebase.ui.auth.data.model.User;
 import com.firebase.ui.auth.util.ExtraConstants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -40,10 +41,9 @@ public class SignedInActivity extends AppCompatActivity {
     private NavigationView navigationView;
 
     private FirebaseUser currentUser;
+    DocumentSnapshot userSnapshot;
 
     private View headerView;
-    private String chapterName;
-
 
     @NonNull
     public static Intent createIntent(@NonNull Context context, @Nullable IdpResponse response) {
@@ -61,6 +61,7 @@ public class SignedInActivity extends AppCompatActivity {
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
+        headerView = navigationView.getHeaderView(0);
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -79,23 +80,10 @@ public class SignedInActivity extends AppCompatActivity {
             finish();
         }
 
-        // Set the username
-        updateUsername();
-
-        // Set the chapter name
-        updateChapterName();
-
-
+        initUserandChapter();
     }
 
-    private void updateUsername(){
-        headerView = navigationView.getHeaderView(0);
-        TextView navUsername = headerView.findViewById(R.id.nav_username);
-        navUsername.setText(currentUser.getDisplayName());
-    }
-
-    private void updateChapterName(){
-        // Set the chapter
+    private void initUserandChapter(){
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
         CollectionReference usersCollection = fireStore.collection("DatabaseUser");
         DocumentReference databaseUserRef = usersCollection.document(currentUser.getUid());
@@ -103,14 +91,30 @@ public class SignedInActivity extends AppCompatActivity {
         databaseUserRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot snapshot = task.getResult();
-                    String chapterName = snapshot.get("chapterName").toString();
-                    TextView navChapter = headerView.findViewById(R.id.nav_chapter);
-                    navChapter.setText(chapterName);
-                }
+
+            if (task.isSuccessful()) {
+                userSnapshot = task.getResult();
+                updateUsername();
+                updateChapterName();
+            }
             }
         });
+    }
+
+    private void updateUsername(){
+        TextView navUsername = headerView.findViewById(R.id.nav_username);
+        String username = currentUser.getDisplayName();
+
+        if ((Boolean) userSnapshot.get("isAdmin"))
+            username += " (Admin)";
+
+        navUsername.setText(username);
+    }
+
+    private void updateChapterName(){
+        String chapterName = userSnapshot.get("chapterName").toString();
+        TextView navChapter = headerView.findViewById(R.id.nav_chapter);
+        navChapter.setText(chapterName);
     }
 
     @Override

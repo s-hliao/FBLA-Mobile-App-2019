@@ -23,12 +23,15 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.hg.mad.dialog.CompSUDialogFragment;
 import com.hg.mad.dialog.CompetitiveDialogFragment;
 import com.hg.mad.dialog.Filters;
 import com.hg.mad.R;
 import com.hg.mad.dialog.FilterDialogFragment;
 import com.hg.mad.adapter.CompetitiveAdapter;
 import com.hg.mad.model.DatabaseUser;
+
+import java.util.Map;
 
 
 public class CompetitiveEventsFragment extends Fragment implements
@@ -49,7 +52,10 @@ public class CompetitiveEventsFragment extends Fragment implements
     private Filters filters;
     private String searchText;
 
+    private Map<String, Integer> eventsSignedUp;
+
     private CompetitiveDialogFragment competitiveDialog;
+    private CompSUDialogFragment compSUDialog;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_competitive_events, container, false);
@@ -91,8 +97,9 @@ public class CompetitiveEventsFragment extends Fragment implements
 
         initSearch();
 
-        // Competitive Dialog
+        // Competitive Dialogs
         competitiveDialog = new CompetitiveDialogFragment();
+        compSUDialog = new CompSUDialogFragment();
 
         return root;
     }
@@ -225,13 +232,38 @@ public class CompetitiveEventsFragment extends Fragment implements
         // TODO
     }
 
-    // TODO
     @Override
     public void onCompetitiveSelected(DocumentSnapshot competitiveEvent) {
-        String eventName = competitiveEvent.get("eventName").toString();
-        competitiveDialog.setEventName(eventName);
-        competitiveDialog.show(getFragmentManager(), "CompetitiveDialog");
 
+        hideKeyboard();
+        searchView.clearFocus();
+
+        final String eventName = competitiveEvent.get("eventName").toString();
+
+        // Find out if the user has signed up for this event already
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DocumentReference userRef = FirebaseFirestore.getInstance().collection("DatabaseUser").document(uid);
+
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    eventsSignedUp = (Map<String, Integer>) task.getResult().get("competitiveEvents");
+
+                    // Show the already signed up dialog
+                    if (eventsSignedUp.containsKey(eventName)){
+                        compSUDialog.setEventName(eventName);
+                        compSUDialog.show(getFragmentManager(), "CompSUDialog");
+                    }
+
+                    // Show the signed up dialog
+                    else {
+                        competitiveDialog.setEventName(eventName);
+                        competitiveDialog.show(getFragmentManager(), "CompetitiveDialog");
+                    }
+                }
+            }
+        });
     }
 
 }

@@ -19,12 +19,12 @@ public class Chapter {
 
     public Chapter() {}
 
-    public Chapter(String chapterName, String adminID, Map<String, String>usersInChapter) {
+    public Chapter(String chapterName, String adminID, Map<String, String> usersInChapter) {
         this.chapterName = chapterName;
         this.adminID = adminID;
         this.usersInChapter = usersInChapter;
-        competitiveEvents = new HashMap<>();
-        chapterEvents = new HashMap<>();
+        this.competitiveEvents = new HashMap<>();
+        this.chapterEvents = new HashMap<>();
     }
 
     public String getChapterName() {
@@ -51,7 +51,7 @@ public class Chapter {
         return competitiveEvents;
     }
 
-    public void setCompetitiveEvents(Map competitiveEvents){
+    public void setCompetitiveEvents(Map<String, Map<String, String>> competitiveEvents){
         this.competitiveEvents = competitiveEvents;
     }
 
@@ -59,7 +59,7 @@ public class Chapter {
         return chapterEvents;
     }
 
-    public void setChapterEvents(Map chapterEvents){
+    public void setChapterEvents(Map<String, Map<String, String>> chapterEvents){
         this.chapterEvents = chapterEvents;
     }
 

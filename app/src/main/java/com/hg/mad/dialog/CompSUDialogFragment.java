@@ -5,56 +5,115 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.hg.mad.R;
 
-public class CompetitiveDialogFragment extends DialogFragment implements View.OnClickListener {
+import java.util.HashMap;
+import java.util.Map;
 
-    private View rootView;
-    private String eventName;
-    private TextView signUp;
+ public class CompSUDialogFragment extends DialogFragment implements View.OnClickListener {
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.dialog_competitive, container, false);
+     private View rootView;
+     private String eventName;
+     private TextView signUp;
 
-        rootView.findViewById(R.id.button_yes).setOnClickListener(this);
-        rootView.findViewById(R.id.button_no).setOnClickListener(this);
+     @Nullable
+     @Override
+     public View onCreateView(@NonNull LayoutInflater inflater,
+                              @Nullable ViewGroup container,
+                              @Nullable Bundle savedInstanceState) {
+         rootView = inflater.inflate(R.layout.dialog_compsignedup, container, false);
 
-        signUp = rootView.findViewById(R.id.competitive_signup);
-        signUp.setText("Sign up for "+ eventName);
+         rootView.findViewById(R.id.button_signedup_yes).setOnClickListener(this);
+         rootView.findViewById(R.id.button_signedup_no).setOnClickListener(this);
 
-        return rootView;
-    }
+         signUp = rootView.findViewById(R.id.competitive_signedup);
+         signUp.setText("Cancel "+ eventName + " sign up");
 
-    public void setEventName(String eventName){
-        this.eventName = eventName;
-    }
+         return rootView;
+     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button_yes:
-                onYesClicked();
-                break;
-            case R.id.button_no:
-                onNoClicked();
-                break;
-        }
-    }
+     public void setEventName(String eventName){
+         this.eventName = eventName;
+     }
 
-    public void onYesClicked() {
+     @Override
+     public void onClick(View v) {
+         switch (v.getId()) {
+             case R.id.button_signedup_yes:
+                 onYesClicked();
+                 break;
+             case R.id.button_signedup_no:
+                 onNoClicked();
+                 break;
+         }
+     }
 
-    }
+     public void onYesClicked() {
 
-    public void onNoClicked() {
-        dismiss();
-    }
-}
+         final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
+
+         CollectionReference usersCollection = fireStore.collection("DatabaseUser");
+         final DocumentReference userRef = usersCollection.document(currentUser.getUid());
+
+         final CollectionReference chaptersCollection = fireStore.collection("Chapter");
+
+         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+             @Override
+             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                 if (task.isSuccessful()) {
+
+                     // Update DatabaseUser
+                     DocumentSnapshot user = task.getResult();
+                     Map<String, Integer> currentEventsUser = (Map<String, Integer>) user.get("competitiveEvents");
+                     currentEventsUser.remove(eventName);
+                     userRef.update("competitiveEvents", currentEventsUser);
+
+                     // Update Chapter
+                     chaptersCollection.whereEqualTo("chapterName", user.get("chapterName"))
+                             .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                         @Override
+                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                             if (task.isSuccessful()) {
+
+                                 DocumentSnapshot chapter = task.getResult().getDocuments().get(0);
+
+                                 Map<String, Map<String, String>> currentEventsChap = (Map) chapter.get("competitiveEvents");
+                                 currentEventsChap.get(eventName).remove(currentUser.getUid());
+                                 if (currentEventsChap.get(eventName).isEmpty()){
+                                     currentEventsChap.remove(eventName);
+                                 }
+
+                                 chapter.getReference().update("competitiveEvents", currentEventsChap);
+
+                                 dismiss();
+                                 Toast.makeText(getContext(), "Cancel success", Toast.LENGTH_SHORT).show();
+
+                             }
+                         }
+                     });
+                 }
+             }
+         });
+     }
+
+     public void onNoClicked() {
+         dismiss();
+     }
+ }

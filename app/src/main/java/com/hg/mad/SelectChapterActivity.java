@@ -200,15 +200,12 @@ public class SelectChapterActivity extends AppCompatActivity{
 
     // Creating a new chapter using chapter name and admin info
     private void createChapter(String name, String adminID, String adminName){
-        Map<String, Object> data = new HashMap<>();
-        data.put("chapterName", name);
-        data.put("adminID", adminID);
 
-        Map<String, String> usersInChapter = new HashMap<String, String>();
+        Map<String, String> usersInChapter = new HashMap<>();
         usersInChapter.put(adminID, adminName);
-        data.put("usersInChapter", usersInChapter);
+        Chapter chapter = new Chapter(name, adminID, usersInChapter);
 
-        fireStore.collection("Chapter").add(data);
+        fireStore.collection("Chapter").add(chapter);
     }
 
     // Updating a chapter with a new user
