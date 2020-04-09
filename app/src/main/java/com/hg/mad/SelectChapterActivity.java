@@ -50,6 +50,8 @@ public class SelectChapterActivity extends AppCompatActivity{
     TextView chapterName;
     Button selectChapterBtn;
 
+    Toast myToast;
+
     @NonNull
     public static Intent createIntent(@NonNull Context context) {
         return new Intent(context, SelectChapterActivity.class);
@@ -81,14 +83,16 @@ public class SelectChapterActivity extends AppCompatActivity{
 
                 // If the user is joining an existing chapter
                 if (join.isChecked()) {
+
                     if (chapterSpinner.getSelectedItem() == null) {
-                        Toast.makeText(getApplicationContext(), "Please select a chapter", Toast.LENGTH_LONG).show();
+                        alert("Please select a chapter");
                     }
 
                     // Update the user and chapter, then go to signed in activity
                     else {
-                        updateUser(chapterSpinner.getSelectedItem().toString(), true, false);
-                        updateChapter(chapterSpinner.getSelectedItem().toString(), user.getUid(), user.getDisplayName());
+                        String spinnerText = chapterSpinner.getSelectedItem().toString();
+                        updateUser(spinnerText, true, false);
+                        updateChapter(spinnerText, user.getUid(), user.getDisplayName());
 
                         startActivity(SignedInActivity.createIntent(context, null));
                         finish();
@@ -100,7 +104,7 @@ public class SelectChapterActivity extends AppCompatActivity{
                     final String cName = chapterName.getText().toString();
 
                     if (cName.equals("")){
-                        Toast.makeText(getApplicationContext(), "Please enter a chapter name", Toast.LENGTH_LONG).show();
+                        alert("Please enter a chapter name");
                     } else {
 
                         // Handle duplicate chapters
@@ -109,7 +113,7 @@ public class SelectChapterActivity extends AppCompatActivity{
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
                                     if (task.getResult().size() > 0) {
-                                        Toast.makeText(getApplicationContext(), "This chapter name is already taken" + task.getResult().size(), Toast.LENGTH_LONG).show();
+                                        alert("This chapter name is already taken");
                                     } else {
                                         // Create the chapter, add the user as admin, then go to signed in activity
                                         createChapter(cName, user.getUid(), user.getDisplayName());
@@ -126,7 +130,7 @@ public class SelectChapterActivity extends AppCompatActivity{
 
                 // if the user hasn't selected anything
                 else {
-                    Toast.makeText(getApplicationContext(), "Please select or join a chapter", Toast.LENGTH_LONG).show();
+                    alert("Please select or join a chapter");
                 }
             }
         });
@@ -223,5 +227,12 @@ public class SelectChapterActivity extends AppCompatActivity{
                 }
             }
         });
+    }
+
+    private void alert(String message) {
+        if(myToast != null)
+            myToast.cancel();
+        myToast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+        myToast.show();
     }
 }

@@ -14,7 +14,7 @@ public class ContactUsActivity extends AppCompatActivity {
     EditText subject;
     EditText message;
     Button send;
-
+    Toast myToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +33,9 @@ public class ContactUsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(subject.getText().toString().equals("")){
-                    Toast.makeText(ContactUsActivity.this,
-                            "Needs a subject.", Toast.LENGTH_SHORT).show();
+                    alert("Needs a subject.");
                 } else if(message.getText().toString().equals("")){
-                    Toast.makeText(ContactUsActivity.this,
-                            "Needs a message.", Toast.LENGTH_SHORT).show();
+                    alert("Needs a message.");
                 } else {
                     sendEmail(message.getText().toString(), subject.getText().toString());
                 }
@@ -65,11 +63,9 @@ public class ContactUsActivity extends AppCompatActivity {
         try {
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
             finish();
-            Toast.makeText(ContactUsActivity.this,
-                    "Select Email to Use", Toast.LENGTH_SHORT).show();
+            alert("Select Email to Use");
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(ContactUsActivity.this,
-                    "There is no email client installed.", Toast.LENGTH_SHORT).show();
+            alert("There is no email client installed.");
         }
 
 
@@ -79,5 +75,12 @@ public class ContactUsActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    private void alert(String message) {
+        if(myToast != null)
+            myToast.cancel();
+        myToast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        myToast.show();
     }
 }
