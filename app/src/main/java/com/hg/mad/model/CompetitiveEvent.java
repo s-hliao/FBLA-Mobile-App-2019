@@ -10,11 +10,11 @@ public class CompetitiveEvent {
     private String eventName;
     private String type;
     private String category;
-    private Boolean intro;
+    private String intro;
 
     public CompetitiveEvent() {}
 
-    public CompetitiveEvent(String eventName, String type, String category, Boolean intro){
+    public CompetitiveEvent(String eventName, String type, String category, String intro){
         this.eventName = eventName;
         this.type = type;
         this.category = category;
@@ -45,11 +45,9 @@ public class CompetitiveEvent {
         this.category = category;
     }
 
-    public Boolean getIntro() {
-        return intro;
-    }
+    public String getIntro() {return intro;}
 
-    public void setIntro(Boolean intro) {
+    public void setIntro(String intro) {
         this.intro = intro;
     }
 }

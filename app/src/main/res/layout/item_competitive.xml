@@ -6,7 +6,7 @@
     android:padding="4dp">
 
     <TextView
-        android:id="@+id/helpSub"
+        android:id="@+id/competitiveTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="3dp"
@@ -14,23 +14,38 @@
         android:textColor="#000"
         android:textSize="15sp" />
 
-    <TextView
-        android:id="@+id/helpSub"
+    <TableRow
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="3dp"
-        android:text="Type"
-        android:textColor="#a9a9a9"
-        android:textSize="15sp" />
+        android:layout_height="match_parent" >
 
-    <TextView
-        android:id="@+id/competitiveCategory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="3dp"
-        android:layout_weight="1"
-        android:text="Category"
-        android:textColor="#a9a9a9"
-        android:textSize="15sp" />
+        <TextView
+            android:id="@+id/competitiveType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:text="Type"
+            android:textColor="#a9a9a9"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/competitiveCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:paddingHorizontal="16dp"
+            android:text="Category"
+            android:textColor="#a9a9a9"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/competitiveIntro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:text="Intro"
+            android:textColor="#a9a9a9"
+            android:textSize="15sp" />
+
+    </TableRow>
 
 </LinearLayout>

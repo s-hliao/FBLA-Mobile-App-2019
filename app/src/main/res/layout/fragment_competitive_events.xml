@@ -11,32 +11,39 @@
     <!-- Main Restaurants recycler -->
 
     <TextView
-        android:id="@+id/manageCompetitive"
+        android:id="@+id/manage_signups"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="12dp"
-        android:text="Manage Sign Ups" />
+        android:text="Manage Sign Ups"
+        android:textColor="@android:color/black" />
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:elevation="8dp"
+        android:paddingStart="12dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="12dp">
 
-        <FrameLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:elevation="8dp"
-            android:paddingStart="12dp"
-            android:paddingTop="12dp"
-            android:paddingEnd="12dp"
-            android:paddingBottom="12dp">
+            android:layout_height="match_parent">
 
             <SearchView
-                android:layout_width="match_parent"
+                android:id="@+id/search_competitive"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="50dp"
-                android:background="@android:color/background_light">
+                android:layout_marginEnd="8dp"
+                android:background="@android:color/background_light"
+                android:elevation="8dp"
+                android:iconifiedByDefault="false"
+                android:queryHint="Search Here"
+                app:layout_constraintEnd_toStartOf="@+id/button_filter"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
             </SearchView>
 
@@ -44,19 +51,23 @@
                 android:id="@+id/button_filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center|end"
+                android:layout_gravity="center|start"
                 android:background="@android:color/background_light"
+                android:elevation="8dp"
                 android:padding="12dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_filter" />
 
-        </FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_competitive"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/item_competitive" />
+    </FrameLayout>
 
-    </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_competitive"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/item_competitive" />
 
 </LinearLayout>

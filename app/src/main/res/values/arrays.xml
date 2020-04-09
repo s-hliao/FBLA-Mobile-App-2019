@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="types">
+        <item>Any Type</item>
+        <item>Individual</item>
+        <item>Individual, Team</item>
+        <item>Chapter</item>
+    </string-array>
+
+    <string-array name="categories">
+        <item>Any Category</item>
+        <item>Test</item>
+        <item>Presentation</item>
+        <item>Interview</item>
+        <item>Team Performance</item>
+    </string-array>
+
+    <string-array name="intros">
+        <item>Any Level</item>
+        <item>Introduction</item>
+        <item>Normal</item>
+    </string-array>
+
+</resources>
