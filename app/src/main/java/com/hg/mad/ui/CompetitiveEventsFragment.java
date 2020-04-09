@@ -45,6 +45,7 @@ public class CompetitiveEventsFragment extends Fragment implements
     private FilterDialogFragment filterDialog;
     private CompetitiveAdapter adapter;
     private Filters filters;
+    private String searchText;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_competitive_events, container, false);
@@ -84,6 +85,8 @@ public class CompetitiveEventsFragment extends Fragment implements
         filterDialog = new FilterDialogFragment();
         filters = Filters.getDefault();
 
+        initSearch();
+
         return root;
     }
 
@@ -100,6 +103,24 @@ public class CompetitiveEventsFragment extends Fragment implements
 
         competitiveRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         competitiveRecycler.setAdapter(adapter);
+    }
+
+    private void initSearch() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchText = newText;
+                onFilter(filters);
+
+                return false;
+            }
+        });
     }
 
     @Override
@@ -123,7 +144,10 @@ public class CompetitiveEventsFragment extends Fragment implements
             adapter.stopListening();
         }
 
-        // Hide the keyboard
+        hideKeyboard();
+    }
+
+    private void hideKeyboard() {
         View view = getActivity().getCurrentFocus();
         if (view != null) {
             ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
@@ -135,6 +159,18 @@ public class CompetitiveEventsFragment extends Fragment implements
     public void onFilter(Filters filters) {
         // Construct query basic query
         Query query = firestore.collection("CompetitiveEvent");
+
+        // Name (contains filter)
+        if (searchText != null){
+
+            String nameUpper = searchText.toUpperCase();
+            String nameLower = searchText.toLowerCase();
+
+            query = firestore.collection("CompetitiveEvent")
+                    .orderBy("eventName")
+                    .startAt(nameUpper)
+                    .endAt(nameLower+"\uf8ff");
+        }
 
         // Type (equality filter)
         if (filters.hasType()) {
@@ -184,6 +220,8 @@ public class CompetitiveEventsFragment extends Fragment implements
     @Override
     public void onCompetitiveSelected(DocumentSnapshot competitiveEvent) {
         String eventName = competitiveEvent.get("eventName").toString();
+
+        // TODO
     }
 
 }
