@@ -21,9 +21,7 @@ public class AbtFBLAFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_abtfbla, container, false);
 
         WebView webView = root.findViewById(R.id.abtFBLAWeb);
-        webView.loadUrl("https://www.fbla-pbl.org/about/");
-        WebSettings webSettings= webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
+        webView.loadUrl("file:///android_asset/aboutFBLA.html");
 
         return root;
     }
