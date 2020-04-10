@@ -155,16 +155,16 @@ public class HomeFragment extends Fragment implements
         viewFlipper.setDisplayedChild(1);
     }
 
-    private void flipperOn(TextView v){
+    private void flipperOff(TextView v){
         v.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         v.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
-        v.setElevation(0);
+        v.setElevation(16);
     }
 
-    private void flipperOff(TextView v){
-        v.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.background_light));
+    private void flipperOn(TextView v){
+        v.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.defaultBackground));
         v.setTextColor(ContextCompat.getColor(getContext(), android.R.color.black));
-        v.setElevation(16);
+        v.setElevation(0);
     }
 
     @Override
