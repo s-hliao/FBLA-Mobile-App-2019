@@ -65,9 +65,6 @@ import java.util.Map;
 
      public void onYesClicked() {
 
-         dismiss();
-         Toast.makeText(getContext(), "Canceled", Toast.LENGTH_SHORT).show();
-
          final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
          FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
 
@@ -110,6 +107,9 @@ import java.util.Map;
                  }
              }
          });
+
+         dismiss();
+         Toast.makeText(getContext(), "Canceled", Toast.LENGTH_SHORT).show();
      }
 
      public void onNoClicked() {

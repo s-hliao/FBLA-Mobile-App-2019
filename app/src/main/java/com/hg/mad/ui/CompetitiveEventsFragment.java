@@ -251,19 +251,24 @@ public class CompetitiveEventsFragment extends Fragment implements
                     eventsSignedUp = (Map<String, Integer>) task.getResult().get("competitiveEvents");
 
                     // Show the already signed up dialog
-                    if (eventsSignedUp.containsKey(eventName)){
+                    if (eventsSignedUp.containsKey(eventName)) {
                         compSUDialog.setEventName(eventName);
-                        compSUDialog.show(getFragmentManager(), "CompSUDialog");
+
+                        getFragmentManager().executePendingTransactions();
+                        if (!compSUDialog.isAdded())
+                            compSUDialog.show(getFragmentManager(), "CompSUDialog");
                     }
 
                     // Show the signed up dialog
                     else {
                         competitiveDialog.setEventName(eventName);
-                        competitiveDialog.show(getFragmentManager(), "CompetitiveDialog");
+
+                        getFragmentManager().executePendingTransactions();
+                        if (!competitiveDialog.isAdded())
+                            competitiveDialog.show(getFragmentManager(), "CompetitiveDialog");
                     }
                 }
             }
         });
     }
-
 }
