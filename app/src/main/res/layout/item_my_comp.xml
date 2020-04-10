@@ -12,6 +12,7 @@
         android:layout_margin="10dp"
         android:text="Title"
         android:textColor="#000"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        android:focusable="false"/>
 
 </LinearLayout>

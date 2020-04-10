@@ -33,13 +33,15 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.hg.mad.AuthUiActivity;
 import com.hg.mad.R;
 import com.hg.mad.adapter.MyCompEventAdapter;
+import com.hg.mad.dialog.CompSUDialogFragment;
 import com.hg.mad.model.DatabaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements
+        MyCompEventAdapter.OnMyCompListener {
 
     private View root;
     private ViewFlipper viewFlipper;
@@ -103,8 +105,14 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        // Recycler Views
         myComp = new ArrayList<>();
-        setupCompAdapter();
+        myCompRecycler = root.findViewById(R.id.recycler_my_comp);
+        layoutManager = new LinearLayoutManager(getContext());
+        myCompRecycler.setLayoutManager(layoutManager);
+        myCompRecycler.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+
+        updateCompAdapter();
         beganUpdating();
 
         return root;
@@ -124,20 +132,15 @@ public class HomeFragment extends Fragment {
                     Map<String, Integer> events = (Map<String, Integer>) snapshot.get("competitiveEvents");
                     myComp.addAll(events.keySet());
 
-                    setupCompAdapter();
+                    updateCompAdapter();
                 }
             }
         });
     }
 
-    private void setupCompAdapter(){
-        myCompRecycler = root.findViewById(R.id.recycler_my_comp);
-        layoutManager = new LinearLayoutManager(getContext());
-        adapter = new MyCompEventAdapter(myComp);
-
+    private void updateCompAdapter(){
+        adapter = new MyCompEventAdapter(myComp, this);
         myCompRecycler.setAdapter(adapter);
-        myCompRecycler.setLayoutManager(layoutManager);
-        myCompRecycler.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
     }
 
     private void chapterEvents() {
@@ -162,5 +165,16 @@ public class HomeFragment extends Fragment {
         v.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.background_light));
         v.setTextColor(ContextCompat.getColor(getContext(), android.R.color.black));
         v.setElevation(16);
+    }
+
+    @Override
+    public void onMyCompSelected(String eventName) {
+
+        CompSUDialogFragment compSUDialog = new CompSUDialogFragment();
+        compSUDialog.setEventName(eventName);
+
+        getFragmentManager().executePendingTransactions();
+        if (!compSUDialog.isAdded())
+            compSUDialog.show(getFragmentManager(), "CompSUDialog");
     }
 }

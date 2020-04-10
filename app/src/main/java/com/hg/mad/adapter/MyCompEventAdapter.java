@@ -8,13 +8,30 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.dynamic.IFragmentWrapper;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Query;
 import com.hg.mad.R;
+import com.hg.mad.dialog.CompSUDialogFragment;
 
 import java.util.List;
 
 public class MyCompEventAdapter extends RecyclerView.Adapter<MyCompEventAdapter.ViewHolder> {
 
     private List<String> list;
+
+    public interface OnMyCompListener {
+
+        void onMyCompSelected(String eventName);
+
+    }
+
+    private MyCompEventAdapter.OnMyCompListener listener;
+
+    public MyCompEventAdapter(List list, MyCompEventAdapter.OnMyCompListener listener) {
+        this.list = list;
+        this.listener = listener;
+    }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -25,15 +42,21 @@ public class MyCompEventAdapter extends RecyclerView.Adapter<MyCompEventAdapter.
             myCompTitle = itemView.findViewById(R.id.my_comp_title);
         }
 
-        public void bind(String s) {
-            myCompTitle.setText(s);
+        public void bind(final String eventName, final OnMyCompListener listener) {
+            myCompTitle.setText(eventName);
+
+            // Click listener
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null) {
+                        listener.onMyCompSelected(eventName);
+                    }
+                }
+            });
         }
 
 
-    }
-
-    public MyCompEventAdapter(List<String> list) {
-        this.list = list;
     }
 
     @NonNull
@@ -46,8 +69,8 @@ public class MyCompEventAdapter extends RecyclerView.Adapter<MyCompEventAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String currentString = list.get(position);
-        holder.bind(currentString);
+        String eventName = list.get(position);
+        holder.bind(eventName, listener);
     }
 
     @Override
