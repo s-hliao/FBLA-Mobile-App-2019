@@ -9,7 +9,7 @@
         android:id="@+id/my_comp_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_margin="10dp"
         android:text="Title"
         android:textColor="#000"
         android:textSize="15sp" />

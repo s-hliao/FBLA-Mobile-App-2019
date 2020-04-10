@@ -25,15 +25,23 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.hg.mad.AuthUiActivity;
 import com.hg.mad.R;
 import com.hg.mad.adapter.MyCompEventAdapter;
+import com.hg.mad.model.DatabaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class HomeFragment extends Fragment {
 
+    private View root;
     private ViewFlipper viewFlipper;
     private TextView myChapEvents;
     private TextView myCompEvents;
@@ -43,9 +51,10 @@ public class HomeFragment extends Fragment {
     private RecyclerView myCompRecycler;
     private LinearLayoutManager layoutManager;
     private MyCompEventAdapter adapter;
+    private List<String> myComp;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+        this.root = inflater.inflate(R.layout.fragment_home, container, false);
 
         // View flipping
         viewFlipper = root.findViewById(R.id.home_flipper);
@@ -94,14 +103,34 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        myComp = new ArrayList<>();
+        setupCompAdapter();
+        beganUpdating();
 
-        // Recycler Views
-        List<String> myComp = new ArrayList<>();
+        return root;
+    }
 
-        // Add my events to the list
-        myComp.add("hi");
-        myComp.add("lmao");
+    private void beganUpdating() {
+        DocumentReference databaseUserRef = FirebaseFirestore.getInstance().collection("DatabaseUser")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
+        // Set up competitive events listener
+        databaseUserRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {
+
+                if (snapshot != null && snapshot.exists() && snapshot.get("competitiveEvents") != null) {
+                    myComp = new ArrayList<>();
+                    Map<String, Integer> events = (Map<String, Integer>) snapshot.get("competitiveEvents");
+                    myComp.addAll(events.keySet());
+
+                    setupCompAdapter();
+                }
+            }
+        });
+    }
+
+    private void setupCompAdapter(){
         myCompRecycler = root.findViewById(R.id.recycler_my_comp);
         layoutManager = new LinearLayoutManager(getContext());
         adapter = new MyCompEventAdapter(myComp);
@@ -109,17 +138,15 @@ public class HomeFragment extends Fragment {
         myCompRecycler.setAdapter(adapter);
         myCompRecycler.setLayoutManager(layoutManager);
         myCompRecycler.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-
-        return root;
     }
 
-    public void chapterEvents() {
+    private void chapterEvents() {
         viewFlipper.setInAnimation(getContext(), android.R.anim.slide_in_left);
         viewFlipper.setOutAnimation(getContext(), android.R.anim.slide_out_right);
         viewFlipper.setDisplayedChild(0);
     }
 
-    public void competitiveEvents() {
+    private void competitiveEvents() {
         viewFlipper.setInAnimation(getContext(), R.anim.slide_in_right);
         viewFlipper.setOutAnimation(getContext(), R.anim.slide_out_left);
         viewFlipper.setDisplayedChild(1);
