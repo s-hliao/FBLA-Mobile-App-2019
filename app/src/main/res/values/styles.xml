@@ -44,13 +44,4 @@
     <style name="ThemeOverlay.FilterButton" parent="ThemeOverlay.AppCompat.Dark">
         <item name="colorButtonNormal">@color/colorPrimary</item>
     </style>
-
-    <style name="FlipperOn">
-        <item name="android:background">@color/colorPrimary</item>
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-    <style name="FlipperOff">
-        <item name="android:background">@android:color/white</item>
-        <item name="android:textColor">@android:color/black</item>
-    </style>
 </resources>

@@ -224,6 +224,10 @@ public class CompetitiveEventsFragment extends Fragment implements
 
     public void onFilterClicked() {
         // Show the dialog containing filter options
+
+        hideKeyboard();
+        searchView.clearFocus();
+
         if (!filterDialog.isAdded())
             filterDialog.show(getFragmentManager(), "FilterDialog");
     }
