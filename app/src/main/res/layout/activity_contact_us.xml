@@ -14,7 +14,8 @@
         android:layout_marginTop="20dp"
         android:text="@string/contact_us"
         android:textSize="24sp"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:textColor="@android:color/black"/>
 
     <EditText
         android:id="@+id/editText6"
