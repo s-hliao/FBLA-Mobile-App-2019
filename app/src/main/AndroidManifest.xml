@@ -12,11 +12,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".LoadActivity"
+        <activity android:name=".ManageCompActivity" />
+        <activity
+            android:name=".LoadActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -25,18 +27,16 @@
         <activity
             android:name=".ContactUsActivity"
             android:windowSoftInputMode="stateVisible|adjustPan" />
-        <activity android:name=".AuthUiActivity"/>
+        <activity android:name=".AuthUiActivity" />
         <activity android:name=".SelectChapterActivity" />
         <activity
             android:name=".SignedInActivity"
             android:label="@string/title_activity_signed_in"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
             android:launchMode="standard"
             tools:replace="android:launchMode" />
-
     </application>
 
 </manifest>

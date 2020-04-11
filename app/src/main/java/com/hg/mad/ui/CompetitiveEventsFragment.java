@@ -23,6 +23,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.hg.mad.ManageCompActivity;
 import com.hg.mad.dialog.CompSUDialogFragment;
 import com.hg.mad.dialog.CompetitiveDialogFragment;
 import com.hg.mad.dialog.Filters;
@@ -100,6 +101,14 @@ public class CompetitiveEventsFragment extends Fragment implements
         // Competitive Dialogs
         competitiveDialog = new CompetitiveDialogFragment();
         compSUDialog = new CompSUDialogFragment();
+
+        // Manage sign ups
+        manageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(ManageCompActivity.createIntent(getContext()));
+            }
+        });
 
         return root;
     }

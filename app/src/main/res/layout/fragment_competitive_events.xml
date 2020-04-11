@@ -8,16 +8,16 @@
     tools:context="com.hg.mad.SignedInActivity"
     android:orientation="vertical">
 
-    <!-- Main Restaurants recycler -->
-
     <TextView
         android:id="@+id/manage_signups"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="12dp"
         android:text="Manage Sign Ups"
-        android:textColor="@android:color/black"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:focusable="true"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"/>
 
     <FrameLayout
         android:layout_width="match_parent"
