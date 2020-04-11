@@ -7,48 +7,30 @@
     android:orientation="vertical"
     tools:context=".ui.HomeFragment">
 
-    <LinearLayout
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/my_events_tab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:background="@color/colorPrimary"
+        android:elevation="8dp"
+        app:tabIndicatorColor="@color/defaultBackground"
+        app:tabSelectedTextColor="@color/defaultBackground"
+        app:tabTextColor="@color/colorPrimaryTint">
 
-        <TextView
-            android:id="@+id/my_chap_events"
-            android:layout_width="match_parent"
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:text="Chapter Events"
-            android:textSize="18sp" />
+            android:text="Tab 1"/>
 
-        <TextView
-            android:id="@+id/my_comp_events"
-            android:layout_width="match_parent"
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:text="Competitive Events"
-            android:textSize="18sp" />
+            android:text="Tab 2"/>
 
-    </LinearLayout>
+    </com.google.android.material.tabs.TabLayout>
 
-    <ViewFlipper
-        android:id="@+id/home_flipper"
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/my_events_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_my_chap"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_my_comp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-
-    </ViewFlipper>
-
-
+        android:layout_height="match_parent" />
 </LinearLayout>

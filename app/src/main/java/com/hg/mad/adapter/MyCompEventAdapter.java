@@ -8,11 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.dynamic.IFragmentWrapper;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.Query;
 import com.hg.mad.R;
-import com.hg.mad.dialog.CompSUDialogFragment;
 
 import java.util.List;
 

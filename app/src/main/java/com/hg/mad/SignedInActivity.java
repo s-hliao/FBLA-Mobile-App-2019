@@ -92,11 +92,11 @@ public class SignedInActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-            if (task.isSuccessful()) {
-                userSnapshot = task.getResult();
-                updateUsername();
-                updateChapterName();
-            }
+                if (task.isSuccessful()) {
+                    userSnapshot = task.getResult();
+                    updateUsername();
+                    updateChapterName();
+                }
             }
         });
     }
