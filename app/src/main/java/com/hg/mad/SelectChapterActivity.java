@@ -60,7 +60,7 @@ public class SelectChapterActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.select_chapter_activity);
+        setContentView(R.layout.activity_selecte_chapter);
 
         context = getApplicationContext();
 
