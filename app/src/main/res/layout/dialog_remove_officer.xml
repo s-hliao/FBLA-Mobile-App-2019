@@ -7,7 +7,7 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/competitive_signedup"
+        android:id="@+id/remove_officer"
         style="@style/AppTheme.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

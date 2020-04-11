@@ -37,8 +37,8 @@ import java.util.Map;
                               @Nullable Bundle savedInstanceState) {
          rootView = inflater.inflate(R.layout.dialog_compsignedup, container, false);
 
-         rootView.findViewById(R.id.button_removeofficer_yes).setOnClickListener(this);
-         rootView.findViewById(R.id.button_removeofficer_no).setOnClickListener(this);
+         rootView.findViewById(R.id.button_cancel_yes).setOnClickListener(this);
+         rootView.findViewById(R.id.button_cancel_no).setOnClickListener(this);
 
          signUp = rootView.findViewById(R.id.competitive_signedup);
          signUp.setText("Cancel "+ eventName + " sign up");
@@ -53,10 +53,10 @@ import java.util.Map;
      @Override
      public void onClick(View v) {
          switch (v.getId()) {
-             case R.id.button_removeofficer_yes:
+             case R.id.button_cancel_yes:
                  onYesClicked();
                  break;
-             case R.id.button_removeofficer_no:
+             case R.id.button_cancel_no:
                  onNoClicked();
                  break;
          }
