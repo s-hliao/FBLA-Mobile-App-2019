@@ -27,16 +27,14 @@ public class LinksFragment extends Fragment {
             "Competitive Events",
             "Facebook",
             "Twitter",
-            "Instagram",
-            "LinkedIn"
+            "Instagram"
     };
     int images[] = {
             R.drawable.fbla_icon,
             R.drawable.fbla_icon,
             R.drawable.facebook_logo,
             R.drawable.twitter_logo,
-            R.drawable.instagram_logo,
-            R.drawable.icon_linkedin
+            R.drawable.instagram_logo
     };
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
