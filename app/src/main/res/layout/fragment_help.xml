@@ -7,7 +7,7 @@
     tools:context=".SignedInActivity">
 
     <ListView
-        android:id="@+id/text_dashboard"
+        android:id="@+id/list_help"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

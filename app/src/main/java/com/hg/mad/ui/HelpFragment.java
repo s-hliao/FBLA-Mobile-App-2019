@@ -32,7 +32,7 @@ public class HelpFragment extends Fragment {
     String mDescription[] = {
             "Common questions on how to use MyChapter",
             "Need additional help?",
-            "",
+            ""
     };
     int images[] = {
             R.drawable.ic_menu_questions,
@@ -43,7 +43,7 @@ public class HelpFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_help, container, false);
-        listView = view.findViewById(R.id.text_dashboard);
+        listView = view.findViewById(R.id.list_help);
         ((ViewGroup)listView.getParent()).removeView(listView);
         final Context c = getContext();
 
@@ -74,7 +74,7 @@ public class HelpFragment extends Fragment {
         int rImgs[];
 
         MyAdapter(Context c, String title[], String description[], int imgs[]) {
-            super(c, R.layout.item_help, R.id.textView1, title);
+            super(c, R.layout.item_links, R.id.textView, title);
             this.context = c;
             this.rTitle = title;
             this.rDescription = description;
@@ -88,7 +88,7 @@ public class HelpFragment extends Fragment {
             LayoutInflater layoutInflater = (LayoutInflater) context.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             row = layoutInflater.inflate(R.layout.item_help, parent, false);
-            ImageView images = row.findViewById(R.id.image);
+            ImageView images = row.findViewById(R.id.helpImage);
             TextView myTitle = row.findViewById(R.id.helpMain);
             TextView myDescription = row.findViewById(R.id.helpSub);
 

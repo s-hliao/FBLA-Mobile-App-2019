@@ -15,19 +15,7 @@
         android:elevation="8dp"
         app:tabIndicatorColor="@color/defaultBackground"
         app:tabSelectedTextColor="@color/defaultBackground"
-        app:tabTextColor="@color/colorPrimaryTint">
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tab 1"/>
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tab 2"/>
-
-    </com.google.android.material.tabs.TabLayout>
+        app:tabTextColor="@color/colorPrimaryTint"/>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/my_events_pager"

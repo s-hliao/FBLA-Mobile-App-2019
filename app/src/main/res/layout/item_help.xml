@@ -8,7 +8,7 @@
     >
 
     <ImageView
-        android:id="@+id/image"
+        android:id="@+id/helpImage"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:paddingRight="7dp"

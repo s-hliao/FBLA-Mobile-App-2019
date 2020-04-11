@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.hg.mad.ui.LinksFragment;
 import com.hg.mad.ui.MyChapFragment;
 import com.hg.mad.ui.MyCompFragment;
 
@@ -20,8 +21,10 @@ public class MyEventsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch(position) {
             case 0:
-                return new MyChapFragment();
+                return new LinksFragment();
             case 1:
+                return new MyChapFragment();
+            case 2:
                 return new MyCompFragment();
             default:
                 return null;
@@ -30,7 +33,7 @@ public class MyEventsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     @Nullable
@@ -38,9 +41,11 @@ public class MyEventsPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch(position){
             case 0:
-                return "Chapter Events";
+                return "Links";
             case 1:
-                return "Competitive Events";
+                return "Chapter";
+            case 2:
+                return "Competitive";
             default:
                 return null;
         }
