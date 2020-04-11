@@ -17,6 +17,7 @@ public class Chapter {
     private Map<String, Map<String, String>> competitiveEvents;
     private Map<String, Map<String, String>> chapterEvents;
 
+
     public Chapter() {}
 
     public Chapter(String chapterName, String adminID, Map<String, String> usersInChapter) {

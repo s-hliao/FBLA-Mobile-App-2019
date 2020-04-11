@@ -22,7 +22,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hg.mad.R;
 
-import java.util.HashMap;
 import java.util.Map;
 
  public class CompSUDialogFragment extends DialogFragment implements View.OnClickListener {
@@ -38,8 +37,8 @@ import java.util.Map;
                               @Nullable Bundle savedInstanceState) {
          rootView = inflater.inflate(R.layout.dialog_compsignedup, container, false);
 
-         rootView.findViewById(R.id.button_signedup_yes).setOnClickListener(this);
-         rootView.findViewById(R.id.button_signedup_no).setOnClickListener(this);
+         rootView.findViewById(R.id.button_removeofficer_yes).setOnClickListener(this);
+         rootView.findViewById(R.id.button_removeofficer_no).setOnClickListener(this);
 
          signUp = rootView.findViewById(R.id.competitive_signedup);
          signUp.setText("Cancel "+ eventName + " sign up");
@@ -54,10 +53,10 @@ import java.util.Map;
      @Override
      public void onClick(View v) {
          switch (v.getId()) {
-             case R.id.button_signedup_yes:
+             case R.id.button_removeofficer_yes:
                  onYesClicked();
                  break;
-             case R.id.button_signedup_no:
+             case R.id.button_removeofficer_no:
                  onNoClicked();
                  break;
          }

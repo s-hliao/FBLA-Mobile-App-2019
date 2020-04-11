@@ -1,5 +1,9 @@
 package com.hg.mad.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class Officer {
     public static final String FIELD_NAME = "name";
     public static final String FIELD_POSITION = "position";
@@ -42,5 +46,19 @@ public class Officer {
 
     public void setContact(String contact) {
         this.contact = contact;
+    }
+
+    public byte[] getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(byte[] profileImage) {
+        this.profileImage = profileImage;
+    }
+
+
+    public static void createOfficerList(Map<Officer, String>chapOfficers){
+        List<Officer>officers = new ArrayList<>();
+        officers.addAll(chapOfficers.keySet());
     }
 }
