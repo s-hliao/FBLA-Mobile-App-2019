@@ -6,19 +6,22 @@ public class CompetitiveEvent {
     public static final String FIELD_TYPE = "type";
     public static final String FIELD_CATEGORY = "category";
     public static final String FIELD_INTRO = "intro";
+    public static final String FIELD_LOWER = "lower";
 
     private String eventName;
     private String type;
     private String category;
     private String intro;
+    private String lower;
 
     public CompetitiveEvent() {}
 
-    public CompetitiveEvent(String eventName, String type, String category, String intro){
+    public CompetitiveEvent(String eventName, String type, String category, String intro, String lower){
         this.eventName = eventName;
         this.type = type;
         this.category = category;
         this.intro = intro;
+        this.lower = lower;
     }
 
     public String getEventName(){
@@ -49,5 +52,13 @@ public class CompetitiveEvent {
 
     public void setIntro(String intro) {
         this.intro = intro;
+    }
+
+    public String getLower() {
+        return lower;
+    }
+
+    public void setLower(String lower) {
+        this.lower = lower;
     }
 }

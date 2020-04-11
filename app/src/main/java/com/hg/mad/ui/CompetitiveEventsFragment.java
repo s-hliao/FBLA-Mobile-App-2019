@@ -178,13 +178,12 @@ public class CompetitiveEventsFragment extends Fragment implements
         // Name (contains filter)
         if (searchText != null){
 
-            String nameUpper = searchText.toUpperCase();
-            String nameLower = searchText.toLowerCase();
+            String searchLower = searchText.toLowerCase();
 
             query = firestore.collection("CompetitiveEvent")
-                    .orderBy("eventName")
-                    .startAt(nameUpper)
-                    .endAt(nameLower+"\uf8ff");
+                    .orderBy("lower")
+                    .startAt(searchLower)
+                    .endAt(searchLower+"\uf8ff");
         }
 
         // Type (equality filter)
