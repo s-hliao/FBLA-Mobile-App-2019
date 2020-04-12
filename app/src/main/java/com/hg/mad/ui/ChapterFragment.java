@@ -1,9 +1,11 @@
 package com.hg.mad.ui;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -44,6 +46,7 @@ public class ChapterFragment extends Fragment implements
     private ImageView instagram;
     private ImageView twitter;
     private ImageView addOfficerButton;
+    private Button mediaButton;
 
     private RecyclerView officerRV;
 
@@ -56,6 +59,7 @@ public class ChapterFragment extends Fragment implements
 
 
 
+    @SuppressLint("WrongViewCast")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_chapter, container, false);
 
@@ -64,10 +68,13 @@ public class ChapterFragment extends Fragment implements
         instagram = (ImageView) getView().findViewById(R.id.imageView8);
         twitter = (ImageView) getView().findViewById(R.id.imageView9);
         addOfficerButton = (ImageView) getView().findViewById(R.id.imageView);
+        mediaButton = (Button) getView().findViewById(R.id.media_button);
 
         facebook.setOnClickListener(this);
         instagram.setOnClickListener(this);
         twitter.setOnClickListener(this);
+        addOfficerButton.setOnClickListener(this);
+        mediaButton.setOnClickListener(this);
 
 
 
@@ -114,6 +121,7 @@ public class ChapterFragment extends Fragment implements
                         });
                     }
         });
+
 
 
 
