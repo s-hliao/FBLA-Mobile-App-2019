@@ -17,6 +17,7 @@ public class FaqActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         WebView webView = findViewById(R.id.faqWeb);
+        webView.setVerticalScrollBarEnabled(true);
         webView.loadUrl("file:///android_asset/FAQ.html");
     }
 

@@ -5,11 +5,13 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -61,12 +64,15 @@ public class ChapterFragment extends Fragment implements
     private DocumentReference chapterRef;
     private FirebaseFirestore firestore;
 
-    private DatabaseUser curUser;
     private OfficerAdapter adapter;
 
     private SocMediaDialogFragment socMediaDialog;
     private AddOfficerDialogFragment addOfficerDialog;
     private EditOfficerDialogFragment editOfficerDialog;
+
+
+    private boolean isAdmin;
+    private String chapterName;
 
     @SuppressLint("WrongViewCast")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -87,6 +93,9 @@ public class ChapterFragment extends Fragment implements
 
         socMediaDialog = new SocMediaDialogFragment();
         addOfficerDialog = new AddOfficerDialogFragment();
+        editOfficerDialog = new EditOfficerDialogFragment();
+
+        isAdmin = false;
 
         FirebaseFirestore.setLoggingEnabled(true);
 
@@ -98,40 +107,64 @@ public class ChapterFragment extends Fragment implements
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    curUser = task.getResult().toObject(DatabaseUser.class);
+
+                    boolean isAdmin = (boolean)task.getResult().get("isAdmin");
+                    if (isAdmin){
+                        addOfficerButton.setVisibility(View.VISIBLE);
+                        mediaButton.setVisibility(View.VISIBLE);
+                    } else{
+                        addOfficerButton.setVisibility(View.INVISIBLE);
+                        mediaButton.setVisibility(View.INVISIBLE);
+                    }
+
+                    chapterName = task.getResult().get("chapterName").toString();
+
 
                 }
             }
         });
 
-        if (curUser.getIsAdmin()){
-            addOfficerButton.setVisibility(View.VISIBLE);
-            mediaButton.setVisibility(View.VISIBLE);
-        } else{
-            addOfficerButton.setVisibility(View.INVISIBLE);
-            mediaButton.setVisibility(View.INVISIBLE);
-        }
 
-        Task<QuerySnapshot> q = firestore.collection("Chapters").whereEqualTo("chapterName", curUser.getChapterName())
+        Task<QuerySnapshot> q = firestore.collection("Chapter").orderBy("chapterName")
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        chapterRef = queryDocumentSnapshots.getDocuments().get(0).getReference();
+                        for(DocumentSnapshot ds: queryDocumentSnapshots.getDocuments()){
+                            if(ds.get("chapterName").toString().equals(chapterName)){
+                                chapterRef = ds.getReference();
+                                System.out.println(ds.get("chapterName").toString());
+                                System.out.println("recycler start");
+                                startRecycler();
 
-                        chapterRef.collection("officers").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                            @Override
-                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                adapter = new OfficerAdapter(chapterRef.collection("officers"));
-
-                                officerRV.setLayoutManager(new LinearLayoutManager(getContext()));
-                                officerRV.setAdapter(adapter);
-                                officerRV.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
                             }
-                        });
+                        }
+
                     }
-        });
+                });
+
+
+
+
 
         return root;
+    }
+
+    private void startRecycler(){
+        Task<QuerySnapshot> q = chapterRef.collection("officers").orderBy("name")
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for(DocumentSnapshot ds: queryDocumentSnapshots.getDocuments()){
+                            System.out.println(ds.get("name"));
+                        }
+
+                    }
+                });
+       adapter = new OfficerAdapter(chapterRef.collection("officers").orderBy("name"), this);
+
+        officerRV.setLayoutManager(new LinearLayoutManager(getContext()));
+        officerRV.setAdapter(adapter);
+        officerRV.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
     }
 
     @Override
@@ -157,12 +190,14 @@ public class ChapterFragment extends Fragment implements
         switch( view.getId()){
             case R.id.media_button: // set social media
                 socMediaDialog.setChapterRef(chapterRef);
+                getFragmentManager().executePendingTransactions();
                 if(!socMediaDialog.isAdded()){
                     socMediaDialog.show(getFragmentManager(), "socMediaDialog");
                 }
                 break;
             case R.id.imageView: // add a new officer
                 addOfficerDialog.setChapterRef(chapterRef);
+                getFragmentManager().executePendingTransactions();
                 if(!addOfficerDialog.isAdded())
                     addOfficerDialog.show(getFragmentManager(), "addOfficerDialog");
                 break;
@@ -186,8 +221,12 @@ public class ChapterFragment extends Fragment implements
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Map<String, String>socialMedia = (Map<String, String>) documentSnapshot.get("socialMedia");
                 if(socialMedia.containsKey(s)){
+                    System.out.println("http://www."+s+".com/"+socialMedia.get(s));
                     Intent viewIntent = new Intent("android.intent.action.VIEW",
                             Uri.parse("http://www."+s+".com/"+socialMedia.get(s)));
+                    startActivity(viewIntent);
+                } else{
+                    Toast.makeText(getContext(), "Not set up", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -196,8 +235,10 @@ public class ChapterFragment extends Fragment implements
 
     @Override
     public void onOfficerSelected(DocumentSnapshot chapOfficer) {
-        if(curUser.getIsAdmin()){
+        if(isAdmin){
+
             editOfficerDialog.setOfficer(chapOfficer);
+            getFragmentManager().executePendingTransactions();
             if(!editOfficerDialog.isAdded())
                 editOfficerDialog.show(getFragmentManager(), "editOfficerDialog");
         }

@@ -30,7 +30,9 @@ import com.hg.mad.model.Officer;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
  /**
  * Dialog Fragment containing filter form.
@@ -59,7 +61,7 @@ public class AddOfficerDialogFragment extends DialogFragment implements View.OnC
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.dialog_filter, container, false);
+        rootView = inflater.inflate(R.layout.dialog_add_officer, container, false);
 
         add = (Button) rootView.findViewById(R.id.button_addOfficer);
         cancel = (Button) rootView.findViewById(R.id.button_cancel);
@@ -107,6 +109,14 @@ public class AddOfficerDialogFragment extends DialogFragment implements View.OnC
         }
     }
 
+     @Override
+     public void onResume() {
+         super.onResume();
+         getDialog().getWindow().setLayout(
+                 ViewGroup.LayoutParams.MATCH_PARENT,
+                 ViewGroup.LayoutParams.WRAP_CONTENT);
+     }
+
     public void onUploadClicked(){
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, 1);
@@ -119,12 +129,16 @@ public class AddOfficerDialogFragment extends DialogFragment implements View.OnC
 
 
     public void onAddClicked() {
-        Officer o;
-        o = new Officer(name.getText().toString(), position.getText().toString(), contact.getText().toString());
+        Map<String, Object> newOfficer = new HashMap<>();
+        newOfficer.put("name",name.getText().toString());
+        newOfficer.put("position",position.getText().toString());
+        newOfficer.put("contact", contact.getText().toString());
+
         if(profile!=null){
-            o.setProfileImage(profile);
+            newOfficer.put("profilePic", profile);
         }
-        chapterRef.collection("officers").add(o);
+        chapterRef.collection("officers").add(newOfficer);
+        System.out.println("officer added");
 
         dismiss();
         Toast.makeText(getContext(), "Officer Added", Toast.LENGTH_SHORT).show();

@@ -62,7 +62,7 @@ public class EditOfficerDialogFragment extends DialogFragment implements View.On
      public View onCreateView(@NonNull LayoutInflater inflater,
                               @Nullable ViewGroup container,
                               @Nullable Bundle savedInstanceState) {
-         rootView = inflater.inflate(R.layout.dialog_filter, container, false);
+         rootView = inflater.inflate(R.layout.dialog_remove_officer, container, false);
 
          edit = (Button) rootView.findViewById(R.id.button_edit_officer);
          cancel1 = (Button) rootView.findViewById(R.id.button_cancel1);
@@ -116,6 +116,14 @@ public class EditOfficerDialogFragment extends DialogFragment implements View.On
                  onCameraClicked();
                  break;
          }
+     }
+
+     @Override
+     public void onResume() {
+         super.onResume();
+         getDialog().getWindow().setLayout(
+                 ViewGroup.LayoutParams.MATCH_PARENT,
+                 ViewGroup.LayoutParams.WRAP_CONTENT);
      }
 
      public void onEditClicked(){

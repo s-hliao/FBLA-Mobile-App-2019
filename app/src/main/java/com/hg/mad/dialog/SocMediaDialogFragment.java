@@ -52,7 +52,7 @@ public class SocMediaDialogFragment extends DialogFragment implements View.OnCli
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.dialog_filter, container, false);
+        rootView = inflater.inflate(R.layout.dialog_set_social_media, container, false);
 
         yes = (Button)rootView.findViewById(R.id.button_set_media_yes);
         cancel = (Button)rootView.findViewById(R.id.button_cancel);
@@ -101,6 +101,14 @@ public class SocMediaDialogFragment extends DialogFragment implements View.OnCli
                 break;
         }
     }
+
+     @Override
+     public void onResume() {
+         super.onResume();
+         getDialog().getWindow().setLayout(
+                 ViewGroup.LayoutParams.MATCH_PARENT,
+                 ViewGroup.LayoutParams.WRAP_CONTENT);
+     }
 
     public void setMedia() {
         Map<String, String> newMedia = new HashMap<String, String>();
