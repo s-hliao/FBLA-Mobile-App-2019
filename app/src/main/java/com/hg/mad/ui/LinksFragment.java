@@ -87,7 +87,7 @@ public class LinksFragment extends Fragment {
         int rImgs[];
 
         MyAdapter(Context c, String title[], int imgs[]) {
-            super(c, R.layout.item_links, R.id.textView, title);
+            super(c, R.layout.item_links, title);
             this.context = c;
             this.rTitle = title;
             this.rImgs = imgs;
