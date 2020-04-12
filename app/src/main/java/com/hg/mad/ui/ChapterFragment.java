@@ -35,6 +35,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.hg.mad.R;
 import com.hg.mad.adapter.CompetitiveAdapter;
 import com.hg.mad.adapter.OfficerAdapter;
+import com.hg.mad.dialog.AddOfficerDialogFragment;
 import com.hg.mad.dialog.SocMediaDialogFragment;
 import com.hg.mad.model.Chapter;
 import com.hg.mad.model.DatabaseUser;
@@ -52,6 +53,7 @@ public class ChapterFragment extends Fragment implements
     private ImageView addOfficerButton;
     private Button mediaButton;
 
+
     private RecyclerView officerRV;
 
     private DocumentReference chapterRef;
@@ -62,6 +64,7 @@ public class ChapterFragment extends Fragment implements
     private OfficerAdapter adapter;
 
     private SocMediaDialogFragment socMediaDialog;
+    private AddOfficerDialogFragment addOfficerDialog;
 
 
 
@@ -84,6 +87,7 @@ public class ChapterFragment extends Fragment implements
         mediaButton.setOnClickListener(this);
 
         socMediaDialog = new SocMediaDialogFragment();
+        addOfficerDialog = new AddOfficerDialogFragment();
 
 
 
@@ -168,6 +172,9 @@ public class ChapterFragment extends Fragment implements
                 }
                 break;
             case R.id.imageView: // add a new officer
+                addOfficerDialog.setChapterRef(chapterRef);
+                if(!addOfficerDialog.isAdded())
+                    addOfficerDialog.show(getFragmentManager(), "addOfficerDialog");
                 break;
             case R.id.imageView7: // facebook
                 onSocialMediaClicked("facebook");

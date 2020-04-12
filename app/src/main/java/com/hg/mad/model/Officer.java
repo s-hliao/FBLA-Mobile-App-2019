@@ -15,12 +15,19 @@ public class Officer {
     private String contact;
     private byte[] profileImage;
 
-    public Officer() {}
-
     public Officer(String name, String position, String contact){
         this.name = name;
         this.position = position;
         this.contact = contact;
+        profileImage = new byte[0];
+
+    }
+
+    public Officer(String name, String position, String contact, byte[]profileImage){
+        this.name = name;
+        this.position = position;
+        this.contact = contact;
+        this.profileImage = profileImage;
 
     }
 

@@ -72,9 +72,11 @@ public class OfficerAdapter extends FirestoreAdapter<OfficerAdapter.ViewHolder> 
         viewHolder.positionTextView.setText(officer.getPosition());
         viewHolder.contactTextView.setText(officer.getContact());
         byte[]data = officer.getProfileImage();
-        viewHolder.profilePic.setImageBitmap(
-                BitmapFactory.decodeByteArray(data, 0, data.length)
-        );
+        if(data.length!=0) {
+            viewHolder.profilePic.setImageBitmap(
+                    BitmapFactory.decodeByteArray(data, 0, data.length)
+            );
+        }
     }
 
 
