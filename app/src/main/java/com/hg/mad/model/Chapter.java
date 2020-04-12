@@ -10,12 +10,14 @@ public class Chapter {
     public static final String FIELD_USERSINCHAPTER = "usersInChapter";
     public static final String FIELD_COMPETITIVEEVENTS = "competitiveEvents";
     public static final String FIELD_CHAPTEREVENTS = "chapterEvents";
+    public static final String FIELD_SOCIALMEDIA = "socialMedia";
 
     private String chapterName;
     private Map<String, String> usersInChapter;
     private String adminID;
     private Map<String, Map<String, String>> competitiveEvents;
     private Map<String, Map<String, String>> chapterEvents;
+    private Map<String, String> socialMedia;
 
 
     public Chapter() {}
@@ -62,6 +64,14 @@ public class Chapter {
 
     public void setChapterEvents(Map<String, Map<String, String>> chapterEvents){
         this.chapterEvents = chapterEvents;
+    }
+
+    public Map<String, String> getSocialMedia() {
+        return socialMedia;
+    }
+
+    public void setSocialMedia(Map<String, String> socMedia) {
+        this.socialMedia = socMedia;
     }
 
 

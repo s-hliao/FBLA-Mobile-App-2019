@@ -1,6 +1,9 @@
 package com.hg.mad.ui;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +35,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.hg.mad.R;
 import com.hg.mad.adapter.CompetitiveAdapter;
 import com.hg.mad.adapter.OfficerAdapter;
+import com.hg.mad.dialog.SocMediaDialogFragment;
 import com.hg.mad.model.Chapter;
 import com.hg.mad.model.DatabaseUser;
 import com.hg.mad.model.Officer;
@@ -57,24 +61,30 @@ public class ChapterFragment extends Fragment implements
     private DatabaseUser curUser;
     private OfficerAdapter adapter;
 
+    private SocMediaDialogFragment socMediaDialog;
+
+
 
 
     @SuppressLint("WrongViewCast")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_chapter, container, false);
 
-        officerRV = (RecyclerView) getView().findViewById(R.id.recyclerView);
-        facebook  = (ImageView) getView().findViewById(R.id.imageView7);
-        instagram = (ImageView) getView().findViewById(R.id.imageView8);
-        twitter = (ImageView) getView().findViewById(R.id.imageView9);
-        addOfficerButton = (ImageView) getView().findViewById(R.id.imageView);
-        mediaButton = (Button) getView().findViewById(R.id.media_button);
+        officerRV = (RecyclerView) root.findViewById(R.id.recyclerView);
+        facebook  = (ImageView) root.findViewById(R.id.imageView7);
+        instagram = (ImageView) root.findViewById(R.id.imageView8);
+        twitter = (ImageView) root.findViewById(R.id.imageView9);
+        addOfficerButton = (ImageView) root.findViewById(R.id.imageView);
+        mediaButton = (Button) root.findViewById(R.id.media_button);
 
         facebook.setOnClickListener(this);
         instagram.setOnClickListener(this);
         twitter.setOnClickListener(this);
         addOfficerButton.setOnClickListener(this);
         mediaButton.setOnClickListener(this);
+
+        socMediaDialog = new SocMediaDialogFragment();
+
 
 
 
@@ -99,8 +109,10 @@ public class ChapterFragment extends Fragment implements
 
         if (curUser.getIsAdmin()){
             addOfficerButton.setVisibility(View.VISIBLE);
+            mediaButton.setVisibility(View.VISIBLE);
         } else{
             addOfficerButton.setVisibility(View.INVISIBLE);
+            mediaButton.setVisibility(View.INVISIBLE);
         }
 
         Task<QuerySnapshot> q = firestore.collection("Chapters").whereEqualTo("chapterName", curUser.getChapterName())
@@ -148,7 +160,41 @@ public class ChapterFragment extends Fragment implements
 
     @Override
     public void onClick(View view) {
+        switch( view.getId()){
+            case R.id.media_button: // set social media
+                socMediaDialog.setChapterRef(chapterRef);
+                if(!socMediaDialog.isAdded()){
+                    socMediaDialog.show(getFragmentManager(), "socMediaDialog");
+                }
+                break;
+            case R.id.imageView: // add a new officer
+                break;
+            case R.id.imageView7: // facebook
+                onSocialMediaClicked("facebook");
+                break;
+            case R.id.imageView8: //instagram
+                onSocialMediaClicked("instagram");
+                break;
+            case R.id.imageView9: //twitter
+                onSocialMediaClicked("twitter");
+                break;
+        }
 
+    }
+
+
+    public void onSocialMediaClicked(final String s){
+        chapterRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Chapter chap =  documentSnapshot.toObject(Chapter.class);
+                if(chap.getSocialMedia().containsKey(s)){
+                    Intent viewIntent = new Intent("android.intent.action.VIEW",
+                            Uri.parse("http://www."+s+".com/"+chap.getSocialMedia().get(s)));
+                }
+
+            }
+        });
     }
 
     @Override

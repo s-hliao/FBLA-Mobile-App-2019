@@ -29,12 +29,12 @@
             android:textSize="18sp" />
 
         <EditText
-            android:id="@+id/editText3"
+            android:id="@+id/editText_facebook"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="facebook username"
+            android:hint="facebook id (url extension)"
             android:inputType="textPersonName" />
 
     </LinearLayout>
@@ -53,12 +53,12 @@
             android:textSize="18sp" />
 
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/editText_instagram"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="instagram username"
+            android:hint="instagram id (url extension)"
             android:inputType="textPersonName" />
 
     </LinearLayout>
@@ -77,12 +77,12 @@
             android:textSize="18sp" />
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/editText_twitter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="twitter username"
+            android:hint="twitter id (url extension)"
             android:inputType="textPersonName" />
     </LinearLayout>
 
@@ -99,22 +99,22 @@
             android:layout_weight="1" />
 
         <Button
-            android:id="@+id/button_removeofficer_no"
+            android:id="@+id/button_cancel"
             style="@style/Base.Widget.AppCompat.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="NO"
+            android:text="CANCEL"
             android:textColor="@color/greySecondary"
             android:theme="@style/ThemeOverlay.FilterButton" />
 
 
         <Button
-            android:id="@+id/button_removeofficer_yes"
+            android:id="@+id/button_set_media_yes"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="YES"
+            android:text="CONFIRM"
             android:theme="@style/ThemeOverlay.FilterButton" />
 
     </LinearLayout>
