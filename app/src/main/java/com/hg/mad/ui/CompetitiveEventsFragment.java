@@ -260,6 +260,7 @@ public class CompetitiveEventsFragment extends Fragment implements
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful() && task.getResult() != null) {
+
                     eventsSignedUp = (Map<String, Integer>) task.getResult().get("competitiveEvents");
 
                     // Show the already signed up dialog

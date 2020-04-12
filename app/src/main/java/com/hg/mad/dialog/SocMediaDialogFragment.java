@@ -42,6 +42,8 @@ public class SocMediaDialogFragment extends DialogFragment implements View.OnCli
     private EditText twitterID;
 
     private DocumentReference chapterRef;
+    private Map<String, String>socialMedia;
+
 
 
 
@@ -65,16 +67,16 @@ public class SocMediaDialogFragment extends DialogFragment implements View.OnCli
         chapterRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Chapter chap =  documentSnapshot.toObject(Chapter.class);
-                if(chap.getSocialMedia().containsKey("facebook")){
-                    facebookID.setText(chap.getSocialMedia().get("facebook"));
+                socialMedia = (Map<String, String>) documentSnapshot.get("socialMedia");
+                if(socialMedia.containsKey("facebook")){
+                    facebookID.setText(socialMedia.get("facebook"));
                 }
-                if(chap.getSocialMedia().containsKey("instagram")){
-                    instagramID.setText(chap.getSocialMedia().get("instagram"));
+                if(socialMedia.containsKey("instagram")){
+                    instagramID.setText(socialMedia.get("instagram"));
                 }
-                if(chap.getSocialMedia().containsKey("twitter")){
-                    twitterID.setText(chap.getSocialMedia().get("twitter"));
-                }
+                if(socialMedia.containsKey("twitter")){
+                    twitterID.setText(socialMedia.get("twitter"));        }
+
 
             }
         });
@@ -101,26 +103,26 @@ public class SocMediaDialogFragment extends DialogFragment implements View.OnCli
     }
 
     public void setMedia() {
-        Map<String, String> socialMedia = new HashMap<String, String>();
+        Map<String, String> newMedia = new HashMap<String, String>();
 
         if(facebookID.getText().toString()!=null && !facebookID.getText().toString().equals("")){
-            socialMedia.put("facebook", facebookID.getText().toString());
+            newMedia.put("facebook", facebookID.getText().toString());
         }
         if(instagramID.getText().toString()!=null && !instagramID.getText().toString().equals("")){
-            socialMedia.put("instagram", instagramID.getText().toString());
+            newMedia.put("instagram", instagramID.getText().toString());
         }
         if(twitterID.getText().toString()!=null && !twitterID.getText().toString().equals("")){
-            socialMedia.put("instagram", twitterID.getText().toString());
+            newMedia.put("twitter", twitterID.getText().toString());
         }
         Map<String, Object> updates = new HashMap<>();
-        updates.put("socialMedia", socialMedia);
+        updates.put("socialMedia", newMedia);
 
         chapterRef.update(updates);
 
 
-
         dismiss();
-        Toast.makeText(getContext(), "Social Media Updated", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Social Media Changed", Toast.LENGTH_SHORT).show();
+
     }
 
     public void onCancelClicked() {

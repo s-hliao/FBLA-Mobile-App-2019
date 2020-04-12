@@ -36,6 +36,7 @@ import com.hg.mad.R;
 import com.hg.mad.adapter.CompetitiveAdapter;
 import com.hg.mad.adapter.OfficerAdapter;
 import com.hg.mad.dialog.AddOfficerDialogFragment;
+import com.hg.mad.dialog.EditOfficerDialogFragment;
 import com.hg.mad.dialog.SocMediaDialogFragment;
 import com.hg.mad.model.Chapter;
 import com.hg.mad.model.DatabaseUser;
@@ -58,16 +59,13 @@ public class ChapterFragment extends Fragment implements
 
     private DocumentReference chapterRef;
     private FirebaseFirestore firestore;
-    private Query query;
 
     private DatabaseUser curUser;
     private OfficerAdapter adapter;
 
     private SocMediaDialogFragment socMediaDialog;
     private AddOfficerDialogFragment addOfficerDialog;
-
-
-
+    private EditOfficerDialogFragment editOfficerDialog;
 
     @SuppressLint("WrongViewCast")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -207,7 +205,9 @@ public class ChapterFragment extends Fragment implements
     @Override
     public void onOfficerSelected(DocumentSnapshot chapOfficer) {
         if(curUser.getIsAdmin()){
-
+            editOfficerDialog.setOfficer(chapOfficer);
+            if(!editOfficerDialog.isAdded())
+                editOfficerDialog.show(getFragmentManager(), "editOfficerDialog");
         }
     }
 }

@@ -28,6 +28,7 @@ public class Chapter {
         this.usersInChapter = usersInChapter;
         this.competitiveEvents = new HashMap<>();
         this.chapterEvents = new HashMap<>();
+        this.socialMedia = new HashMap<>();
     }
 
     public String getChapterName() {

@@ -88,7 +88,7 @@ public class AddOfficerDialogFragment extends DialogFragment implements View.OnC
      @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.button_search:
+            case R.id.button_addOfficer:
                 if(name.getText()!=null && position.getText()!=null && contact.getText()!=null){
                     onAddClicked();
                 } else{
@@ -167,6 +167,7 @@ public class AddOfficerDialogFragment extends DialogFragment implements View.OnC
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 profile = stream.toByteArray();
+                Toast.makeText(getContext(), "Image Uploaded", Toast.LENGTH_SHORT).show();
                 bm.recycle();
             }
 
