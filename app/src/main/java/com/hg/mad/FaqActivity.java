@@ -3,6 +3,7 @@ package com.hg.mad;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.webkit.WebView;
 
 public class FaqActivity extends AppCompatActivity {
 
@@ -14,6 +15,9 @@ public class FaqActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("FAQ");
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        WebView webView = findViewById(R.id.faqWeb);
+        webView.loadUrl("file:///android_asset/FAQ.html");
     }
 
     @Override

@@ -44,6 +44,7 @@ import com.hg.mad.model.Officer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ChapterFragment extends Fragment implements
         View.OnClickListener, OfficerAdapter.OnOfficerListener{
@@ -87,14 +88,9 @@ public class ChapterFragment extends Fragment implements
         socMediaDialog = new SocMediaDialogFragment();
         addOfficerDialog = new AddOfficerDialogFragment();
 
-
-
-
         FirebaseFirestore.setLoggingEnabled(true);
 
         firestore = FirebaseFirestore.getInstance();
-
-
 
         // Only show manage to admins
         DocumentReference databaseUserRef = firestore.collection("DatabaseUser").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -107,7 +103,6 @@ public class ChapterFragment extends Fragment implements
                 }
             }
         });
-
 
         if (curUser.getIsAdmin()){
             addOfficerButton.setVisibility(View.VISIBLE);
@@ -135,9 +130,6 @@ public class ChapterFragment extends Fragment implements
                         });
                     }
         });
-
-
-
 
         return root;
     }
@@ -192,10 +184,10 @@ public class ChapterFragment extends Fragment implements
         chapterRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Chapter chap =  documentSnapshot.toObject(Chapter.class);
-                if(chap.getSocialMedia().containsKey(s)){
+                Map<String, String>socialMedia = (Map<String, String>) documentSnapshot.get("socialMedia");
+                if(socialMedia.containsKey(s)){
                     Intent viewIntent = new Intent("android.intent.action.VIEW",
-                            Uri.parse("http://www."+s+".com/"+chap.getSocialMedia().get(s)));
+                            Uri.parse("http://www."+s+".com/"+socialMedia.get(s)));
                 }
 
             }

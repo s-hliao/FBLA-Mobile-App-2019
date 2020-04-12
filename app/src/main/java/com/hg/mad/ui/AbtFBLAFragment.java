@@ -15,7 +15,6 @@ import com.hg.mad.R;
 
 public class AbtFBLAFragment extends Fragment {
 
-    VideoView videoView;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_abtfbla, container, false);
