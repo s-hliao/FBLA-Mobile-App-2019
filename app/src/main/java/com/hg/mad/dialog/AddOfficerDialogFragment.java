@@ -192,7 +192,8 @@ public class AddOfficerDialogFragment extends DialogFragment implements View.OnC
             if(bm!=null) {
                 System.out.println("uploaded");
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                Bitmap scaled  = Bitmap.createScaledBitmap(bm, 85, 93, true);
+                double scale  =550/bm.getHeight();
+                Bitmap scaled  = Bitmap.createScaledBitmap(bm, (int)(bm.getWidth()*scale), (int)(bm.getHeight()*scale), true);
                 scaled.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                 byte[]picture = stream.toByteArray();
 
