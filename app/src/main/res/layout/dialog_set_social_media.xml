@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="facebook id (url extension)"
+            android:hint="(ex: FutureBusinessLeaders)"
             android:inputType="textPersonName" />
 
     </LinearLayout>
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="instagram id (url extension)"
+            android:hint="(ex: FutureBusinessLeaders)"
             android:inputType="textPersonName" />
 
     </LinearLayout>
@@ -82,7 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="twitter id (url extension)"
+            android:hint="(ex: FutureBusinessLeaders)"
             android:inputType="textPersonName" />
     </LinearLayout>
 

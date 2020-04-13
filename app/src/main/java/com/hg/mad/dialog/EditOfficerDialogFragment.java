@@ -47,7 +47,6 @@ public class EditOfficerDialogFragment extends DialogFragment implements View.On
      private View rootView;
 
      private Button edit;
-     private Button cancel1;
      private Button cancel2;
      private LinearLayout upload;
      private LinearLayout camera;
@@ -73,7 +72,6 @@ public class EditOfficerDialogFragment extends DialogFragment implements View.On
          rootView = inflater.inflate(R.layout.dialog_remove_officer, container, false);
 
          edit = (Button) rootView.findViewById(R.id.button_edit_officer);
-         cancel1 = (Button) rootView.findViewById(R.id.button_cancel1);
          cancel2 = (Button) rootView.findViewById(R.id.button_cancel2);
          remove = (Button) rootView.findViewById(R.id.button_remove);
          upload = (LinearLayout) rootView.findViewById(R.id.layout_upload);
@@ -89,7 +87,6 @@ public class EditOfficerDialogFragment extends DialogFragment implements View.On
 
 
          edit.setOnClickListener(this);
-         cancel1.setOnClickListener(this);
          cancel2.setOnClickListener(this);
          upload.setOnClickListener(this);
          camera.setOnClickListener(this);
@@ -114,9 +111,6 @@ public class EditOfficerDialogFragment extends DialogFragment implements View.On
          switch (v.getId()) {
              case R.id.button_edit_officer:
                  onEditClicked();
-                 break;
-             case R.id.button_cancel1:
-                 onCancelClicked();
                  break;
              case R.id.button_cancel2:
                  onCancelClicked();;
