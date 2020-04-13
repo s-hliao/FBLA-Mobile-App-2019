@@ -12,13 +12,21 @@
         android:id="@+id/manage_signups"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:padding="15dp"
         android:text="Manage Sign Ups"
         android:textColor="@android:color/black"
-        android:visibility="gone"
-        android:focusable="true"
-        android:clickable="true"
-        android:foreground="?android:attr/selectableItemBackground"/>
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/divider_comp"
+        android:layout_width="match_parent"
+        android:layout_height="7dp"
+        android:background="?android:attr/listDivider"
+        tools:visibility="gone" />
 
     <FrameLayout
         android:layout_width="match_parent"

@@ -25,7 +25,7 @@ import com.hg.mad.R;
 import java.util.HashMap;
 import java.util.Map;
 
- public class CompetitiveDialogFragment extends DialogFragment implements View.OnClickListener {
+ public class CompUsersSUDialogFragment extends DialogFragment implements View.OnClickListener {
 
     private View rootView;
     private String eventName;
