@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -23,16 +24,22 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.hg.mad.R;
 import com.hg.mad.model.Officer;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
  /**
  * Dialog Fragment containing filter form.
@@ -53,8 +60,11 @@ public class AddOfficerDialogFragment extends DialogFragment implements View.OnC
 
     private DocumentReference chapterRef;
 
-    private byte[] profile;
+    private String profile;
 
+
+     FirebaseStorage storage;
+     StorageReference storageReference;
 
     @Nullable
     @Override
@@ -72,7 +82,14 @@ public class AddOfficerDialogFragment extends DialogFragment implements View.OnC
         position = (EditText) rootView.findViewById(R.id.editText_position);
         contact = (EditText) rootView.findViewById(R.id.editText_contact);
 
+        name.clearComposingText();
+        position.clearComposingText();
+        contact.clearComposingText();
+
         profile = null;
+
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
 
 
         add.setOnClickListener(this);
@@ -135,7 +152,8 @@ public class AddOfficerDialogFragment extends DialogFragment implements View.OnC
         newOfficer.put("contact", contact.getText().toString());
 
         if(profile!=null){
-            newOfficer.put("profilePic", profile);
+
+            newOfficer.put("profile", profile);
         }
         chapterRef.collection("officers").add(newOfficer);
         System.out.println("officer added");
@@ -155,32 +173,32 @@ public class AddOfficerDialogFragment extends DialogFragment implements View.OnC
             Bitmap bm = null;
             switch (requestCode){
                 case 0:
+                    System.out.println("cas0");
                      bm= (Bitmap) data.getExtras().get("data");
                     break;
                 case 1:
-                    Uri uri =  data.getData();
-                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                    if (uri != null) {
-
-                        Cursor cursor = getContext().getContentResolver().query(uri,
-                                filePathColumn, null, null, null);
-                        if (cursor != null) {
-                            cursor.moveToFirst();
-
-                            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                            String picturePath = cursor.getString(columnIndex);
-                            bm = BitmapFactory.decodeFile(picturePath);
-                            cursor.close();
-                        }
+                    Uri contentURI = data.getData();
+                    try {
+                        bm = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), contentURI);
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
 
                     break;
 
             }
-            if(bm!=null){
+            System.out.println("completed");
+            if(bm!=null) {
+                System.out.println("uploaded");
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                profile = stream.toByteArray();
+                Bitmap scaled  = Bitmap.createScaledBitmap(bm, 85, 93, true);
+                scaled.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                byte[]picture = stream.toByteArray();
+
+                profile = "images/"+UUID.randomUUID().toString()+".jpg";
+
+                storageReference.child(profile).putBytes(picture);
+
                 Toast.makeText(getContext(), "Image Uploaded", Toast.LENGTH_SHORT).show();
                 bm.recycle();
             }

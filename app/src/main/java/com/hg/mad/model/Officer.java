@@ -8,26 +8,27 @@ public class Officer {
     public static final String FIELD_NAME = "name";
     public static final String FIELD_POSITION = "position";
     public static final String FIELD_CONTACT = "contact";
-    public static final String FIELD_PROFILEIMAGE = "profileImage";
+    public static final String FIELD_PROFILEIMAGE = "profile";
 
     private String name;
     private String position;
     private String contact;
-    private byte[] profileImage;
+    private String profile;
+    public Officer(){}
 
     public Officer(String name, String position, String contact){
         this.name = name;
         this.position = position;
         this.contact = contact;
-        profileImage = new byte[0];
+        profile = null;
 
     }
 
-    public Officer(String name, String position, String contact, byte[]profileImage){
+    public Officer(String name, String position, String contact, String profile){
         this.name = name;
         this.position = position;
         this.contact = contact;
-        this.profileImage = profileImage;
+        this.profile = profile;
 
     }
 
@@ -55,12 +56,12 @@ public class Officer {
         this.contact = contact;
     }
 
-    public byte[] getProfileImage() {
-        return profileImage;
+    public String getProfile() {
+        return profile;
     }
 
-    public void setProfileImage(byte[] profileImage) {
-        this.profileImage = profileImage;
+    public void setProfile(String profile) {
+        this.profile = profile;
     }
 
 

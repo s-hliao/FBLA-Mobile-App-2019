@@ -25,13 +25,17 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.hg.mad.R;
 import com.hg.mad.model.Officer;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
  /**
  * Dialog Fragment containing filter form.
@@ -54,7 +58,10 @@ public class EditOfficerDialogFragment extends DialogFragment implements View.On
 
      private DocumentSnapshot officer;
 
-     private byte[] profile;
+     private String profile;
+
+     FirebaseStorage storage;
+     StorageReference storageReference;
 
 
      @Nullable
@@ -75,17 +82,24 @@ public class EditOfficerDialogFragment extends DialogFragment implements View.On
          position = (EditText) rootView.findViewById(R.id.editText_position);
          contact = (EditText) rootView.findViewById(R.id.editText_contact);
 
-         profile = null;
+         if(officer.get("profile")!=null){
+             profile = officer.get("profile").toString();
+         }
 
 
          edit.setOnClickListener(this);
          cancel1.setOnClickListener(this);
+         cancel2.setOnClickListener(this);
          upload.setOnClickListener(this);
          camera.setOnClickListener(this);
+         remove.setOnClickListener(this);
 
          name.setText(officer.get("name").toString());
          position.setText(officer.get("position").toString());
          contact.setText(officer.get("contact").toString());
+
+         storage = FirebaseStorage.getInstance();
+         storageReference = storage.getReference();
 
          return rootView;
      }
@@ -128,15 +142,16 @@ public class EditOfficerDialogFragment extends DialogFragment implements View.On
 
      public void onEditClicked(){
          Map<String, Object> updates = new HashMap<String, Object>();
-         updates.put("name", name);
-         updates.put("position", position);
-         updates.put("contact", contact);
+         updates.put("name", name.getText().toString());
+         updates.put("position", position.getText().toString());
+         updates.put("contact", contact.getText().toString());
 
          if(profile!=null){
-            updates.put("profileImage", profile);
+            updates.put("profile", profile);
          }
 
          officer.getReference().update(updates);
+         dismiss();
          Toast.makeText(getContext(), "Officer Edited", Toast.LENGTH_SHORT).show();
      }
 
@@ -164,36 +179,35 @@ public class EditOfficerDialogFragment extends DialogFragment implements View.On
      @Override
      public void onActivityResult(int requestCode, int resultCode, Intent data){
          super.onActivityResult(requestCode, resultCode, data);
-         if(resultCode== Activity.RESULT_OK){
+         if(resultCode==Activity.RESULT_OK){
              Bitmap bm = null;
              switch (requestCode){
                  case 0:
+                     System.out.println("cas0");
                      bm= (Bitmap) data.getExtras().get("data");
                      break;
                  case 1:
-                     Uri uri =  data.getData();
-                     String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                     if (uri != null) {
-
-                         Cursor cursor = getContext().getContentResolver().query(uri,
-                                 filePathColumn, null, null, null);
-                         if (cursor != null) {
-                             cursor.moveToFirst();
-
-                             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                             String picturePath = cursor.getString(columnIndex);
-                             bm = BitmapFactory.decodeFile(picturePath);
-                             cursor.close();
-                         }
+                     Uri contentURI = data.getData();
+                     try {
+                         bm = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), contentURI);
+                     } catch (IOException e) {
+                         e.printStackTrace();
                      }
 
                      break;
 
              }
-             if(bm!=null){
+             System.out.println("completed");
+             if(bm!=null) {
+                 System.out.println("uploaded");
                  ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                 bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                 profile = stream.toByteArray();
+                 Bitmap scaled  = Bitmap.createScaledBitmap(bm, 85, 93, true);
+                 scaled.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                 byte[]picture = stream.toByteArray();
+
+                 if(profile!=null) storageReference.child(profile).putBytes(picture);
+                 else profile = "images/"+UUID.randomUUID().toString()+".jpg";
+
                  Toast.makeText(getContext(), "Image Uploaded", Toast.LENGTH_SHORT).show();
                  bm.recycle();
              }

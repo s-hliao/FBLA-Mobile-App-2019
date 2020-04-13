@@ -48,6 +48,7 @@ import com.hg.mad.model.Officer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 public class ChapterFragment extends Fragment implements
         View.OnClickListener, OfficerAdapter.OnOfficerListener{
@@ -63,6 +64,7 @@ public class ChapterFragment extends Fragment implements
 
     private DocumentReference chapterRef;
     private FirebaseFirestore firestore;
+    private Query query;
 
     private OfficerAdapter adapter;
 
@@ -108,7 +110,7 @@ public class ChapterFragment extends Fragment implements
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
 
-                    boolean isAdmin = (boolean)task.getResult().get("isAdmin");
+                    isAdmin = (boolean)task.getResult().get("isAdmin");
                     if (isAdmin){
                         addOfficerButton.setVisibility(View.VISIBLE);
                         mediaButton.setVisibility(View.VISIBLE);
@@ -124,6 +126,8 @@ public class ChapterFragment extends Fragment implements
             }
         });
 
+        final OfficerAdapter.OnOfficerListener o = this;
+
 
         Task<QuerySnapshot> q = firestore.collection("Chapter").orderBy("chapterName")
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -132,9 +136,14 @@ public class ChapterFragment extends Fragment implements
                         for(DocumentSnapshot ds: queryDocumentSnapshots.getDocuments()){
                             if(ds.get("chapterName").toString().equals(chapterName)){
                                 chapterRef = ds.getReference();
-                                System.out.println(ds.get("chapterName").toString());
-                                System.out.println("recycler start");
-                                startRecycler();
+                                query = chapterRef.collection("officers").orderBy("name");
+                                adapter = new OfficerAdapter(query, o);
+                                adapter.setQuery(query);
+                                officerRV.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                                officerRV.setAdapter(adapter);
+                                officerRV.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+
 
                             }
                         }
@@ -143,29 +152,10 @@ public class ChapterFragment extends Fragment implements
                 });
 
 
-
-
-
         return root;
     }
 
-    private void startRecycler(){
-        Task<QuerySnapshot> q = chapterRef.collection("officers").orderBy("name")
-                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for(DocumentSnapshot ds: queryDocumentSnapshots.getDocuments()){
-                            System.out.println(ds.get("name"));
-                        }
 
-                    }
-                });
-       adapter = new OfficerAdapter(chapterRef.collection("officers").orderBy("name"), this);
-
-        officerRV.setLayoutManager(new LinearLayoutManager(getContext()));
-        officerRV.setAdapter(adapter);
-        officerRV.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-    }
 
     @Override
     public void onStart() {
@@ -235,8 +225,10 @@ public class ChapterFragment extends Fragment implements
 
     @Override
     public void onOfficerSelected(DocumentSnapshot chapOfficer) {
+        System.out.println("selected");
+        System.out.println(isAdmin);
         if(isAdmin){
-
+            System.out.println("admin");
             editOfficerDialog.setOfficer(chapOfficer);
             getFragmentManager().executePendingTransactions();
             if(!editOfficerDialog.isAdded())

@@ -12,12 +12,16 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.common.util.ArrayUtils;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.hg.mad.R;
 import com.hg.mad.model.CompetitiveEvent;
 import com.hg.mad.model.Officer;
@@ -51,11 +55,22 @@ public class OfficerAdapter extends FirestoreAdapter<OfficerAdapter.ViewHolder> 
             nameTextView.setText(officer.getName());
             positionTextView.setText(officer.getPosition());
             contactTextView.setText(officer.getContact());
-            byte[]data = officer.getProfileImage();
-            if(data.length!=0) {
-                profilePic.setImageBitmap(
-                        BitmapFactory.decodeByteArray(data, 0, data.length)
-                );
+            String profile = officer.getProfile();
+
+            if(profile!=null) {
+                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                StorageReference imageRef = storageRef.child(profile);
+
+                imageRef.getBytes(20000000).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        profilePic.setImageBitmap(
+                                BitmapFactory.decodeByteArray(bytes, 0, bytes.length)
+                        );
+                    }
+                });
+
+
             }
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -79,7 +94,6 @@ public class OfficerAdapter extends FirestoreAdapter<OfficerAdapter.ViewHolder> 
 
     public OfficerAdapter(Query query, OnOfficerListener listener) {
         super(query);
-        System.out.println("officers found");
         this.listener = listener;
     }
 
