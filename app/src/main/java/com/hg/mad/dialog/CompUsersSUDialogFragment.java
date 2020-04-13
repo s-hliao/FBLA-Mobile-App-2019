@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,10 +26,11 @@ import com.hg.mad.R;
 import java.util.HashMap;
 import java.util.Map;
 
- public class CompetitiveDialogFragment extends DialogFragment implements View.OnClickListener {
+ public class CompUsersSUDialogFragment extends DialogFragment implements View.OnClickListener {
 
     private View rootView;
     private String eventName;
+    private RecyclerView userRecycler;
     private TextView signUp;
 
     @Nullable
@@ -42,7 +44,9 @@ import java.util.Map;
         rootView.findViewById(R.id.button_no).setOnClickListener(this);
 
         signUp = rootView.findViewById(R.id.competitive_signup);
-        signUp.setText("Sign up for "+ eventName);
+        signUp.setText("Sign ups for "+ eventName);
+
+        rootView.findViewById(R.id.recycler_user);
 
         return rootView;
     }
@@ -68,12 +72,12 @@ import java.util.Map;
         final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
 
-        CollectionReference usersCollection = fireStore.collection("DatabaseUser");
-        final DocumentReference userRef = usersCollection.document(currentUser.getUid());
+        CollectionReference chapterCollection = fireStore.collection("Chapter");
+        final DocumentReference chapterRef = chapterCollection.document(currentUser.getUid());
 
         final CollectionReference chaptersCollection = fireStore.collection("Chapter");
 
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        chapterRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
@@ -83,7 +87,7 @@ import java.util.Map;
                     DocumentSnapshot user = task.getResult();
                     Map<String, Integer> currentEventsUser = (Map<String, Integer>) user.get("competitiveEvents");
                     currentEventsUser.put(eventName, 1);
-                    userRef.update("competitiveEvents", currentEventsUser);
+                    chapterRef.update("competitiveEvents", currentEventsUser);
 
                     // Update Chapter
                     chaptersCollection.whereEqualTo("chapterName", user.get("chapterName"))

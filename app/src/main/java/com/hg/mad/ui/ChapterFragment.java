@@ -36,6 +36,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hg.mad.R;
+import com.hg.mad.SignedInActivity;
 import com.hg.mad.adapter.CompetitiveAdapter;
 import com.hg.mad.adapter.OfficerAdapter;
 import com.hg.mad.dialog.AddOfficerDialogFragment;
@@ -44,11 +45,14 @@ import com.hg.mad.dialog.SocMediaDialogFragment;
 import com.hg.mad.model.Chapter;
 import com.hg.mad.model.DatabaseUser;
 import com.hg.mad.model.Officer;
+import com.hg.mad.util.ThisUser;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+
+import javax.annotation.Signed;
 
 public class ChapterFragment extends Fragment implements
         View.OnClickListener, OfficerAdapter.OnOfficerListener{
@@ -104,30 +108,19 @@ public class ChapterFragment extends Fragment implements
         firestore = FirebaseFirestore.getInstance();
 
         // Only show manage to admins
-        DocumentReference databaseUserRef = firestore.collection("DatabaseUser").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        databaseUserRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
 
-                    isAdmin = (boolean)task.getResult().get("isAdmin");
-                    if (isAdmin){
-                        addOfficerButton.setVisibility(View.VISIBLE);
-                        mediaButton.setVisibility(View.VISIBLE);
-                    } else{
-                        addOfficerButton.setVisibility(View.INVISIBLE);
-                        mediaButton.setVisibility(View.INVISIBLE);
-                    }
+        isAdmin = ThisUser.isAdmin();
+        if (isAdmin){
+            addOfficerButton.setVisibility(View.VISIBLE);
+            mediaButton.setVisibility(View.VISIBLE);
+        } else{
+            addOfficerButton.setVisibility(View.INVISIBLE);
+            mediaButton.setVisibility(View.INVISIBLE);
+        }
 
-                    chapterName = task.getResult().get("chapterName").toString();
-
-
-                }
-            }
-        });
+        chapterName = ThisUser.getChapterName();
 
         final OfficerAdapter.OnOfficerListener o = this;
-
 
         Task<QuerySnapshot> q = firestore.collection("Chapter").orderBy("chapterName")
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
