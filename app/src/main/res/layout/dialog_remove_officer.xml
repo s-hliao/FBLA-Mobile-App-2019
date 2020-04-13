@@ -191,6 +191,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <View
+            android:id="@+id/view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
         <Button
             android:id="@+id/button_cancel2"
             style="@style/Base.Widget.AppCompat.Button.Borderless"
