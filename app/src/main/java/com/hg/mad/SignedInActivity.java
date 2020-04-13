@@ -22,6 +22,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.hg.mad.model.DatabaseUser;
+import com.hg.mad.util.ThisUser;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,11 +38,9 @@ import org.w3c.dom.Document;
 
 public class SignedInActivity extends AppCompatActivity {
 
+    public ThisUser thisUser;
     private AppBarConfiguration mAppBarConfiguration;
     private NavigationView navigationView;
-
-    private FirebaseUser currentUser;
-    DocumentSnapshot userSnapshot;
 
     private View headerView;
 
@@ -73,48 +72,29 @@ public class SignedInActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        // Get the current user
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser == null) {
-            startActivity(AuthUiActivity.createIntent(this));
-            finish();
-        }
-
-        initUserandChapter();
+        // Get the current user and wait till it finishes
+        String[] methods = {"updateUserName", "updateChapterName"};
+        thisUser = new ThisUser(this);
     }
 
-    private void initUserandChapter(){
-        FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
-        CollectionReference usersCollection = fireStore.collection("DatabaseUser");
-        DocumentReference databaseUserRef = usersCollection.document(currentUser.getUid());
-
-        databaseUserRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                if (task.isSuccessful()) {
-                    userSnapshot = task.getResult();
-                    updateUsername();
-                    updateChapterName();
-                }
-            }
-        });
+    public void execute() {
+        updateUsername();
+        updateChapterName();
     }
 
     private void updateUsername(){
         TextView navUsername = headerView.findViewById(R.id.nav_username);
-        String username = currentUser.getDisplayName();
+        String username = thisUser.getDisplayName();
 
-        if ((Boolean) userSnapshot.get("isAdmin"))
+        if (thisUser.isAdmin())
             username += " (Admin)";
 
         navUsername.setText(username);
     }
 
     private void updateChapterName(){
-        String chapterName = userSnapshot.get("chapterName").toString();
         TextView navChapter = headerView.findViewById(R.id.nav_chapter);
-        navChapter.setText(chapterName);
+        navChapter.setText(thisUser.getChapterName());
     }
 
     @Override

@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import com.hg.mad.util.StaticMethods;
+import com.hg.mad.util.ThisUser;
 
 public class LoadActivity extends AppCompatActivity {
 
@@ -12,6 +12,6 @@ public class LoadActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        StaticMethods.redirect(this);
+        ThisUser.redirect(this);
     }
 }
