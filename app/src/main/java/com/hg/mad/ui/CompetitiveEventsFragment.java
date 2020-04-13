@@ -41,9 +41,9 @@ public class CompetitiveEventsFragment extends Fragment implements
         CompetitiveAdapter.OnCompetitiveListener {
 
     private RecyclerView competitiveRecycler;
-    private SearchView searchView;
-    private ImageView filterButton;
-    private TextView manageButton;
+    SearchView searchView;
+    TextView manageButton;
+    View divider;
 
     private FirebaseFirestore firestore;
     private Query query;
@@ -64,8 +64,9 @@ public class CompetitiveEventsFragment extends Fragment implements
         // Set up views
         competitiveRecycler = root.findViewById(R.id.recycler_competitive);
         searchView = root.findViewById(R.id.search_competitive);
-        filterButton = root.findViewById(R.id.button_filter);
+        ImageView filterButton = root.findViewById(R.id.button_filter);
         manageButton = root.findViewById(R.id.manage_signups);
+        divider = root.findViewById(R.id.divider_comp);
         filterButton.setOnClickListener(this);
         manageButton.setOnClickListener(this);
 
@@ -76,19 +77,7 @@ public class CompetitiveEventsFragment extends Fragment implements
         initFirestore();
 
         // Only show manage to admins
-        DocumentReference databaseUserRef = firestore.collection("DatabaseUser").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        databaseUserRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DatabaseUser databaseUserClass = task.getResult().toObject(DatabaseUser.class);
-
-                    if (databaseUserClass.getIsAdmin()){
-                        manageButton.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
-        });
+        setVisibility();
 
         initRecyclerView();
 
@@ -106,11 +95,28 @@ public class CompetitiveEventsFragment extends Fragment implements
         manageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(ManageCompActivity.createIntent(getContext()));
+                onManageClicked();
             }
         });
 
         return root;
+    }
+
+    protected void setVisibility() {
+        DocumentReference databaseUserRef = firestore.collection("DatabaseUser").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        databaseUserRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DatabaseUser databaseUserClass = task.getResult().toObject(DatabaseUser.class);
+
+                    if (databaseUserClass.getIsAdmin()){
+                        manageButton.setVisibility(View.VISIBLE);
+                        divider.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
     }
 
     private void initFirestore() {
@@ -171,7 +177,7 @@ public class CompetitiveEventsFragment extends Fragment implements
         hideKeyboard();
     }
 
-    private void hideKeyboard() {
+    void hideKeyboard() {
         View view = getActivity().getCurrentFocus();
         if (view != null) {
             ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
@@ -225,12 +231,12 @@ public class CompetitiveEventsFragment extends Fragment implements
                 onFilterClicked();
                 break;
             case R.id.manage_signups:
-                onManageCLicked();
+                onManageClicked();
                 break;
         }
     }
 
-    public void onFilterClicked() {
+    private void onFilterClicked() {
         // Show the dialog containing filter options
 
         hideKeyboard();
@@ -240,8 +246,8 @@ public class CompetitiveEventsFragment extends Fragment implements
             filterDialog.show(getFragmentManager(), "FilterDialog");
     }
 
-    public void onManageCLicked() {
-        // TODO
+    void onManageClicked() {
+        startActivity(ManageCompActivity.createIntent(getContext()));
     }
 
     @Override
