@@ -9,34 +9,49 @@
     android:padding="15dp"
     tools:context=".ui.ChapterFragment">
 
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/button_addOfficer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Chapter Information"
-        android:textSize="24sp" />
+        android:padding="10dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Add Officer"
+            android:textSize="18sp" />
+
+        <View
+            android:id="@+id/view3"
+            android:layout_width="237dp"
+            android:layout_height="23dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_menu_add" />
+
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="464dp"
+        android:layout_width="374dp"
+        android:layout_height="471dp"
         android:layout_marginTop="8dp" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="53dp"
-        android:layout_height="45dp"
-        android:layout_gravity="center_horizontal"
-        android:src="@android:drawable/ic_input_add"
-
-        />
 
     <LinearLayout
         android:layout_width="350dp"
         android:layout_height="33dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="15dp"
         android:layout_marginBottom="10dp"
         android:orientation="horizontal">
 
@@ -45,6 +60,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
             android:src="@drawable/facebook_logo" />
 
         <ImageView
@@ -52,6 +70,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
             android:src="@drawable/instagram_logo" />
 
         <ImageView
@@ -59,13 +80,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
             android:src="@drawable/twitter_logo" />
+
     </LinearLayout>
 
-    <Button
+    <TextView
         android:id="@+id/media_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Set Social Media" />
+        android:padding="10dp"
+        android:text="Set Social Media"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:textSize="18sp" />
 
 </LinearLayout>

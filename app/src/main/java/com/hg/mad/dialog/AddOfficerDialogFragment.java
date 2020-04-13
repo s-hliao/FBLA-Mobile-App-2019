@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -51,8 +52,8 @@ public class AddOfficerDialogFragment extends DialogFragment implements View.OnC
 
     private Button add;
     private Button cancel;
-    private Button upload;
-    private Button camera;
+    private LinearLayout upload;
+    private LinearLayout camera;
 
     private EditText name;
     private EditText position;
@@ -75,8 +76,8 @@ public class AddOfficerDialogFragment extends DialogFragment implements View.OnC
 
         add = (Button) rootView.findViewById(R.id.button_addOfficer);
         cancel = (Button) rootView.findViewById(R.id.button_cancel);
-        upload = (Button) rootView.findViewById(R.id.button_upload);
-        camera = (Button) rootView.findViewById(R.id.button_camera);
+        upload = (LinearLayout) rootView.findViewById(R.id.layout_upload);
+        camera = (LinearLayout) rootView.findViewById(R.id.layout_camera);
 
         name = (EditText) rootView.findViewById(R.id.editText_name);
         position = (EditText) rootView.findViewById(R.id.editText_position);
@@ -115,10 +116,10 @@ public class AddOfficerDialogFragment extends DialogFragment implements View.OnC
             case R.id.button_cancel:
                 onCancelClicked();
                 break;
-            case R.id.button_upload:
+            case R.id.layout_upload:
                 onUploadClicked();
                 break;
-            case R.id.button_camera:
+            case R.id.layout_camera:
                 onCameraClicked();
                 break;
         }

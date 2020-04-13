@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -48,8 +49,8 @@ public class EditOfficerDialogFragment extends DialogFragment implements View.On
      private Button edit;
      private Button cancel1;
      private Button cancel2;
-     private Button upload;
-     private Button camera;
+     private LinearLayout upload;
+     private LinearLayout camera;
      private Button remove;
 
      private EditText name;
@@ -75,8 +76,8 @@ public class EditOfficerDialogFragment extends DialogFragment implements View.On
          cancel1 = (Button) rootView.findViewById(R.id.button_cancel1);
          cancel2 = (Button) rootView.findViewById(R.id.button_cancel2);
          remove = (Button) rootView.findViewById(R.id.button_remove);
-         upload = (Button) rootView.findViewById(R.id.button_upload);
-         camera = (Button) rootView.findViewById(R.id.button_camera);
+         upload = (LinearLayout) rootView.findViewById(R.id.layout_upload);
+         camera = (LinearLayout) rootView.findViewById(R.id.layout_camera);
 
          name = (EditText) rootView.findViewById(R.id.editText_name);
          position = (EditText) rootView.findViewById(R.id.editText_position);
@@ -123,10 +124,10 @@ public class EditOfficerDialogFragment extends DialogFragment implements View.On
              case R.id.button_remove:
                  onRemoveClicked();
                  break;
-             case R.id.button_upload:
+             case R.id.layout_upload:
                  onUploadClicked();
                  break;
-             case R.id.button_camera:
+             case R.id.layout_camera:
                  onCameraClicked();
                  break;
          }
@@ -205,7 +206,8 @@ public class EditOfficerDialogFragment extends DialogFragment implements View.On
              if(bm!=null) {
                  System.out.println("uploaded");
                  ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                 Bitmap scaled  = Bitmap.createScaledBitmap(bm, 400, 500, true);
+                 double scale  =550/bm.getHeight();
+                 Bitmap scaled  = Bitmap.createScaledBitmap(bm, (int)(bm.getWidth()*scale), (int)(bm.getHeight()*scale), true);
                  scaled.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                  byte[]picture = stream.toByteArray();
 

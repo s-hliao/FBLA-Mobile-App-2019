@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -60,8 +62,8 @@ public class ChapterFragment extends Fragment implements
     private ImageView facebook;
     private ImageView instagram;
     private ImageView twitter;
-    private ImageView addOfficerButton;
-    private Button mediaButton;
+    private LinearLayout addOfficerButton;
+    private TextView mediaButton;
 
 
     private RecyclerView officerRV;
@@ -88,8 +90,8 @@ public class ChapterFragment extends Fragment implements
         facebook  = (ImageView) root.findViewById(R.id.imageView7);
         instagram = (ImageView) root.findViewById(R.id.imageView8);
         twitter = (ImageView) root.findViewById(R.id.imageView9);
-        addOfficerButton = (ImageView) root.findViewById(R.id.imageView);
-        mediaButton = (Button) root.findViewById(R.id.media_button);
+        addOfficerButton = (LinearLayout) root.findViewById(R.id.button_addOfficer);
+        mediaButton = (TextView) root.findViewById(R.id.media_button);
 
         facebook.setOnClickListener(this);
         instagram.setOnClickListener(this);
@@ -178,7 +180,7 @@ public class ChapterFragment extends Fragment implements
                     socMediaDialog.show(getFragmentManager(), "socMediaDialog");
                 }
                 break;
-            case R.id.imageView: // add a new officer
+            case R.id.button_addOfficer: // add a new officer
                 addOfficerDialog.setChapterRef(chapterRef);
                 getFragmentManager().executePendingTransactions();
                 if(!addOfficerDialog.isAdded())
