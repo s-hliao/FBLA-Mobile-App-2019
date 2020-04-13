@@ -21,7 +21,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hg.mad.R;
+import com.hg.mad.SignedInActivity;
+import com.hg.mad.util.ThisUser;
 
+import java.util.HashMap;
 import java.util.Map;
 
  public class CompSUDialogFragment extends DialogFragment implements View.OnClickListener {
@@ -64,45 +67,27 @@ import java.util.Map;
 
      public void onYesClicked() {
 
-         final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
+         DocumentSnapshot user = ThisUser.getUserSnapshot();
+         Map<String, Integer> currentEventsUser = (Map<String, Integer>) user.get("competitiveEvents");
+         currentEventsUser.remove(eventName);
+         ThisUser.getUserRef().update("competitiveEvents", currentEventsUser);
 
-         CollectionReference usersCollection = fireStore.collection("DatabaseUser");
-         final DocumentReference userRef = usersCollection.document(currentUser.getUid());
-
-         final CollectionReference chaptersCollection = fireStore.collection("Chapter");
-
-         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+         // Update Chapter
+         FirebaseFirestore.getInstance().collection("Chapter").whereEqualTo("chapterName", user.get("chapterName"))
+                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
              @Override
-             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
+             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                  if (task.isSuccessful()) {
 
-                     // Update DatabaseUser
-                     DocumentSnapshot user = task.getResult();
-                     Map<String, Integer> currentEventsUser = (Map<String, Integer>) user.get("competitiveEvents");
-                     currentEventsUser.remove(eventName);
-                     userRef.update("competitiveEvents", currentEventsUser);
+                     DocumentSnapshot chapter = task.getResult().getDocuments().get(0);
 
-                     // Update Chapter
-                     chaptersCollection.whereEqualTo("chapterName", user.get("chapterName"))
-                             .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                         @Override
-                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                             if (task.isSuccessful()) {
+                     Map<String, Map<String, String>> currentEventsChap = (Map) chapter.get("competitiveEvents");
+                     currentEventsChap.get(eventName).remove(ThisUser.getUid());
+                     if (currentEventsChap.get(eventName).isEmpty()){
+                         currentEventsChap.remove(eventName);
+                     }
 
-                                 DocumentSnapshot chapter = task.getResult().getDocuments().get(0);
-
-                                 Map<String, Map<String, String>> currentEventsChap = (Map) chapter.get("competitiveEvents");
-                                 currentEventsChap.get(eventName).remove(currentUser.getUid());
-                                 if (currentEventsChap.get(eventName).isEmpty()){
-                                     currentEventsChap.remove(eventName);
-                                 }
-
-                                 chapter.getReference().update("competitiveEvents", currentEventsChap);
-                             }
-                         }
-                     });
+                     chapter.getReference().update("competitiveEvents", currentEventsChap);
                  }
              }
          });

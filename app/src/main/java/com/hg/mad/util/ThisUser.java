@@ -16,9 +16,68 @@ import com.hg.mad.SelectChapterActivity;
 import com.hg.mad.SignedInActivity;
 import com.hg.mad.model.DatabaseUser;
 
-import java.util.HashMap;
+import javax.annotation.Signed;
 
-public class StaticMethods {
+
+public class ThisUser{
+
+    private FirebaseFirestore fireStore;
+    private static DocumentSnapshot userSnapshot;
+    private static DocumentReference userRef;
+
+    private static String uid;
+    private static String displayName;
+    private static Boolean isAdmin;
+    private static String chapterName;
+
+    // First time initializing
+    public ThisUser(final SignedInActivity activity) {
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        uid = auth.getCurrentUser().getUid();
+        displayName = auth.getCurrentUser().getDisplayName();
+        fireStore = FirebaseFirestore.getInstance();
+
+        final CollectionReference usersCollection = fireStore.collection("DatabaseUser");
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        userRef = usersCollection.document(user.getUid());
+
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    userSnapshot = task.getResult();
+                    chapterName = (String) userSnapshot.get("chapterName");
+                    isAdmin = (Boolean) userSnapshot.get("isAdmin");
+                    activity.execute();
+                }
+            }
+        });
+    }
+
+    public static DocumentSnapshot getUserSnapshot() {
+        return userSnapshot;
+    }
+
+    public static DocumentReference getUserRef() {
+        return userRef;
+    }
+
+    public static String getUid() {
+        return uid;
+    }
+
+    public static String getDisplayName() {
+        return displayName;
+    }
+
+    public static Boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public static String getChapterName() {
+        return chapterName;
+    }
 
     public static void redirect(final AppCompatActivity thisActivity) {
 
