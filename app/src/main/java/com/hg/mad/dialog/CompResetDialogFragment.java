@@ -13,6 +13,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -22,30 +23,21 @@ import com.hg.mad.util.ThisUser;
 import java.util.HashMap;
 import java.util.Map;
 
- public class CompetitiveDialogFragment extends DialogFragment implements View.OnClickListener {
+ public class CompResetDialogFragment extends DialogFragment implements View.OnClickListener {
 
     private View rootView;
-    private String eventName;
-    private TextView signUp;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.dialog_competitive, container, false);
+        rootView = inflater.inflate(R.layout.dialog_comp_reset, container, false);
 
         rootView.findViewById(R.id.button_yes).setOnClickListener(this);
         rootView.findViewById(R.id.button_cancel).setOnClickListener(this);
 
-        signUp = rootView.findViewById(R.id.competitive_signup);
-        signUp.setText("Sign up for "+ eventName);
-
         return rootView;
-    }
-
-    public void setEventName(String eventName){
-        this.eventName = eventName;
     }
 
     @Override
@@ -63,9 +55,6 @@ import java.util.Map;
     public void onYesClicked() {
 
         DocumentSnapshot user = ThisUser.getUserSnapshot();
-        Map<String, Integer> currentEventsUser = (Map<String, Integer>) user.get("competitiveEvents");
-        currentEventsUser.put(eventName, 1);
-        ThisUser.getUserRef().update("competitiveEvents", currentEventsUser);
 
         // Update Chapter
         FirebaseFirestore.getInstance().collection("Chapter").whereEqualTo("chapterName", user.get("chapterName"))
@@ -76,19 +65,20 @@ import java.util.Map;
 
                     DocumentSnapshot chapter = task.getResult().getDocuments().get(0);
 
-                    Map<String, Map<String, String>> currentEventsChap = (Map) chapter.get("competitiveEvents");
-                    if (!currentEventsChap.containsKey(eventName)) {
-                        currentEventsChap.put(eventName, new HashMap<String, String>());
-                    }
-                    currentEventsChap.get(eventName).put(ThisUser.getUid(), ThisUser.getDisplayName());
+                    chapter.getReference().update("competitiveEvents", new HashMap<String, Map<String, String>>());
 
-                    chapter.getReference().update("competitiveEvents", currentEventsChap);
+                    Map<String, String> users = (Map<String, String>) chapter.get("usersInChapter");
+                    for (String uid : users.keySet()){
+
+                        DocumentReference userRef = FirebaseFirestore.getInstance().collection("DatabaseUser").document(uid);
+                        userRef.update("competitiveEvents", new HashMap<String, Integer>());
+                    }
                 }
             }
         });
 
         dismiss();
-        Toast.makeText(getContext(), "Signed up", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Events reset", Toast.LENGTH_SHORT).show();
     }
 
     public void onNoClicked() {

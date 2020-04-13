@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,12 +20,21 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hg.mad.R;
+import com.hg.mad.adapter.CompUsersSUtAdapter;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.stream.Collectors;
 
  public class CompUsersSUDialogFragment extends DialogFragment implements View.OnClickListener {
 
@@ -38,15 +48,16 @@ import java.util.Map;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.dialog_competitive, container, false);
-
-        rootView.findViewById(R.id.button_yes).setOnClickListener(this);
-        rootView.findViewById(R.id.button_no).setOnClickListener(this);
+        rootView = inflater.inflate(R.layout.dialog_compuser_su, container, false);
+        rootView.findViewById(R.id.button_cancel).setOnClickListener(this);
+        userRecycler = rootView.findViewById(R.id.recycler_user);
 
         signUp = rootView.findViewById(R.id.competitive_signup);
         signUp.setText("Sign ups for "+ eventName);
 
         rootView.findViewById(R.id.recycler_user);
+
+        getUsers();
 
         return rootView;
     }
@@ -58,38 +69,29 @@ import java.util.Map;
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.button_yes:
-                onYesClicked();
-                break;
-            case R.id.button_no:
-                onNoClicked();
+            case R.id.button_cancel:
+                onCancelClicked();
                 break;
         }
     }
 
-    public void onYesClicked() {
+    public void getUsers() {
 
         final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
 
-        CollectionReference chapterCollection = fireStore.collection("Chapter");
-        final DocumentReference chapterRef = chapterCollection.document(currentUser.getUid());
+        CollectionReference userCollection = fireStore.collection("DatabaseUser");
+        final DocumentReference userRef = userCollection.document(currentUser.getUid());
 
         final CollectionReference chaptersCollection = fireStore.collection("Chapter");
 
-        chapterRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        userRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+            public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {
 
-                if (task.isSuccessful()) {
+                if (snapshot != null && snapshot.exists() && snapshot.get("competitiveEvents") != null) {
+                    DocumentSnapshot user = snapshot;
 
-                    // Update DatabaseUser
-                    DocumentSnapshot user = task.getResult();
-                    Map<String, Integer> currentEventsUser = (Map<String, Integer>) user.get("competitiveEvents");
-                    currentEventsUser.put(eventName, 1);
-                    chapterRef.update("competitiveEvents", currentEventsUser);
-
-                    // Update Chapter
                     chaptersCollection.whereEqualTo("chapterName", user.get("chapterName"))
                             .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -99,24 +101,29 @@ import java.util.Map;
                                 DocumentSnapshot chapter = task.getResult().getDocuments().get(0);
 
                                 Map<String, Map<String, String>> currentEventsChap = (Map) chapter.get("competitiveEvents");
-                                if (!currentEventsChap.containsKey(eventName)) {
-                                    currentEventsChap.put(eventName, new HashMap<String, String>());
-                                }
-                                currentEventsChap.get(eventName).put(currentUser.getUid(), currentUser.getDisplayName());
 
-                                chapter.getReference().update("competitiveEvents", currentEventsChap);
+                                if (currentEventsChap != null && currentEventsChap.containsKey(eventName)) {
+                                    Collection<String> users = currentEventsChap.get(eventName).values();
+                                    users.stream().collect(Collectors.toList());
+                                    List<String> usersArray = new ArrayList<>(users);
+
+                                    CompUsersSUtAdapter adapter = new CompUsersSUtAdapter(usersArray);
+                                    userRecycler.setAdapter(adapter);
+                                    userRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+                                } else {
+                                    CompUsersSUtAdapter adapter = new CompUsersSUtAdapter(new ArrayList<String>());
+                                    userRecycler.setAdapter(adapter);
+                                    userRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+                                }
                             }
                         }
                     });
                 }
             }
         });
-
-        dismiss();
-        Toast.makeText(getContext(), "Signed up", Toast.LENGTH_SHORT).show();
     }
 
-    public void onNoClicked() {
+    public void onCancelClicked() {
         dismiss();
     }
 }
