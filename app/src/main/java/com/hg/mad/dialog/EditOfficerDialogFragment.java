@@ -135,6 +135,10 @@ public class EditOfficerDialogFragment extends DialogFragment implements View.On
      @Override
      public void onResume() {
          super.onResume();
+         name.setText(officer.get("name").toString());
+         position.setText(officer.get("position").toString());
+         contact.setText(officer.get("contact").toString());
+
          getDialog().getWindow().setLayout(
                  ViewGroup.LayoutParams.MATCH_PARENT,
                  ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -205,8 +209,10 @@ public class EditOfficerDialogFragment extends DialogFragment implements View.On
                  scaled.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                  byte[]picture = stream.toByteArray();
 
-                 if(profile!=null) storageReference.child(profile).putBytes(picture);
-                 else profile = "images/"+UUID.randomUUID().toString()+".jpg";
+                 if(profile!=null) storageReference.child(profile).delete();
+
+                 profile = "images/"+UUID.randomUUID().toString()+".jpg";
+                 storageReference.child(profile).putBytes(picture);
 
                  Toast.makeText(getContext(), "Image Uploaded", Toast.LENGTH_SHORT).show();
                  bm.recycle();

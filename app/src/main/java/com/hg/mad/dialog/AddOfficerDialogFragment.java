@@ -82,9 +82,7 @@ public class AddOfficerDialogFragment extends DialogFragment implements View.OnC
         position = (EditText) rootView.findViewById(R.id.editText_position);
         contact = (EditText) rootView.findViewById(R.id.editText_contact);
 
-        name.clearComposingText();
-        position.clearComposingText();
-        contact.clearComposingText();
+
 
         profile = null;
 
@@ -129,6 +127,9 @@ public class AddOfficerDialogFragment extends DialogFragment implements View.OnC
      @Override
      public void onResume() {
          super.onResume();
+         name.setText(null);
+         position.setText(null);
+         contact.setText(null);
          getDialog().getWindow().setLayout(
                  ViewGroup.LayoutParams.MATCH_PARENT,
                  ViewGroup.LayoutParams.WRAP_CONTENT);
