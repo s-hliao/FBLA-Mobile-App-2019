@@ -22,8 +22,6 @@ import javax.annotation.Signed;
 public class ThisUser{
 
     private FirebaseFirestore fireStore;
-    private static DocumentSnapshot userSnapshot;
-    private static DocumentReference userRef;
 
     private static String uid;
     private static String displayName;
@@ -40,27 +38,18 @@ public class ThisUser{
 
         final CollectionReference usersCollection = fireStore.collection("DatabaseUser");
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        userRef = usersCollection.document(user.getUid());
+        DocumentReference userRef = usersCollection.document(user.getUid());
 
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    userSnapshot = task.getResult();
-                    chapterName = (String) userSnapshot.get("chapterName");
-                    isAdmin = (Boolean) userSnapshot.get("isAdmin");
+                    chapterName = (String) task.getResult().get("chapterName");
+                    isAdmin = (Boolean) task.getResult().get("isAdmin");
                     activity.execute();
                 }
             }
         });
-    }
-
-    public static DocumentSnapshot getUserSnapshot() {
-        return userSnapshot;
-    }
-
-    public static DocumentReference getUserRef() {
-        return userRef;
     }
 
     public static String getUid() {

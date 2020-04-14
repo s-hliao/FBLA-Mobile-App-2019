@@ -32,7 +32,7 @@
 
 
         <Button
-            android:id="@+id/button_yes"
+            android:id="@+id/button_comp_reset"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
