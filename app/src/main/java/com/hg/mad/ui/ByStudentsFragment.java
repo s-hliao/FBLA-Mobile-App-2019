@@ -18,73 +18,57 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.hg.mad.R;
+import com.hg.mad.adapter.MemberAdapter;
 import com.hg.mad.adapter.MyCompEventAdapter;
 import com.hg.mad.dialog.CompSUDialogFragment;
+import com.hg.mad.util.ThisUser;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class ByStudentsFragment extends Fragment
-        implements MyCompEventAdapter.OnMyCompListener {
+        implements MemberAdapter.OnMemberListener {
 
     private View root;
 
-    private RecyclerView myCompRecycler;
-    private LinearLayoutManager layoutManager;
-    private MyCompEventAdapter adapter;
-    private List<String> myComp;
+    private Query query;
+    private MemberAdapter adapter;
+    private RecyclerView compMembers;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.root = inflater.inflate(R.layout.fragment_mycomp, container, false);
+        this.root = inflater.inflate(R.layout.fragment_comp_members, container, false);
 
-        // Recycler Views
-        myComp = new ArrayList<>();
-        myCompRecycler = root.findViewById(R.id.recycler_my_comp);
-        layoutManager = new LinearLayoutManager(getContext());
-        myCompRecycler.setLayoutManager(layoutManager);
-        myCompRecycler.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        compMembers = root.findViewById(R.id.recycler_comp_members);
 
-        updateCompAdapter();
-        beganUpdating();
+        String chapterName = ThisUser.getChapterName();
+        query = FirebaseFirestore.getInstance().collection("DatabaseUser")
+                .whereEqualTo("chapterName", chapterName)
+                .orderBy("name");
+
+        final MemberAdapter.OnMemberListener memberListener = this;
+        adapter = new MemberAdapter(query, memberListener);
+        adapter.setQuery(query);
+
+        compMembers.setLayoutManager(new LinearLayoutManager(getContext()));
+        compMembers.setAdapter(adapter);
+        compMembers.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
         return root;
     }
 
-    private void beganUpdating() {
-        DocumentReference databaseUserRef = FirebaseFirestore.getInstance().collection("DatabaseUser")
-                .document(FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-        // Set up competitive events listener
-        databaseUserRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {
-
-                if (snapshot != null && snapshot.exists() && snapshot.get("competitiveEvents") != null) {
-                    myComp = new ArrayList<>();
-                    Map<String, Integer> events = (Map<String, Integer>) snapshot.get("competitiveEvents");
-                    myComp.addAll(events.keySet());
-
-                    updateCompAdapter();
-                }
-            }
-        });
-    }
-
-    private void updateCompAdapter(){
-        adapter = new MyCompEventAdapter(myComp, this);
-        myCompRecycler.setAdapter(adapter);
-    }
-
     @Override
-    public void onMyCompSelected(String eventName) {
-
+    public void onMemberSelected(DocumentSnapshot chapOfficer) {
+        /*
         CompSUDialogFragment compSUDialog = new CompSUDialogFragment();
-        compSUDialog.setEventName(eventName);
+        compSUDialog.setEventName();
 
         getFragmentManager().executePendingTransactions();
         if (!compSUDialog.isAdded())
             compSUDialog.show(getFragmentManager(), "CompSUDialog");
+
+         */
     }
 }
