@@ -27,7 +27,8 @@
         android:clickable="true"
         android:focusable="true"
         android:orientation="horizontal"
-        android:padding="15dp">
+        android:padding="15dp"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/textView6"
