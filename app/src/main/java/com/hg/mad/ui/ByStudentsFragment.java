@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +23,8 @@ import com.google.firebase.firestore.Query;
 import com.hg.mad.R;
 import com.hg.mad.adapter.MemberAdapter;
 import com.hg.mad.adapter.MyCompEventAdapter;
+import com.hg.mad.dialog.CompEventsSUDialogFragment;
+import com.hg.mad.dialog.CompResetDialogFragment;
 import com.hg.mad.dialog.CompSUDialogFragment;
 import com.hg.mad.util.ThisUser;
 
@@ -33,6 +36,7 @@ public class ByStudentsFragment extends Fragment
         implements MemberAdapter.OnMemberListener {
 
     private View root;
+    private TextView resetButton;
 
     private Query query;
     private MemberAdapter adapter;
@@ -42,6 +46,18 @@ public class ByStudentsFragment extends Fragment
         this.root = inflater.inflate(R.layout.fragment_comp_members, container, false);
 
         compMembers = root.findViewById(R.id.recycler_comp_members);
+        resetButton = root.findViewById(R.id.comp_student_reset);
+
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CompResetDialogFragment compResetDialog = new CompResetDialogFragment();
+
+                getFragmentManager().executePendingTransactions();
+                if (!compResetDialog.isAdded())
+                    compResetDialog.show(getFragmentManager(), "CompResetDialog");
+            }
+        });
 
         String chapterName = ThisUser.getChapterName();
         query = FirebaseFirestore.getInstance().collection("DatabaseUser")
@@ -61,14 +77,12 @@ public class ByStudentsFragment extends Fragment
 
     @Override
     public void onMemberSelected(DocumentSnapshot chapOfficer) {
-        /*
-        CompSUDialogFragment compSUDialog = new CompSUDialogFragment();
-        compSUDialog.setEventName();
+        CompEventsSUDialogFragment compEventsSUDialog = new CompEventsSUDialogFragment();
+        compEventsSUDialog.setName((String) chapOfficer.get("name"));
+        compEventsSUDialog.setId(chapOfficer.getId());
 
         getFragmentManager().executePendingTransactions();
-        if (!compSUDialog.isAdded())
-            compSUDialog.show(getFragmentManager(), "CompSUDialog");
-
-         */
+        if (!compEventsSUDialog.isAdded())
+            compEventsSUDialog.show(getFragmentManager(), "compEventsSUDialog");
     }
 }

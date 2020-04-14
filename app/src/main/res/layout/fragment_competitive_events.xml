@@ -21,13 +21,6 @@
         android:textStyle="bold"
         android:visibility="gone" />
 
-    <View
-        android:id="@+id/divider_comp"
-        android:layout_width="match_parent"
-        android:layout_height="7dp"
-        android:background="?android:attr/listDivider"
-        tools:visibility="gone" />
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

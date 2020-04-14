@@ -18,7 +18,10 @@ public class ByEventsFragment extends CompetitiveEventsFragment{
     void onManageClicked() {
         // RESET ALL EVENTS
         CompResetDialogFragment compResetDialog = new CompResetDialogFragment();
-        compResetDialog.show(getFragmentManager(), "CompResetDialog");
+
+        getFragmentManager().executePendingTransactions();
+        if (!compResetDialog.isAdded())
+            compResetDialog.show(getFragmentManager(), "CompResetDialog");
     }
 
     @Override

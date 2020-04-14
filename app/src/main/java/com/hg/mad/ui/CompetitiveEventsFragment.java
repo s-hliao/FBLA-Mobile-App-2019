@@ -43,7 +43,6 @@ public class CompetitiveEventsFragment extends Fragment implements
     private RecyclerView competitiveRecycler;
     SearchView searchView;
     TextView manageButton;
-    View divider;
 
     private FirebaseFirestore firestore;
     private Query query;
@@ -66,7 +65,6 @@ public class CompetitiveEventsFragment extends Fragment implements
         searchView = root.findViewById(R.id.search_competitive);
         ImageView filterButton = root.findViewById(R.id.button_filter);
         manageButton = root.findViewById(R.id.manage_signups);
-        divider = root.findViewById(R.id.divider_comp);
         filterButton.setOnClickListener(this);
         manageButton.setOnClickListener(this);
 
@@ -112,7 +110,6 @@ public class CompetitiveEventsFragment extends Fragment implements
 
                     if (databaseUserClass.getIsAdmin()){
                         manageButton.setVisibility(View.VISIBLE);
-                        divider.setVisibility(View.VISIBLE);
                     }
                 }
             }

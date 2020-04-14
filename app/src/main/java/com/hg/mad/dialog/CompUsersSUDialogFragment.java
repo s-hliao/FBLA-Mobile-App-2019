@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,15 +24,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hg.mad.R;
-import com.hg.mad.adapter.CompUsersSUtAdapter;
+import com.hg.mad.adapter.CompSUAdapter;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
 import java.util.stream.Collectors;
 
  public class CompUsersSUDialogFragment extends DialogFragment implements View.OnClickListener {
@@ -104,14 +100,13 @@ import java.util.stream.Collectors;
 
                                 if (currentEventsChap != null && currentEventsChap.containsKey(eventName)) {
                                     Collection<String> users = currentEventsChap.get(eventName).values();
-                                    users.stream().collect(Collectors.toList());
-                                    List<String> usersArray = new ArrayList<>(users);
+                                    List usersArray = users.stream().collect(Collectors.toList());
 
-                                    CompUsersSUtAdapter adapter = new CompUsersSUtAdapter(usersArray);
+                                    CompSUAdapter adapter = new CompSUAdapter(usersArray);
                                     userRecycler.setAdapter(adapter);
                                     userRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
                                 } else {
-                                    CompUsersSUtAdapter adapter = new CompUsersSUtAdapter(new ArrayList<String>());
+                                    CompSUAdapter adapter = new CompSUAdapter(new ArrayList<String>());
                                     userRecycler.setAdapter(adapter);
                                     userRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
                                 }

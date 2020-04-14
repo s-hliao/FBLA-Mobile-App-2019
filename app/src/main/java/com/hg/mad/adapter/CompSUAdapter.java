@@ -12,11 +12,11 @@ import com.hg.mad.R;
 
 import java.util.List;
 
-public class CompUsersSUtAdapter extends RecyclerView.Adapter<CompUsersSUtAdapter.ViewHolder> {
+public class CompSUAdapter extends RecyclerView.Adapter<CompSUAdapter.ViewHolder> {
 
     private List<String> list;
 
-    public CompUsersSUtAdapter(List list) {
+    public CompSUAdapter(List list) {
         this.list = list;
     }
 
