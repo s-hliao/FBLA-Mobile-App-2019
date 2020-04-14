@@ -132,8 +132,9 @@ public class MembersFragment extends Fragment implements
 
 
     @Override
-    public void onMemberSelected(DocumentSnapshot chapOfficer) {
+    public void onMemberSelected(DocumentSnapshot member) {
         if(isAdmin){
+            removeDialog.setMember(member);
             getFragmentManager().executePendingTransactions();
             if(!removeDialog.isAdded())
                 removeDialog.show(getFragmentManager(), "removeDialog");
