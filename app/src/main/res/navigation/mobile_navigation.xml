@@ -13,14 +13,14 @@
 
     <fragment
         android:id="@+id/nav_chapter"
-        android:name="com.hg.mad.ui.ChapterFragment"
+        android:name="com.hg.mad.ui.ChapterPagerFragment"
         android:label="Chapter"
         tools:layout="@layout/fragment_chapter" />
 
     <fragment
-        android:id="@+id/nav_chapter_pager"
-        android:name="com.hg.mad.ui.ChapterPagerFragment"
-        android:label="Chapter Pager"
+        android:id="@+id/nav_chapter_events"
+        android:name="com.hg.mad.ui.ChapterEventsFragment"
+        android:label="Chapter Events"
         tools:layout="@layout/fragment_chapter_events" />
 
     <fragment
