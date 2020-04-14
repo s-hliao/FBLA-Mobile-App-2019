@@ -18,9 +18,9 @@
         tools:layout="@layout/fragment_chapter" />
 
     <fragment
-        android:id="@+id/nav_chapter_events"
-        android:name="com.hg.mad.ui.ChapterEventsFragment"
-        android:label="Chapter Events"
+        android:id="@+id/nav_chapter_pager"
+        android:name="com.hg.mad.ui.ChapterPagerFragment"
+        android:label="Chapter Pager"
         tools:layout="@layout/fragment_chapter_events" />
 
     <fragment
