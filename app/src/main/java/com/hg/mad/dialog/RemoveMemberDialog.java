@@ -13,9 +13,17 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.hg.mad.R;
+import com.hg.mad.util.ThisUser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,11 +81,49 @@ public class RemoveMemberDialog extends DialogFragment implements View.OnClickLi
 
     public void onRemoveClicked(){
         if (! (Boolean) member.get("isAdmin")) {
-            Map<String, Object> updates = new HashMap<>();
-            updates.put("inChapter", false);
-            updates.put("isAdmin", false);
-            updates.put("chapterName", "");
-            member.getReference().update(updates);
+
+            // Update Chapter
+            CollectionReference chaptersCollection = FirebaseFirestore.getInstance().collection("Chapter");
+            chaptersCollection.whereEqualTo("chapterName", ThisUser.getChapterName())
+                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+
+                        DocumentSnapshot chapter = task.getResult().getDocuments().get(0);
+
+                        Map<String, Map<String, String>> currentEventsChap = (Map<String, Map<String, String>>) chapter.get("competitiveEvents");
+                        for (Map<String, String> event : currentEventsChap.values()){
+                            if (event.containsKey(member.getId())){
+                                event.remove(member.getId());
+                            }
+                        }
+
+                        ArrayList<String> keys = new ArrayList<>();
+                        for(String key : currentEventsChap.keySet()){
+                            if (currentEventsChap.get(key).isEmpty()){
+                                keys.add(key);
+                            }
+                        }
+                        for (String key : keys){
+                            currentEventsChap.remove(key);
+                        }
+
+                        chapter.getReference().update("competitiveEvents", currentEventsChap);
+
+                        DocumentReference userRef = FirebaseFirestore.getInstance().collection("DatabaseUser").document(member.getId());
+                        Map<String, Object> updates = new HashMap<>();
+                        updates.put("inChapter", false);
+                        updates.put("isAdmin", false);
+                        updates.put("chapterName", "");
+                        updates.put("competitiveEvents", new HashMap<String, Integer>());
+                        updates.put("chapterEvents", new HashMap<String, Integer>());
+
+                        userRef.update(updates);
+                    }
+                }
+            });
+
         } else {
             Toast.makeText(getContext(), "The admin cannot be removed", Toast.LENGTH_SHORT).show();
         }

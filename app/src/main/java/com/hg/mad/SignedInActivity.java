@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
@@ -20,7 +21,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.hg.mad.model.DatabaseUser;
 import com.hg.mad.util.ThisUser;
 
@@ -33,8 +37,13 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.PagerAdapter;
 
 import org.w3c.dom.Document;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignedInActivity extends AppCompatActivity {
 
@@ -73,13 +82,13 @@ public class SignedInActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         // Get the current user and wait till it finishes
-        String[] methods = {"updateUserName", "updateChapterName"};
         thisUser = new ThisUser(this);
     }
 
     public void execute() {
         updateUsername();
         updateChapterName();
+        setupKick();
     }
 
     private void updateUsername(){
@@ -108,20 +117,78 @@ public class SignedInActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         // Sign out
-        if (item.getItemId() == R.id.action_signout){
-            AuthUI.getInstance()
-                    .signOut(getApplicationContext())
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+        int itemID = item.getItemId();
 
-                        // Show sign in screen
+        switch (itemID) {
+            case (R.id.action_signout):
+                AuthUI.getInstance()
+                        .signOut(getApplicationContext())
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                            // Show sign in screen
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    startActivity(AuthUiActivity.createIntent(getApplicationContext()));
+                                }
+                            }
+                        });
+                break;
+
+            case (R.id.action_leave):
+
+                if (!ThisUser.isAdmin()) {
+
+                    // Update Chapter
+                    CollectionReference chaptersCollection = FirebaseFirestore.getInstance().collection("Chapter");
+                    chaptersCollection.whereEqualTo("chapterName", ThisUser.getChapterName())
+                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
-                        public void onComplete(@NonNull Task<Void> task) {
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
-                                startActivity(AuthUiActivity.createIntent(getApplicationContext()));
+
+                                DocumentSnapshot chapter = task.getResult().getDocuments().get(0);
+
+                                Map<String, Map<String, String>> currentEventsChap = (Map<String, Map<String, String>>) chapter.get("competitiveEvents");
+
+                                for (Map<String, String> event : currentEventsChap.values()){
+                                    if (event.containsKey(ThisUser.getUid())){
+                                        event.remove(ThisUser.getUid());
+                                    }
+                                }
+
+                                ArrayList<String> keys = new ArrayList<>();
+                                for(String key : currentEventsChap.keySet()){
+                                    if (currentEventsChap.get(key).isEmpty()){
+                                        keys.add(key);
+                                    }
+                                }
+                                for (String key : keys){
+                                    currentEventsChap.remove(key);
+                                }
+
+                                chapter.getReference().update("competitiveEvents", currentEventsChap);
+
+                                DocumentReference userRef = FirebaseFirestore.getInstance().collection("DatabaseUser").document(ThisUser.getUid());
+                                Map<String, Object> updates = new HashMap<>();
+                                updates.put("inChapter", false);
+                                updates.put("isAdmin", false);
+                                updates.put("chapterName", "");
+                                updates.put("competitiveEvents", new HashMap<String, Integer>());
+                                updates.put("chapterEvents", new HashMap<String, Integer>());
+
+                                userRef.update(updates);
+
+                                kicked();
                             }
                         }
                     });
+                } else {
+                    Toast.makeText(getApplicationContext(), "The admin cannot leave", Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -131,4 +198,25 @@ public class SignedInActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
+    private void setupKick() {
+        DocumentReference userRef = FirebaseFirestore.getInstance().collection("DatabaseUser").document(ThisUser.getUid());
+        userRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {
+                if (snapshot != null) {
+                    if (! (Boolean) snapshot.get("inChapter")){
+                        kicked();
+                    }
+                }
+            }
+        });
+    }
+
+    private void kicked() {
+        FirebaseAuth.getInstance().signOut();
+        startActivity(AuthUiActivity.createIntent(getApplicationContext()));
+        Toast.makeText(getApplicationContext(), "You have been kicked", Toast.LENGTH_LONG).show();
+    }
+
 }

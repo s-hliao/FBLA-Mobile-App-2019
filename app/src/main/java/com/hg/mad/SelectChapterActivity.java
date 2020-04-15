@@ -92,7 +92,6 @@ public class SelectChapterActivity extends AppCompatActivity{
                     else {
                         String spinnerText = chapterSpinner.getSelectedItem().toString();
                         updateUser(spinnerText, true, false);
-                        updateChapter(spinnerText, user.getUid(), user.getDisplayName());
 
                         startActivity(SignedInActivity.createIntent(context, null));
                         finish();
@@ -203,27 +202,9 @@ public class SelectChapterActivity extends AppCompatActivity{
 
         Map<String, String> usersInChapter = new HashMap<>();
         usersInChapter.put(adminID, adminName);
-        Chapter chapter = new Chapter(name, adminID, usersInChapter);
+        Chapter chapter = new Chapter(name, adminID);
 
         fireStore.collection("Chapter").add(chapter);
-    }
-
-    // Updating a chapter with a new user
-    private void updateChapter(String chapterName, final String userID, final String userName){
-        chapterCollection.whereEqualTo("chapterName", chapterName).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
-                if (task.isSuccessful()) {
-                    DocumentSnapshot chapterSnapshot = task.getResult().getDocuments().get(0);
-                    Chapter chapterJoined = chapterSnapshot.toObject(Chapter.class);
-                    chapterJoined.addUser(userID, userName);
-
-                    DocumentReference chapterRef = chapterCollection.document(chapterSnapshot.getId());
-                    chapterRef.update("usersInChapter", chapterJoined.getUsersInChapter());
-                }
-            }
-        });
     }
 
     private void alert(String message) {

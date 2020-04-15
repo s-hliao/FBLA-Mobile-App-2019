@@ -93,7 +93,6 @@ public class MembersFragment extends Fragment implements
         membersRV.setAdapter(adapter);
         membersRV.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
-
         return root;
     }
 
