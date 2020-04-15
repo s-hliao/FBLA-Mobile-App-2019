@@ -68,12 +68,18 @@ import java.util.Map;
                     DocumentSnapshot chapter = task.getResult().getDocuments().get(0);
                     chapter.getReference().update("competitiveEvents", new HashMap<String, Map<String, String>>());
 
-                    Map<String, String> users = (Map<String, String>) chapter.get("usersInChapter");
-                    for (String uid : users.keySet()){
+                    FirebaseFirestore.getInstance().collection("DatabaseUser").whereEqualTo("chapterName", ThisUser.getChapterName())
+                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
-                        DocumentReference userRef = FirebaseFirestore.getInstance().collection("DatabaseUser").document(uid);
-                        userRef.update("competitiveEvents", new HashMap<String, Integer>());
-                    }
+                                for (DocumentSnapshot snapshot : task.getResult().getDocuments()) {
+                                    DocumentReference userRef = snapshot.getReference();
+                                    userRef.update("competitiveEvents", new HashMap<String, Integer>());
+                                }
+                        }
+                    });
+
                 }
             }
         });
