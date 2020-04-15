@@ -141,8 +141,4 @@ public class MembersFragment extends Fragment implements
 
         }
     }
-
-
-
-
 }

@@ -6,10 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.viewpager.widget.PagerAdapter;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.hg.mad.R;
@@ -70,11 +72,16 @@ public class RemoveMemberDialog extends DialogFragment implements View.OnClickLi
     }
 
     public void onRemoveClicked(){
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("inChapter", false);
-        updates.put("isAdmin", false);
-        updates.put("chapterName", null);
-        member.getReference().update(updates);
+        if (! (Boolean) member.get("isAdmin")) {
+            Map<String, Object> updates = new HashMap<>();
+            updates.put("inChapter", false);
+            updates.put("isAdmin", false);
+            updates.put("chapterName", "");
+            member.getReference().update(updates);
+        } else {
+            Toast.makeText(getContext(), "The admin cannot be removed", Toast.LENGTH_SHORT).show();
+        }
+
         dismiss();
     }
 
