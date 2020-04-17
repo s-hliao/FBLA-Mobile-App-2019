@@ -38,28 +38,45 @@
             android:text="Event Password" />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/sign_in"
+        android:layout_width="383dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="SIGN IN"
+        android:theme="@style/ThemeOverlay.FilterButton" />
+
+    <TextView
+        android:id="@+id/competitive_signedup3"
+        style="@style/AppTheme.Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Cancel Sign Up"
+        android:textSize="15sp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/button_no"
+            android:id="@+id/button_cancel_no"
             style="@style/Base.Widget.AppCompat.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="NO"
+            android:text="CANCEL"
             android:textColor="@color/greySecondary"
             android:theme="@style/ThemeOverlay.FilterButton" />
 
 
         <Button
-            android:id="@+id/button_yes"
+            android:id="@+id/button_cancel_yes"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="SIGN IN"
+            android:text="YES"
             android:theme="@style/ThemeOverlay.FilterButton" />
 
     </LinearLayout>
