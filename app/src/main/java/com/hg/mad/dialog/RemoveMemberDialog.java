@@ -30,7 +30,8 @@ import java.util.Map;
 public class RemoveMemberDialog extends DialogFragment implements View.OnClickListener {
     private Button yes;
     private Button no;
-    private TextView name;
+    private Button elevate;
+    private TextView elevateText;
 
     private DocumentSnapshot member;
 
@@ -44,11 +45,20 @@ public class RemoveMemberDialog extends DialogFragment implements View.OnClickLi
 
         yes = root.findViewById(R.id.button_yes);
         no = root.findViewById(R.id.button_cancel);
-        name = root.findViewById(R.id.text_name);
+        elevate = root.findViewById(R.id.button_elevate);
+        elevateText = root.findViewById(R.id.elevate_text);
 
         yes.setOnClickListener(this);
         no.setOnClickListener(this);
-        name.setText(member.get("name").toString());
+        elevate.setOnClickListener(this);
+
+        if((boolean)member.get("isAdmin")){
+            elevateText.setVisibility(View.GONE);
+            elevate.setVisibility(View.GONE);
+        } else{
+            elevateText.setVisibility(View.VISIBLE);
+            elevate.setVisibility(View.VISIBLE);
+        }
 
         return root;
     }
@@ -60,7 +70,14 @@ public class RemoveMemberDialog extends DialogFragment implements View.OnClickLi
     @Override
     public void onResume() {
         super.onResume();
-        name.setText(member.get("name").toString());
+
+        if((boolean)member.get("isAdmin")){
+            elevateText.setVisibility(View.GONE);
+            elevate.setVisibility(View.GONE);
+        } else{
+            elevateText.setVisibility(View.VISIBLE);
+            elevate.setVisibility(View.VISIBLE);
+        }
 
         getDialog().getWindow().setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -74,9 +91,18 @@ public class RemoveMemberDialog extends DialogFragment implements View.OnClickLi
                 onRemoveClicked();
                 break;
             case R.id.button_cancel:
-                onCancelClicked();;
+                onCancelClicked();
+                break;
+            case R.id.button_elevate:
+                onElevateClicked();
                 break;
         }
+    }
+
+    public void onElevateClicked(){
+        member.getReference().update("isAdmin", true);
+        Toast.makeText(getContext(), "Elevated to admin", Toast.LENGTH_SHORT).show();
+        dismiss();
     }
 
     public void onRemoveClicked(){
