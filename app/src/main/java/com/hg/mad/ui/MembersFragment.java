@@ -77,7 +77,7 @@ public class MembersFragment extends Fragment implements
         if (isAdmin){
             removeAll.setVisibility(View.VISIBLE);
         } else{
-            removeAll.setVisibility(View.INVISIBLE);
+            removeAll.setVisibility(View.GONE);
         }
 
         chapterName = ThisUser.getChapterName();

@@ -5,24 +5,21 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    android:padding="4dp">
+    android:padding="15dp">
 
     <TextView
-        android:id="@+id/competitiveTitle"
-        android:layout_width="274dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:text="Title"
-        android:textColor="#000"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/inAttendance"
+        android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="3dp"
-        android:text="Type"
-        android:textColor="#a9a9a9"
-        android:textSize="15sp" />
+        android:layout_weight="1"
+        android:text="TextView"
+        android:textColor="#000000" />
 
+    <TextView
+        android:id="@+id/attendance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="TextView"
+        android:textSize="12sp" />
 </LinearLayout>

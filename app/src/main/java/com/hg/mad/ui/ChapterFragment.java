@@ -116,8 +116,8 @@ public class ChapterFragment extends Fragment implements
             addOfficerButton.setVisibility(View.VISIBLE);
             mediaButton.setVisibility(View.VISIBLE);
         } else{
-            addOfficerButton.setVisibility(View.INVISIBLE);
-            mediaButton.setVisibility(View.INVISIBLE);
+            addOfficerButton.setVisibility(View.GONE);
+            mediaButton.setVisibility(View.GONE);
         }
 
         chapterName = ThisUser.getChapterName();

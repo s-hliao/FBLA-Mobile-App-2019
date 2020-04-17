@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="4dp"
+    android:focusable="true"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <TextView
+        android:id="@+id/competitiveTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:text="Title"
+        android:textColor="#000"
+        android:textSize="18sp" />
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:text="Date"
+            android:textColor="#a9a9a9"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/eventType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:paddingHorizontal="16dp"
+            android:text="Event Type"
+            android:textColor="#a9a9a9"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/attendance_managed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:paddingHorizontal="16dp"
+            android:text="Attendance Managed"
+            android:textColor="#a9a9a9"
+            android:textSize="15sp" />
+
+
+
+    </TableRow>
+
+</LinearLayout>

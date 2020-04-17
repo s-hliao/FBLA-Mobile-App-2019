@@ -14,7 +14,7 @@ public class Chapter {
     private String chapterName;
     private String adminID;
     private Map<String, Map<String, String>> competitiveEvents;
-    private Map<String, Map<String, String>> chapterEvents;
+    private Map<String, Map<String, Attendee>> chapterEvents;
     private Map<String, String> socialMedia;
 
 
@@ -52,11 +52,11 @@ public class Chapter {
         this.competitiveEvents = competitiveEvents;
     }
 
-    public Map<String, Map<String, String>> getChapterEvents(){
+    public Map<String, Map<String, Attendee>> getChapterEvents(){
         return chapterEvents;
     }
 
-    public void setChapterEvents(Map<String, Map<String, String>> chapterEvents){
+    public void setChapterEvents(Map<String, Map<String, Attendee>> chapterEvents){
         this.chapterEvents = chapterEvents;
     }
 
