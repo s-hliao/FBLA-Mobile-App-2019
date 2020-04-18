@@ -135,7 +135,7 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
                                 if (!currentEventsChap.containsKey(nameEditText.toString())) {
                                     currentEventsChap.put(nameEditText.toString(), new HashMap<String, Attendee>());
 
-                                    SimpleDateFormat dateFormat= new SimpleDateFormat("MM/DD/yyyy");
+                                    SimpleDateFormat dateFormat= new SimpleDateFormat("MM/dd/yyyy");
 
                                     try {
                                         ChapterEvent event  = new ChapterEvent(nameEditText.getText().toString(),
