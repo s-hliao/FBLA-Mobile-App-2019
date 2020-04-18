@@ -137,7 +137,6 @@ public class MembersFragment extends Fragment implements
             getFragmentManager().executePendingTransactions();
             if(!removeDialog.isAdded())
                 removeDialog.show(getFragmentManager(), "removeDialog");
-
         }
     }
 }

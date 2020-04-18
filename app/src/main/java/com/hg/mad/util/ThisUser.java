@@ -64,6 +64,10 @@ public class ThisUser{
         return isAdmin;
     }
 
+    public static void setIsAdmin(Boolean isAdmin) {
+        ThisUser.isAdmin = isAdmin;
+    }
+
     public static String getChapterName() {
         return chapterName;
     }
