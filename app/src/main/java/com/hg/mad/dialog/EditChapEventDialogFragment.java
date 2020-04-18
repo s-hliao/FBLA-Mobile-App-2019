@@ -138,7 +138,15 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
             case R.id.checkbox_attendance:
                 onAttendanceClicked();
                 break;
+            case R.id.button_remove:
+                onRemoveClicked();
+                break;
         }
+    }
+
+    public void onRemoveClicked() {
+        chapterEventReference.delete();
+        Toast.makeText(getContext(), "Event Removed", Toast.LENGTH_SHORT).show();
     }
 
     public void onAttendanceClicked(){
