@@ -158,7 +158,8 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
                     // Update DatabaseUser
                     DocumentSnapshot user = task.getResult();
                     Map<String, Integer> currentEventsUser = (Map<String, Integer>) user.get("chapterEvents");
-                    currentEventsUser.put(nameEditText.toString(), 1);
+                    currentEventsUser.remove(chapterEventSnapshot.get("eventName"));
+                    currentEventsUser.put(nameEditText.getText().toString(), 1);
                     userRef.update("chapterEvents", currentEventsUser);
 
                     // Update Chapter
