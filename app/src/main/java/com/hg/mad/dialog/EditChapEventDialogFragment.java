@@ -86,7 +86,7 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
         chapterEventReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/DD/yyyy");
                 ChapterEvent ds = documentSnapshot.toObject(ChapterEvent.class);
                 nameEditText.setText(ds.getEventName());
                 dateEditText.setText(dateFormat.format(ds.getDate()));
@@ -175,7 +175,7 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
                                     currentEventsChap.put(nameEditText.toString(), new HashMap<String, Attendee>());
                                 }
 
-                                SimpleDateFormat dateFormat= new SimpleDateFormat("MM/dd/yyyy");
+                                SimpleDateFormat dateFormat= new SimpleDateFormat("MM/DD/yyyy");
 
                                 try {
                                     Map<String, Object>updates = new HashMap<>();
