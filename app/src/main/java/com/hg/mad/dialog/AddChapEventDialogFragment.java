@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,8 +23,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hg.mad.R;
+import com.hg.mad.model.Attendee;
+import com.hg.mad.model.ChapterEvent;
 import com.hg.mad.util.ThisUser;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -111,9 +116,9 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
 
                     // Update DatabaseUser
                     DocumentSnapshot user = task.getResult();
-                    Map<String, Integer> currentEventsUser = (Map<String, Integer>) user.get("competitiveEvents");
+                    Map<String, Integer> currentEventsUser = (Map<String, Integer>) user.get("chapterEvents");
                     currentEventsUser.put(nameEditText.toString(), 1);
-                    userRef.update("competitiveEvents", currentEventsUser);
+                    userRef.update("chapterEvents", currentEventsUser);
 
                     // Update Chapter
                     chaptersCollection.whereEqualTo("chapterName", user.get("chapterName"))
@@ -124,13 +129,29 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
 
                                 DocumentSnapshot chapter = task.getResult().getDocuments().get(0);
 
-                                Map<String, Map<String, String>> currentEventsChap = (Map) chapter.get("competitiveEvents");
+                                Map<String, Map<String, Attendee>> currentEventsChap = (Map) chapter.get("chapterEvents");
                                 if (!currentEventsChap.containsKey(nameEditText.toString())) {
-                                    currentEventsChap.put(nameEditText.toString(), new HashMap<String, String>());
-                                }
-                                currentEventsChap.get(nameEditText.toString()).put(currentUser.getUid(), currentUser.getDisplayName());
+                                    currentEventsChap.put(nameEditText.toString(), new HashMap<String, Attendee>());
 
-                                chapter.getReference().update("competitiveEvents", currentEventsChap);
+                                    SimpleDateFormat dateFormat= new SimpleDateFormat("MM/dd/yyyy");
+
+                                    try {
+                                        ChapterEvent event  = new ChapterEvent(nameEditText.getText().toString(),
+                                                typeEditText.getText().toString(), descriptionEditText.toString(),
+                                                dateFormat.parse(dateEditText.getText().toString()),
+                                                passwordEditText.getText().toString(),
+                                                attendanceCheckBox.isChecked());
+
+                                        currentEventsChap.get(nameEditText.toString()).put(currentUser.getUid(), new Attendee(currentUser.getDisplayName(), false));
+                                        chapter.getReference().update("competitiveEvents", currentEventsChap);
+                                        chapter.getReference().collection("ChapterEvent").add(event);
+                                        Toast.makeText(getContext(), "Chapter Event Created", Toast.LENGTH_SHORT).show();
+                                    } catch (ParseException e) {
+                                        Toast.makeText(getContext(), "Incorrect date format", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+
                             }
                         }
                     });
