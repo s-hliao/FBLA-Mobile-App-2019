@@ -19,6 +19,7 @@ import com.google.api.Distribution;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.hg.mad.R;
+import com.hg.mad.util.ThisUser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +31,7 @@ public class MenuDialogFragment extends DialogFragment implements View.OnClickLi
     private LinearLayout manageEvent;
     private LinearLayout signIn;
     private Button cancel;
+    private TextView descriptionText;
 
     private TakeAttendanceDialogFragment  takeAttendanceDialog;
     private EditChapEventDialogFragment editChapEventDialog;
@@ -53,6 +55,15 @@ public class MenuDialogFragment extends DialogFragment implements View.OnClickLi
         manageEvent = rootView.findViewById(R.id.layout_edit_event);
         signIn = rootView.findViewById(R.id.layout_sign_up);
         cancel = rootView.findViewById(R.id.button_cancel3);
+        descriptionText = rootView.findViewById(R.id.event_description_text);
+
+        descriptionText.setText(chapterEventSnapshot.get("description").toString());
+
+        if(ThisUser.isAdmin()){
+            manageEvent.setVisibility(View.VISIBLE);
+        } else{
+            manageEvent.setVisibility(View.GONE);
+        }
 
 
         cancel.setOnClickListener(this);
@@ -84,6 +95,12 @@ public class MenuDialogFragment extends DialogFragment implements View.OnClickLi
      @Override
      public void onResume() {
          super.onResume();
+         if(ThisUser.isAdmin()){
+             manageEvent.setVisibility(View.VISIBLE);
+         } else{
+             manageEvent.setVisibility(View.GONE);
+         }
+         descriptionText.setText(chapterEventSnapshot.get("description").toString());
          getDialog().getWindow().setLayout(
                  ViewGroup.LayoutParams.MATCH_PARENT,
                  ViewGroup.LayoutParams.WRAP_CONTENT);
