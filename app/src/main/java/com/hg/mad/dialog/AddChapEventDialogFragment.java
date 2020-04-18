@@ -25,6 +25,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.hg.mad.R;
 import com.hg.mad.model.Attendee;
 import com.hg.mad.model.ChapterEvent;
+import com.hg.mad.util.ThisUser;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -116,14 +117,10 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
 
                 if (task.isSuccessful()) {
 
-                    // Update DatabaseUser
-                    DocumentSnapshot user = task.getResult();
-                    Map<String, Integer> currentEventsUser = (Map<String, Integer>) user.get("chapterEvents");
-                    currentEventsUser.put(nameEditText.toString(), 1);
-                    userRef.update("chapterEvents", currentEventsUser);
+
 
                     // Update Chapter
-                    chaptersCollection.whereEqualTo("chapterName", user.get("chapterName"))
+                    chaptersCollection.whereEqualTo("chapterName", ThisUser.getChapterName())
                             .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -143,8 +140,6 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
                                                 dateFormat.parse(dateEditText.getText().toString()),
                                                 passwordEditText.getText().toString(),
                                                 attendanceCheckBox.isChecked());
-
-                                        currentEventsChap.get(nameEditText.toString()).put(currentUser.getUid(), new Attendee(currentUser.getDisplayName(), false));
                                         chapter.getReference().update("chapterEvents", currentEventsChap);
                                         chapter.getReference().collection("ChapterEvent").add(event);
                                         Toast.makeText(getContext(), "Chapter event created", Toast.LENGTH_SHORT).show();

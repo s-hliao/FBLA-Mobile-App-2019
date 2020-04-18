@@ -186,14 +186,16 @@ public class TakeAttendanceDialogFragment extends DialogFragment implements View
     public void onResume() {
         super.onResume();
         if(!attendanceActive){
-            title.setVisibility(View.GONE);
             password.setVisibility(View.GONE);
             typePassword.setVisibility(View.GONE);
 
         } else{
-            title.setVisibility(View.VISIBLE);
             password.setVisibility(View.VISIBLE);
             typePassword.setVisibility(View.VISIBLE);
         }
+
+        getDialog().getWindow().setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 }
