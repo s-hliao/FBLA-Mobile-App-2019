@@ -40,7 +40,6 @@ public class ChapterEvent {
         this.date = date;
         this.signInKey = signInKey;
         this.attendanceActive = attendanceActive;
-
     }
 
     public String getEventName(){

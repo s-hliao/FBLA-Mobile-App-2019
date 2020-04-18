@@ -167,7 +167,7 @@
 
 
         <Button
-            android:id="@+id/button_add"
+            android:id="@+id/button_addOfficer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

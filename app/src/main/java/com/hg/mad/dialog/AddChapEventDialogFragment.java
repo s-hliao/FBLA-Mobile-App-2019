@@ -25,7 +25,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.hg.mad.R;
 import com.hg.mad.model.Attendee;
 import com.hg.mad.model.ChapterEvent;
-import com.hg.mad.util.ThisUser;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -71,6 +70,9 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
     @Override
     public void onResume() {
         super.onResume();
+
+        reset();
+
         getDialog().getWindow().setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -137,7 +139,7 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
 
                                     try {
                                         ChapterEvent event  = new ChapterEvent(nameEditText.getText().toString(),
-                                                typeEditText.getText().toString(), descriptionEditText.toString(),
+                                                typeEditText.getText().toString(), descriptionEditText.getText().toString(),
                                                 dateFormat.parse(dateEditText.getText().toString()),
                                                 passwordEditText.getText().toString(),
                                                 attendanceCheckBox.isChecked());
@@ -145,13 +147,12 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
                                         currentEventsChap.get(nameEditText.toString()).put(currentUser.getUid(), new Attendee(currentUser.getDisplayName(), false));
                                         chapter.getReference().update("competitiveEvents", currentEventsChap);
                                         chapter.getReference().collection("ChapterEvent").add(event);
-                                        Toast.makeText(getContext(), "Chapter Event Created", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "Chapter event created", Toast.LENGTH_SHORT).show();
+                                        dismiss();
                                     } catch (ParseException e) {
                                         Toast.makeText(getContext(), "Incorrect date format", Toast.LENGTH_SHORT).show();
                                     }
                                 }
-
-
                             }
                         }
                     });
@@ -162,5 +163,14 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
 
     public void onCancelClicked(){
         dismiss();
+    }
+
+    private void reset(){
+        nameEditText.setText("");
+        dateEditText.setText("");
+        typeEditText.setText("");
+        attendanceCheckBox.setSelected(false);
+        passwordEditText.setText("");
+        descriptionEditText.setText("");
     }
 }
