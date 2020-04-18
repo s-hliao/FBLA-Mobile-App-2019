@@ -111,7 +111,7 @@ public class MenuDialogFragment extends DialogFragment implements View.OnClickLi
      }
 
      public void onEditClicked(){
-        editChapEventDialog.setChapterEventReference(chapterEventSnapshot.getReference());
+        editChapEventDialog.setChapterEventSnapshot(chapterEventSnapshot);
          getFragmentManager().executePendingTransactions();
          if(!editChapEventDialog.isAdded())
              editChapEventDialog.show(getFragmentManager(), "addOfficerDialog");

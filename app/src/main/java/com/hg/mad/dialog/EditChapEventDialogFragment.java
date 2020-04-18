@@ -47,7 +47,7 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
     private Button cancel;
     private Button remove;
 
-    private DocumentReference chapterEventReference;
+    private DocumentSnapshot chapterEventSnapshot;
 
 
     @Nullable
@@ -75,15 +75,15 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
         return rootView;
     }
 
-    public void setChapterEventReference(DocumentReference chapterEventReference) {
-        this.chapterEventReference = chapterEventReference;
+    public void setChapterEventSnapshot(DocumentSnapshot chapterEventSnapshot) {
+        this.chapterEventSnapshot = chapterEventSnapshot;
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        chapterEventReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        chapterEventSnapshot.getReference().get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
@@ -127,7 +127,7 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
     }
 
     public void onRemoveClicked() {
-        chapterEventReference.delete();
+        chapterEventSnapshot.getReference().delete();
         Toast.makeText(getContext(), "Event Removed", Toast.LENGTH_SHORT).show();
         dismiss();
     }
@@ -171,27 +171,37 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
                                 DocumentSnapshot chapter = task.getResult().getDocuments().get(0);
 
                                 Map<String, Map<String, Attendee>> currentEventsChap = (Map) chapter.get("chapterEvents");
-                                if (!currentEventsChap.containsKey(nameEditText.toString())) {
-                                    currentEventsChap.put(nameEditText.toString(), new HashMap<String, Attendee>());
+
+                                if (!currentEventsChap.containsKey(nameEditText.getText().toString())) {
+                                    SimpleDateFormat dateFormat= new SimpleDateFormat("MM/dd/yyyy");
+
+                                    try {
+
+
+                                        Map<String, Object>updates = new HashMap<>();
+                                        updates.put("eventName",nameEditText.getText().toString());
+                                        updates.put("eventType", typeEditText.getText().toString());
+                                        updates.put("description",descriptionEditText.getText().toString());
+                                        updates.put("date", dateFormat.parse(dateEditText.getText().toString()));
+                                        updates.put("signInKey",passwordEditText.getText().toString()) ;
+                                        updates.put("attendanceActive",attendanceCheckBox.isChecked());
+
+                                        Map<String, Attendee> attendees = currentEventsChap.remove(chapterEventSnapshot.get("eventName"));
+
+                                        chapterEventSnapshot.getReference().update(updates);
+
+                                        currentEventsChap.put(nameEditText.getText().toString(), attendees);
+                                        chapter.getReference().update("chapterEvents", currentEventsChap);
+                                        Toast.makeText(getContext(), "Chapter event updated", Toast.LENGTH_SHORT).show();
+
+                                        dismiss();
+                                    } catch (ParseException e) {
+                                        Toast.makeText(getContext(), "Incorrect date format", Toast.LENGTH_SHORT).show();
+                                    }
+
                                 }
 
-                                SimpleDateFormat dateFormat= new SimpleDateFormat("MM/dd/yyyy");
 
-                                try {
-                                    Map<String, Object>updates = new HashMap<>();
-                                    updates.put("eventName",nameEditText.getText().toString());
-                                    updates.put("eventType", typeEditText.getText().toString());
-                                    updates.put("description",descriptionEditText.getText().toString());
-                                    updates.put("date", dateFormat.parse(dateEditText.getText().toString()));
-                                    updates.put("signInKey",passwordEditText.getText().toString()) ;
-                                    updates.put("attendanceActive",attendanceCheckBox.isChecked());
-
-                                    chapterEventReference.update(updates);
-                                    Toast.makeText(getContext(), "Chapter event updated", Toast.LENGTH_SHORT).show();
-                                    dismiss();
-                                } catch (ParseException e) {
-                                    Toast.makeText(getContext(), "Incorrect date format", Toast.LENGTH_SHORT).show();
-                                }
                             }
                         }
                     });

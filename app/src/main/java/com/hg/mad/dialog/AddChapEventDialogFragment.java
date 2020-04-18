@@ -129,17 +129,18 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
                                 DocumentSnapshot chapter = task.getResult().getDocuments().get(0);
 
                                 Map<String, Map<String, Attendee>> currentEventsChap = (Map) chapter.get("chapterEvents");
-                                if (!currentEventsChap.containsKey(nameEditText.toString())) {
-                                    currentEventsChap.put(nameEditText.toString(), new HashMap<String, Attendee>());
+                                if (!currentEventsChap.containsKey(nameEditText.getText().toString())) {
 
-                                    SimpleDateFormat dateFormat= new SimpleDateFormat("MM/dd/yyyy");
 
                                     try {
+
+                                        SimpleDateFormat dateFormat= new SimpleDateFormat("MM/dd/yyyy");
                                         ChapterEvent event  = new ChapterEvent(nameEditText.getText().toString(),
                                                 typeEditText.getText().toString(), descriptionEditText.getText().toString(),
                                                 dateFormat.parse(dateEditText.getText().toString()),
                                                 passwordEditText.getText().toString(),
                                                 attendanceCheckBox.isChecked());
+                                        currentEventsChap.put(nameEditText.getText().toString(), new HashMap<String, Attendee>());
                                         chapter.getReference().update("chapterEvents", currentEventsChap);
                                         chapter.getReference().collection("ChapterEvent").add(event);
                                         Toast.makeText(getContext(), "Chapter event created", Toast.LENGTH_SHORT).show();
