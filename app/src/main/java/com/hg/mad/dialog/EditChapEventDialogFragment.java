@@ -54,7 +54,7 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.dialog_add_chapter_event, container, false);
+        rootView = inflater.inflate(R.layout.dialog_edit_chapter_event, container, false);
 
         nameEditText = rootView.findViewById(R.id.editText_name);
         dateEditText = rootView.findViewById(R.id.editText_date);
