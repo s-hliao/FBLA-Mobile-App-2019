@@ -172,6 +172,10 @@ public class TakeAttendanceDialogFragment extends DialogFragment implements View
                                 Map<String, Map<String, Attendee>> currentEventsChap = (Map) chapter.get("chapterEvents");
                                 currentEventsChap.get(eventName).remove(currentUser.getUid());
 
+                                if(currentEventsChap.get(eventName).isEmpty()){
+                                    currentEventsChap.remove(eventName);
+                                }
+
                                 chapter.getReference().update("chapterEvents", currentEventsChap);
                             }
                         }
