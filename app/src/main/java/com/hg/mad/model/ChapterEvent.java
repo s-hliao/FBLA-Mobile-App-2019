@@ -27,18 +27,16 @@ public class ChapterEvent {
     private String eventType;
     private String description;
     private Date date;
-    private String chapterName;
     private String signInKey;
     private boolean attendanceActive;
 
     public ChapterEvent() {}
 
-    public ChapterEvent(String eventName, String eventType, String description,Date date, String chapterName,
+    public ChapterEvent(String eventName, String eventType, String description,Date date,
                         String signInKey, boolean attendanceActive){
         this.eventName = eventName;
         this.eventType = eventType;
         this.description = description;
-        this.chapterName = chapterName;
         this.date = date;
         this.signInKey = signInKey;
         this.attendanceActive = attendanceActive;
@@ -64,10 +62,6 @@ public class ChapterEvent {
 
     public void setDescription(String description){
         this.description = description;
-    }
-
-    public String getChapterName() {
-        return chapterName;
     }
 
     public Date getDate() {
