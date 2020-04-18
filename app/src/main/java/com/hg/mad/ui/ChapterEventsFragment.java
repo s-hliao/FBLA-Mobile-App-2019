@@ -174,6 +174,13 @@ public class ChapterEventsFragment extends Fragment implements
             if (!attendanceDialog.isAdded()) {
                 attendanceDialog.show(getFragmentManager(), "attendanceDialog");
             }
+        } else {
+            editEventDialog.setChapterEventReference(chapEvent.getReference());
+
+            getFragmentManager().executePendingTransactions();
+            if (!editEventDialog.isAdded()) {
+                editEventDialog.show(getFragmentManager(), "editEventDialog");
+            }
         }
     }
 }
