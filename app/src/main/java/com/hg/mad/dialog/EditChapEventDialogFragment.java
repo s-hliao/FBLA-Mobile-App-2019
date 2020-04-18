@@ -127,6 +127,23 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
     }
 
     public void onRemoveClicked() {
+        FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
+        fireStore.collection("Chapter")
+                .whereEqualTo("chapterName", ThisUser.getChapterName()).get(
+
+        ).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                DocumentSnapshot chapter = queryDocumentSnapshots.getDocuments().get(0);
+
+                Map<String, Map<String, Attendee>> currentEventsChap = (Map) chapter.get("chapterEvents");
+                currentEventsChap.remove(chapterEventSnapshot.get("eventName"));
+                chapter.getReference().update("chapterEvents", currentEventsChap);
+            }
+        });
+
+
+
         chapterEventSnapshot.getReference().delete();
         Toast.makeText(getContext(), "Event Removed", Toast.LENGTH_SHORT).show();
         dismiss();
@@ -155,15 +172,8 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
 
                 if (task.isSuccessful()) {
 
-                    // Update DatabaseUser
-                    DocumentSnapshot user = task.getResult();
-                    Map<String, Integer> currentEventsUser = (Map<String, Integer>) user.get("chapterEvents");
-                    currentEventsUser.remove(chapterEventSnapshot.get("eventName"));
-                    currentEventsUser.put(nameEditText.getText().toString(), 1);
-                    userRef.update("chapterEvents", currentEventsUser);
-
                     // Update Chapter
-                    chaptersCollection.whereEqualTo("chapterName", user.get("chapterName"))
+                    chaptersCollection.whereEqualTo("chapterName", ThisUser.getChapterName())
                             .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
