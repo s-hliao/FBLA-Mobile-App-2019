@@ -140,7 +140,8 @@
             android:layout_weight="1"
             android:ems="10"
             android:hint="Password"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:visibility="invisible" />
 
     </LinearLayout>
 

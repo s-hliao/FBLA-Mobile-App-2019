@@ -45,6 +45,7 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
 
     private Button add;
     private Button cancel;
+    private Button remove;
 
     private DocumentReference chapterEventReference;
 
@@ -64,31 +65,12 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
         descriptionEditText = rootView.findViewById(R.id.editText_description);
         add = rootView.findViewById(R.id.button_cancel);
         cancel = rootView.findViewById(R.id.button_add);
-
-
-        chapterEventReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-                ChapterEvent ds = documentSnapshot.toObject(ChapterEvent.class);
-                nameEditText.setText(ds.getEventName());
-                dateEditText.setText(dateFormat.format(ds.getDate()));
-                typeEditText.setText(ds.getEventType());
-                attendanceCheckBox.setChecked(ds.getAttendanceActive());
-                if(ds.getAttendanceActive()){
-                    passwordEditText.setText(ds.getSignInKey());
-                    passwordEditText.setVisibility(View.VISIBLE);
-                } else{
-                    passwordEditText.setText("");
-                    passwordEditText.setVisibility(View.INVISIBLE);
-                }
-                descriptionEditText.setText(ds.getDescription());
-            }
-        });
+        remove = rootView.findViewById(R.id.button_remove);
 
         attendanceCheckBox.setOnClickListener(this);
         add.setOnClickListener(this);
         cancel.setOnClickListener(this);
+        remove.setOnClickListener(this);
 
         return rootView;
     }
@@ -147,6 +129,7 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
     public void onRemoveClicked() {
         chapterEventReference.delete();
         Toast.makeText(getContext(), "Event Removed", Toast.LENGTH_SHORT).show();
+        dismiss();
     }
 
     public void onAttendanceClicked(){
@@ -192,19 +175,20 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
                                     currentEventsChap.put(nameEditText.toString(), new HashMap<String, Attendee>());
                                 }
 
-                                SimpleDateFormat dateFormat= new SimpleDateFormat("MM-dd-yyyy");
+                                SimpleDateFormat dateFormat= new SimpleDateFormat("MM/dd/yyyy");
 
                                 try {
                                     Map<String, Object>updates = new HashMap<>();
                                     updates.put("eventName",nameEditText.getText().toString());
                                     updates.put("eventType", typeEditText.getText().toString());
-                                    updates.put("description",descriptionEditText.toString());
+                                    updates.put("description",descriptionEditText.getText().toString());
                                     updates.put("date", dateFormat.parse(dateEditText.getText().toString()));
                                     updates.put("signInKey",passwordEditText.getText().toString()) ;
                                     updates.put("attendanceActive",attendanceCheckBox.isChecked());
 
                                     chapterEventReference.update(updates);
-                                    Toast.makeText(getContext(), "Chapter Event Created", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Chapter event updated", Toast.LENGTH_SHORT).show();
+                                    dismiss();
                                 } catch (ParseException e) {
                                     Toast.makeText(getContext(), "Incorrect date format", Toast.LENGTH_SHORT).show();
                                 }
