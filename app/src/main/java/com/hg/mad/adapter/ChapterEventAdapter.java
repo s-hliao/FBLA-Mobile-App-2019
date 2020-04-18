@@ -1,5 +1,6 @@
 package com.hg.mad.adapter;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import com.hg.mad.R;
 import com.hg.mad.model.ChapterEvent;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class ChapterEventAdapter extends FirestoreAdapter<ChapterEventAdapter.ViewHolder> {
@@ -44,6 +47,12 @@ public class ChapterEventAdapter extends FirestoreAdapter<ChapterEventAdapter.Vi
             SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
             Date date = event.getDate();
             dateText.setText(dateFormat.format(date));
+
+            Date now = new Date();
+            if (dateFormat.format(now).equals(dateFormat.format(date)))
+                dateText.setTextColor(Color.parseColor("#32cd32"));
+            else if (date.before(now))
+                dateText.setTextColor(Color.parseColor("#d16b73"));
 
             typeText.setText(event.getEventType());
             if (event.getAttendanceActive())
