@@ -42,6 +42,7 @@ public class MembersFragment extends Fragment implements
         View.OnClickListener, MemberAdapter.OnMemberListener {
     private RecyclerView membersRV;
     private LinearLayout removeAll;
+    private View divider;
 
     private FirebaseFirestore firestore;
     private Query query;
@@ -60,6 +61,7 @@ public class MembersFragment extends Fragment implements
 
         membersRV = (RecyclerView) root.findViewById(R.id.recycler_members);
         removeAll = root.findViewById(R.id.btn_removeAll);
+        divider = root.findViewById(R.id.divider6);
 
         removeAll.setOnClickListener(this);
 
@@ -76,8 +78,10 @@ public class MembersFragment extends Fragment implements
         isAdmin = ThisUser.isAdmin();
         if (isAdmin){
             removeAll.setVisibility(View.VISIBLE);
+            divider.setVisibility(View.VISIBLE);
         } else{
             removeAll.setVisibility(View.GONE);
+            divider.setVisibility(View.GONE);
         }
 
         chapterName = ThisUser.getChapterName();

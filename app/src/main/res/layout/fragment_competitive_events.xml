@@ -17,8 +17,9 @@
         android:foreground="?android:attr/selectableItemBackground"
         android:padding="15dp"
         android:text="Manage Sign Ups"
-        android:textColor="@android:color/black"
+        android:textColor="@color/colorPrimaryTint"
         android:textStyle="bold"
+        android:textSize="14sp"
         android:visibility="gone" />
 
     <FrameLayout

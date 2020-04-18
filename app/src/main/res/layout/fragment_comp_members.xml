@@ -15,7 +15,7 @@
         android:foreground="?android:attr/selectableItemBackground"
         android:padding="15dp"
         android:text="Reset All Events"
-        android:textColor="@android:color/black"
+        android:textColor="@color/colorPrimaryTint"
         android:textStyle="bold" />
 
     <View

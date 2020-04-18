@@ -63,7 +63,7 @@ public class ChapterFragment extends Fragment implements
     private ImageView instagram;
     private ImageView twitter;
     private LinearLayout addOfficerButton;
-    private TextView mediaButton;
+    private LinearLayout mediaButton;
 
 
     private RecyclerView officerRV;
@@ -90,8 +90,8 @@ public class ChapterFragment extends Fragment implements
         facebook  = (ImageView) root.findViewById(R.id.imageView7);
         instagram = (ImageView) root.findViewById(R.id.imageView8);
         twitter = (ImageView) root.findViewById(R.id.imageView9);
-        addOfficerButton = (LinearLayout) root.findViewById(R.id.button_addOfficer);
-        mediaButton = (TextView) root.findViewById(R.id.media_button);
+        addOfficerButton = root.findViewById(R.id.button_addOfficer);
+        mediaButton = root.findViewById(R.id.media_button);
 
         facebook.setOnClickListener(this);
         instagram.setOnClickListener(this);
