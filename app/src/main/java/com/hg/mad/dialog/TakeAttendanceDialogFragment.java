@@ -25,12 +25,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.hg.mad.R;
 import com.hg.mad.model.Attendee;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class TakeAttendanceDialogFragment extends DialogFragment implements View.OnClickListener {
-    private TextView eventNameText;
     private TextView password;
-    private TextView cancelSignUp;
     private EditText typePassword;
     private Button no;
     private Button remove;
@@ -46,13 +45,11 @@ public class TakeAttendanceDialogFragment extends DialogFragment implements View
                              @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.dialog_take_attendance, container, false);
 
-        eventNameText = rootView.findViewById(R.id.event_name_text);
         password =rootView.findViewById(R.id.password_text);
         typePassword = rootView.findViewById(R.id.password_type);
         no = rootView.findViewById(R.id.button_cancel_no);
         remove = rootView.findViewById(R.id.button_cancel_yes);
         signIn = rootView.findViewById(R.id.sign_in);
-        cancelSignUp = rootView.findViewWithTag(R.id.competitive_signedup3);
 
         if(attendanceActive){
             password.setVisibility(View.GONE);
@@ -61,8 +58,6 @@ public class TakeAttendanceDialogFragment extends DialogFragment implements View
             password.setVisibility(View.VISIBLE);
             password.setVisibility(View.VISIBLE);
         }
-
-        eventNameText.setText(eventName);
 
         signIn.setOnClickListener(this);
         remove.setOnClickListener(this);
@@ -103,6 +98,48 @@ public class TakeAttendanceDialogFragment extends DialogFragment implements View
 
     public void onSignInClicked(){
         if(!attendanceActive||typePassword.getText().toString().equals(attendancePassword)){
+            final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
+
+            CollectionReference usersCollection = fireStore.collection("DatabaseUser");
+            final DocumentReference userRef = usersCollection.document(currentUser.getUid());
+
+            final CollectionReference chaptersCollection = fireStore.collection("Chapter");
+
+            userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                    if (task.isSuccessful()) {
+
+                        // Update DatabaseUser
+                        DocumentSnapshot user = task.getResult();
+                        Map<String, Integer> currentEventsUser = (Map<String, Integer>) user.get("chapterEvents");
+                        currentEventsUser.put(eventName, 1);
+                        userRef.update("chapterEvents", currentEventsUser);
+
+                        // Update Chapter
+                        chaptersCollection.whereEqualTo("chapterName", user.get("chapterName"))
+                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+
+                                    DocumentSnapshot chapter = task.getResult().getDocuments().get(0);
+
+                                    Map<String, Map<String, Attendee>> currentEventsChap = (Map) chapter.get("chapterEvents");
+                                    currentEventsChap.get(eventName).put(currentUser.getUid(), new Attendee(currentUser.getDisplayName(), true));
+
+                                    chapter.getReference().update("competitiveEvents", currentEventsChap);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+
+            dismiss();
+            Toast.makeText(getContext(), "Signed up", Toast.LENGTH_SHORT).show();
 
             Toast.makeText(getContext(), "Signed In", Toast.LENGTH_SHORT).show();
             dismiss();
