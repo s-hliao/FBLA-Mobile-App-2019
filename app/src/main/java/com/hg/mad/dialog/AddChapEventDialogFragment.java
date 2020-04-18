@@ -145,7 +145,7 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
                                                 attendanceCheckBox.isChecked());
 
                                         currentEventsChap.get(nameEditText.toString()).put(currentUser.getUid(), new Attendee(currentUser.getDisplayName(), false));
-                                        chapter.getReference().update("competitiveEvents", currentEventsChap);
+                                        chapter.getReference().update("chapterEvents", currentEventsChap);
                                         chapter.getReference().collection("ChapterEvent").add(event);
                                         Toast.makeText(getContext(), "Chapter event created", Toast.LENGTH_SHORT).show();
                                         dismiss();

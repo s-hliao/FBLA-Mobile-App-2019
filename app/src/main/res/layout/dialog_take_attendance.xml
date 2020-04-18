@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="15dp">;
+        android:layout_marginBottom="15dp">
 
         <TextView
             android:id="@+id/password_text"
@@ -34,13 +34,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Event Password" />
+            android:inputType="textPassword" />
     </LinearLayout>
 
     <Button
         android:id="@+id/sign_in"
-        android:layout_width="383dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:text="SIGN IN"

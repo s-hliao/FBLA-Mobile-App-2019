@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TakeAttendanceDialogFragment extends DialogFragment implements View.OnClickListener {
+    private TextView title;
     private TextView password;
     private EditText typePassword;
     private Button no;
@@ -46,19 +47,12 @@ public class TakeAttendanceDialogFragment extends DialogFragment implements View
                              @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.dialog_take_attendance, container, false);
 
-        password =rootView.findViewById(R.id.password_text);
+        title = rootView.findViewById(R.id.event_name_text);
+        password = rootView.findViewById(R.id.password_text);
         typePassword = rootView.findViewById(R.id.password_type);
         no = rootView.findViewById(R.id.button_cancel_no);
         remove = rootView.findViewById(R.id.button_cancel_yes);
         signIn = rootView.findViewById(R.id.sign_in);
-
-        if(attendanceActive){
-            password.setVisibility(View.GONE);
-            typePassword.setText(View.GONE);
-        } else{
-            password.setVisibility(View.VISIBLE);
-            password.setVisibility(View.VISIBLE);
-        }
 
         signIn.setOnClickListener(this);
         remove.setOnClickListener(this);
@@ -133,13 +127,13 @@ public class TakeAttendanceDialogFragment extends DialogFragment implements View
                 }
             });
 
-            dismiss();
-            Toast.makeText(getContext(), "Signed up", Toast.LENGTH_SHORT).show();
+            if (attendanceActive)
+                Toast.makeText(getContext(), "Signed up", Toast.LENGTH_SHORT).show();
 
-            Toast.makeText(getContext(), "Signed In", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Signed in", Toast.LENGTH_SHORT).show();
             dismiss();
         } else{
-            Toast.makeText(getContext(), "Wrong Password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Incorrect password", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -191,12 +185,15 @@ public class TakeAttendanceDialogFragment extends DialogFragment implements View
     @Override
     public void onResume() {
         super.onResume();
-        if(attendanceActive){
+        if(!attendanceActive){
+            title.setVisibility(View.GONE);
             password.setVisibility(View.GONE);
-            typePassword.setText(View.GONE);
+            typePassword.setVisibility(View.GONE);
+
         } else{
+            title.setVisibility(View.VISIBLE);
             password.setVisibility(View.VISIBLE);
-            password.setVisibility(View.VISIBLE);
+            typePassword.setVisibility(View.VISIBLE);
         }
     }
 }
