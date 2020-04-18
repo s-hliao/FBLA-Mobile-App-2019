@@ -202,7 +202,7 @@ public class SelectChapterActivity extends AppCompatActivity{
 
         Map<String, String> usersInChapter = new HashMap<>();
         usersInChapter.put(adminID, adminName);
-        Chapter chapter = new Chapter(name, adminID);
+        Chapter chapter = new Chapter(name);
 
         fireStore.collection("Chapter").add(chapter);
     }

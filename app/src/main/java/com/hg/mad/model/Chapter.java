@@ -12,7 +12,6 @@ public class Chapter {
     public static final String FIELD_SOCIALMEDIA = "socialMedia";
 
     private String chapterName;
-    private String adminID;
     private Map<String, Map<String, String>> competitiveEvents;
     private Map<String, Map<String, Attendee>> chapterEvents;
     private Map<String, String> socialMedia;
@@ -20,9 +19,8 @@ public class Chapter {
 
     public Chapter() {}
 
-    public Chapter(String chapterName, String adminID) {
+    public Chapter(String chapterName) {
         this.chapterName = chapterName;
-        this.adminID = adminID;
         this.competitiveEvents = new HashMap<>();
         this.chapterEvents = new HashMap<>();
         this.socialMedia = new HashMap<>();
@@ -34,14 +32,6 @@ public class Chapter {
 
     public void setChapterName(String chapterName) {
         this.chapterName = chapterName;
-    }
-
-    public String getAdminID() {
-        return adminID;
-    }
-
-    public void setAdminID(String adminID) {
-        this.adminID = adminID;
     }
 
     public Map<String, Map<String, String>> getCompetitiveEvents(){
