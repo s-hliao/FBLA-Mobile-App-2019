@@ -29,7 +29,7 @@
 
         <EditText
             android:id="@+id/start_text"
-            android:layout_width="265dp"
+            android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Start Date (MM/DD/YYYY)"
@@ -43,12 +43,6 @@
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true">
-
-            <View
-                android:id="@+id/view5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
 
             <TextView
                 android:id="@+id/textView13"
@@ -75,7 +69,7 @@
 
         <EditText
             android:id="@+id/end_text"
-            android:layout_width="265dp"
+            android:layout_width="231dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="End Date (MM/DD/YYYY)"
@@ -89,12 +83,6 @@
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true">
-
-            <View
-                android:id="@+id/view6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
 
             <TextView
                 android:id="@+id/textView14"

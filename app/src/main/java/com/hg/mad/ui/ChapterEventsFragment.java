@@ -78,7 +78,6 @@ public class ChapterEventsFragment extends Fragment implements
 
     private LinearLayout addEventButton;
     private LinearLayout resetAllButton;
-    private View divider;
     private View divider2;
 
     private RecyclerView eventRV;
@@ -174,6 +173,8 @@ public class ChapterEventsFragment extends Fragment implements
     @Override
     public void onStart() {
         super.onStart();
+
+        onFilter(filters);
         if (adapter != null) {
             adapter.startListening();
         }
@@ -217,6 +218,8 @@ public class ChapterEventsFragment extends Fragment implements
     @Override
     public void onFilter(final ChapFilters newfilters) {
 
+        System.out.println("tryFilter");
+
         firestore.collection("Chapter").whereEqualTo("chapterName", chapterName)
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -233,17 +236,20 @@ public class ChapterEventsFragment extends Fragment implements
                     query = query.endAt(newfilters.getEndDate());
                 }
 
+                System.out.println(searchText);
+
                 if (searchText != null) {
                     searchLower = searchText.toLowerCase();
-                    query = query.orderBy("lower")
-                            .startAt(searchLower)
+                    query = query.orderBy("lower");
+                    query  = query.startAt(searchLower)
                             .endAt(searchLower + "\uf8ff");
+
                 }
 
                 if (newfilters.hasType()) {
                     String typeLower = newfilters.getType().toLowerCase();
-                    query = query.orderBy("typeLower")
-                            .startAt(typeLower)
+                    query = query.orderBy("typeLower");
+                    query = query.startAt(typeLower)
                             .endAt(typeLower + "\uf8ff");
                 }
 
