@@ -14,8 +14,6 @@ import com.hg.mad.R;
 import com.hg.mad.model.ChapterEvent;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class ChapterEventAdapter extends FirestoreAdapter<ChapterEventAdapter.ViewHolder> {
@@ -53,6 +51,8 @@ public class ChapterEventAdapter extends FirestoreAdapter<ChapterEventAdapter.Vi
                 dateText.setTextColor(Color.parseColor("#32cd32"));
             else if (date.before(now))
                 dateText.setTextColor(Color.parseColor("#d16b73"));
+            else
+                dateText.setTextColor(Color.parseColor("#a9a9a9"));
 
             typeText.setText(event.getEventType());
             if (event.getAttendanceActive())

@@ -134,8 +134,7 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
 
                                         SimpleDateFormat dateFormat= new SimpleDateFormat("MM/dd/yyyy");
                                         ChapterEvent event  = new ChapterEvent(
-                                                nameEditText.getText().toString(), nameEditText.getText().toString().toLowerCase(),
-                                                typeEditText.getText().toString(), typeEditText.getText().toString().toLowerCase(),
+                                                nameEditText.getText().toString(), typeEditText.getText().toString(),
                                                 descriptionEditText.getText().toString(),
                                                 dateFormat.parse(dateEditText.getText().toString()),
                                                 passwordEditText.getText().toString(),

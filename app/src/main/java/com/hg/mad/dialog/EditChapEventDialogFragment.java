@@ -183,9 +183,7 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
 
                             Map<String, Object>updates = new HashMap<>();
                             updates.put("eventName", nameEditText.getText().toString());
-                            updates.put("lower", nameEditText.getText().toString().toLowerCase());
                             updates.put("eventType", typeEditText.getText().toString());
-                            updates.put("typeLower", typeEditText.getText().toString().toLowerCase());
                             updates.put("description",descriptionEditText.getText().toString());
                             updates.put("date", dateFormat.parse(dateEditText.getText().toString()));
                             updates.put("signInKey",passwordEditText.getText().toString()) ;
