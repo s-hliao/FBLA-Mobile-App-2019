@@ -51,17 +51,10 @@
     </LinearLayout>
 
     <View
-        android:id="@+id/divider5"
+        android:id="@+id/divider2"
         android:layout_width="match_parent"
         android:layout_height="7dp"
         android:background="?android:attr/listDivider" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_chap_events"
-        android:layout_width="match_parent"
-        android:layout_height="597dp">
-
-    </androidx.recyclerview.widget.RecyclerView>
 
     <LinearLayout
         android:id="@+id/btn_removeAll"
@@ -97,4 +90,18 @@
             app:srcCompat="@android:drawable/ic_menu_delete" />
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/divider5"
+        android:layout_width="match_parent"
+        android:layout_height="7dp"
+        android:background="?android:attr/listDivider" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_chap_events"
+        android:layout_width="match_parent"
+        android:layout_height="554dp">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
 </LinearLayout>

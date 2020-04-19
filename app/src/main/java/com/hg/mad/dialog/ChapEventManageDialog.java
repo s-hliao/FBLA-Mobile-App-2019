@@ -91,7 +91,7 @@ import java.util.stream.Collectors;
     }
 
     public void onResetClicked(){
-        FirebaseFirestore.getInstance().collection("DatabaseUser")
+        FirebaseFirestore.getInstance().collection("Chapter")
                 .whereEqualTo("chapterName", ThisUser.getChapterName()).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override

@@ -95,6 +95,7 @@ public class MenuDialogFragment extends DialogFragment implements View.OnClickLi
                 onCancelClicked();
                 break;
             case R.id.layout_manage:
+                onManageClicked();
                 break;
         }
     }
