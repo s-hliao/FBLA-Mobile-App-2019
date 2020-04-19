@@ -244,6 +244,8 @@ public class ChapterEventsFragment extends Fragment implements
                     DocumentSnapshot first = documents.get(0);
                     DocumentSnapshot last = documents.get(documents.size() - 1);
 
+
+
                     Date startDate;
                     if (newfilters.hasStartDate()) {
                         startDate = newfilters.getStartDate();
@@ -258,33 +260,10 @@ public class ChapterEventsFragment extends Fragment implements
                         endDate = ((com.google.firebase.Timestamp) last.get("date")).toDate();
                     }
 
-                    String searchLower;
-                    if (searchText != null) {
-                        searchLower = searchText.toLowerCase();
-                    } else {
-                        searchLower = "";
-                    }
-
-                    String typeLower;
-                    if (newfilters.hasType()) {
-                        typeLower = newfilters.getType().toLowerCase();
-                    } else {
-                        typeLower = "";
-                    }
-
                     query = chapter.collection("ChapterEvent");
-                    query = query.orderBy("date").orderBy("lower").orderBy("typeLower")
-                            .startAt(startDate, searchLower, typeLower)
-                            .endAt(endDate, searchLower + "\uf8ff", typeLower + "\uf8ff");
-
-                    query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            System.out.println(queryDocumentSnapshots.size());
-                        }
-                    });
-
-                    System.out.println("hi");
+                    query = query.orderBy("date")
+                            .startAt(startDate)
+                            .endAt(endDate);
 
                     // Update the query
                     adapter.setQuery(query);

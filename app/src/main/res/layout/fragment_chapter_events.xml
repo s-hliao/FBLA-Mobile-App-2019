@@ -101,24 +101,15 @@
         android:paddingEnd="12dp"
         android:paddingBottom="12dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <SearchView
-                android:id="@+id/search_chapter"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:background="@android:color/background_light"
-                android:elevation="8dp"
-                android:iconifiedByDefault="false"
-                android:queryHint="Search Here"
-                app:layout_constraintEnd_toStartOf="@+id/button_filter"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-            </SearchView>
+            <Spinner
+                android:id="@+id/spinner3"
+                android:layout_width="332dp"
+                android:layout_height="match_parent"
+                android:entries="@array/categories" />
 
             <ImageView
                 android:id="@+id/button_filter"
@@ -128,12 +119,9 @@
                 android:background="@android:color/background_light"
                 android:elevation="8dp"
                 android:padding="12dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_filter" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
     </FrameLayout>
 
