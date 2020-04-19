@@ -21,7 +21,7 @@ public class ChapFilters {
     }
 
     public boolean hasType() {
-        return !(TextUtils.isEmpty(type));
+        return !(type == null) && !type.isEmpty();
     }
 
     public String getType() {

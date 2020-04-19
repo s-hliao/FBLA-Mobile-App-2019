@@ -64,7 +64,10 @@ import com.hg.mad.model.DatabaseUser;
 import com.hg.mad.model.Officer;
 import com.hg.mad.util.ThisUser;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -85,6 +88,7 @@ public class ChapterEventsFragment extends Fragment implements
     private DocumentReference chapterRef;
     private FirebaseFirestore firestore;
     private Query query;
+    private DocumentReference chapter;
 
     private ChapterEventAdapter adapter;
 
@@ -103,7 +107,6 @@ public class ChapterEventsFragment extends Fragment implements
     private ChapFilters filters;
     private SearchView searchView;
     private String searchText;
-    private String searchLower;
 
     @SuppressLint("WrongViewCast")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -218,50 +221,80 @@ public class ChapterEventsFragment extends Fragment implements
     @Override
     public void onFilter(final ChapFilters newfilters) {
 
-        System.out.println("tryFilter");
-
         firestore.collection("Chapter").whereEqualTo("chapterName", chapterName)
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                DocumentSnapshot chaptersh = queryDocumentSnapshots.getDocuments().get(0);
 
-                query = chaptersh.getReference().collection("ChapterEvent");
-
-                query = query.orderBy("date");
-                if (newfilters.hasStartDate()) {
-                    query = query.startAt(newfilters.getStartDate());
-                }
-                if (newfilters.hasEndDate()) {
-                    query = query.endAt(newfilters.getEndDate());
-                }
-
-                System.out.println(searchText);
-
-                if (searchText != null) {
-                    searchLower = searchText.toLowerCase();
-                    query = query.orderBy("lower");
-                    query  = query.startAt(searchLower)
-                            .endAt(searchLower + "\uf8ff");
-
-                }
-
-                if (newfilters.hasType()) {
-                    String typeLower = newfilters.getType().toLowerCase();
-                    query = query.orderBy("typeLower");
-                    query = query.startAt(typeLower)
-                            .endAt(typeLower + "\uf8ff");
-                }
-
-                // Update the query
-                adapter.setQuery(query);
-
-                // Save filters
-                filters = newfilters;
+                chapter = queryDocumentSnapshots.getDocuments().get(0).getReference();
+                filter(newfilters);
             }
         });
     }
 
+    private void filter(final ChapFilters newfilters){
+
+        chapter.collection("ChapterEvent").orderBy("date")
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+
+                if (!documents.isEmpty()) {
+                    DocumentSnapshot first = documents.get(0);
+                    DocumentSnapshot last = documents.get(documents.size() - 1);
+
+                    Date startDate;
+                    if (newfilters.hasStartDate()) {
+                        startDate = newfilters.getStartDate();
+                    } else {
+                        startDate = ((com.google.firebase.Timestamp) first.get("date")).toDate();
+                    }
+
+                    Date endDate;
+                    if (newfilters.hasEndDate()) {
+                        endDate = newfilters.getEndDate();
+                    } else {
+                        endDate = ((com.google.firebase.Timestamp) last.get("date")).toDate();
+                    }
+
+                    String searchLower;
+                    if (searchText != null) {
+                        searchLower = searchText.toLowerCase();
+                    } else {
+                        searchLower = "";
+                    }
+
+                    String typeLower;
+                    if (newfilters.hasType()) {
+                        typeLower = newfilters.getType().toLowerCase();
+                    } else {
+                        typeLower = "";
+                    }
+
+                    query = chapter.collection("ChapterEvent");
+                    query = query.orderBy("date").orderBy("lower").orderBy("typeLower")
+                            .startAt(startDate, searchLower, typeLower)
+                            .endAt(endDate, searchLower + "\uf8ff", typeLower + "\uf8ff");
+
+                    query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            System.out.println(queryDocumentSnapshots.size());
+                        }
+                    });
+
+                    System.out.println("hi");
+
+                    // Update the query
+                    adapter.setQuery(query);
+
+                    // Save filters
+                    filters = newfilters;
+                }
+            }
+        });
+    }
 
     @Override
     public void onClick(View view) {
