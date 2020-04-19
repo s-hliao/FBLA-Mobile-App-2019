@@ -70,7 +70,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginBottom="15dp">
 
         <EditText
             android:id="@+id/end_text"
