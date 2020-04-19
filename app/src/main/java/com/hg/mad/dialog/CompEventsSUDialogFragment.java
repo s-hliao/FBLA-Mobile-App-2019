@@ -65,6 +65,15 @@ import java.util.stream.Collectors;
      }
 
      @Override
+     public void onResume() {
+         super.onResume();
+
+         getDialog().getWindow().setLayout(
+                 ViewGroup.LayoutParams.MATCH_PARENT,
+                 ViewGroup.LayoutParams.WRAP_CONTENT);
+     }
+
+     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_cancel:

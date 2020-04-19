@@ -70,6 +70,14 @@ import java.util.stream.Collectors;
                 break;
         }
     }
+     @Override
+     public void onResume() {
+         super.onResume();
+
+         getDialog().getWindow().setLayout(
+                 ViewGroup.LayoutParams.MATCH_PARENT,
+                 ViewGroup.LayoutParams.WRAP_CONTENT);
+     }
 
     public void getUsers() {
 
