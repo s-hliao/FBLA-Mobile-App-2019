@@ -183,7 +183,8 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
 
                                 Map<String, Map<String, Attendee>> currentEventsChap = (Map) chapter.get("chapterEvents");
 
-                                if (!currentEventsChap.containsKey(nameEditText.getText().toString())) {
+                                if (chapterEventSnapshot.get("eventName").equals(nameEditText.getText().toString())||
+                                        !currentEventsChap.containsKey(nameEditText.getText().toString())) {
                                     SimpleDateFormat dateFormat= new SimpleDateFormat("MM/dd/yyyy");
 
                                     try {
@@ -210,6 +211,8 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
                                         Toast.makeText(getContext(), "Incorrect date format", Toast.LENGTH_SHORT).show();
                                     }
 
+                                } else{
+                                    Toast.makeText(getContext(), "Chapter Event name cannot already exist", Toast.LENGTH_SHORT).show();
                                 }
 
 

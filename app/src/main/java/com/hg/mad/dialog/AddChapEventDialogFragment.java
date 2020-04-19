@@ -146,6 +146,8 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
                                     } catch (ParseException e) {
                                         Toast.makeText(getContext(), "Incorrect date format", Toast.LENGTH_SHORT).show();
                                     }
+                                } else{
+                                    Toast.makeText(getContext(), "Chapter Event name cannot already exist", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
