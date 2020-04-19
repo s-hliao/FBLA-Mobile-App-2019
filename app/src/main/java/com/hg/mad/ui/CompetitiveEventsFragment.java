@@ -175,6 +175,7 @@ public class CompetitiveEventsFragment extends Fragment implements
     }
 
     void hideKeyboard() {
+        searchView.clearFocus();
         View view = getActivity().getCurrentFocus();
         if (view != null) {
             ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))

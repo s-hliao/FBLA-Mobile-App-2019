@@ -2,6 +2,7 @@ package com.hg.mad.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -145,8 +147,6 @@ public class ChapterEventsFragment extends Fragment implements
             divider2.setVisibility(View.GONE);
         }
 
-
-
         chapterName = ThisUser.getChapterName();
         final ChapterEventAdapter.OnChapListener o = this;
 
@@ -187,11 +187,20 @@ public class ChapterEventsFragment extends Fragment implements
         }
     }
 
+    private void hideKeyboard() {
+        searchView.clearFocus();
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
+                    .hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
     private void initSearch() {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchView.clearFocus();
+                hideKeyboard();
                 return false;
             }
 
@@ -208,7 +217,6 @@ public class ChapterEventsFragment extends Fragment implements
     @Override
     public void onFilter(final ChapFilters newfilters) {
 
-        // Name (contains filter)
         searchLower = "";
         if (searchText != null){
             searchLower = searchText.toLowerCase();
@@ -224,23 +232,23 @@ public class ChapterEventsFragment extends Fragment implements
 
                         query = query.orderBy("date");
                         if (newfilters.hasStartDate()) {
-                            query = query.startAt("date", newfilters.getStartDate());
+                            query = query.startAt(newfilters.getStartDate());
                         }
                         if (newfilters.hasEndDate()) {
-                            query = query.endAt("date", newfilters.getEndDate());
+                            query = query.endAt(newfilters.getEndDate());
                         }
 
                         if (!searchLower.equals("")) {
                             query = query.orderBy("lower")
-                                    .startAt("lower", searchLower)
-                                    .endAt("lower", searchLower + "\uf8ff");
+                                    .startAt(searchLower)
+                                    .endAt(searchLower + "\uf8ff");
                         }
 
                         if (newfilters.hasType()) {
                             String typeLower = newfilters.getType().toLowerCase();
                             query = query.orderBy("typeLower")
-                                    .startAt("typeLower", typeLower)
-                                    .endAt("typeLower", typeLower + "\uf8ff");
+                                    .startAt(typeLower)
+                                    .endAt(typeLower + "\uf8ff");
                         }
 
                         // Update the query
@@ -279,6 +287,9 @@ public class ChapterEventsFragment extends Fragment implements
 
     @Override
     public void onChapSelected(final DocumentSnapshot chapEvent) {
+
+        hideKeyboard();
+
         if (!isAdmin) {
 
            FirebaseFirestore.getInstance().collection("Chapter")
