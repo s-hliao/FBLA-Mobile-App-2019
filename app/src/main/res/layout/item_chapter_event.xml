@@ -42,20 +42,20 @@
     </TableRow>
 
     <TextView
-        android:id="@+id/description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:text="Description"
-        android:textColor="#a9a9a9"
-        android:textSize="15sp" />
-
-    <TextView
         android:id="@+id/attendance_managed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:text="Attendance Managed"
+        android:textColor="#a9a9a9"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:text="Description"
         android:textColor="#a9a9a9"
         android:textSize="15sp" />
 
