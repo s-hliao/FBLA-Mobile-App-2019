@@ -102,8 +102,10 @@ public class FilterChapDialogFragment extends DialogFragment implements View.OnC
         switch (v.getId()) {
             case R.id.layout_today_start:
                 onTodayStartClicked();
+                break;
             case R.id.layout_today_end:
                 onTodayEndClicked();
+                break;
             case R.id.button_search:
                 onSearchClicked();
                 break;
