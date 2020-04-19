@@ -20,6 +20,9 @@ public class ChapFilters {
         return filters;
     }
 
+    public boolean hasType() {
+        return !(TextUtils.isEmpty(type));
+    }
 
     public String getType() {
         return type;
@@ -29,12 +32,20 @@ public class ChapFilters {
         this.type = type;
     }
 
+    public boolean hasEndDate() {
+        return !(endDate == null);
+    }
+
     public Date getEndDate() {
         return endDate;
     }
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public boolean hasStartDate() {
+        return !(startDate == null);
     }
 
     public Date getStartDate() {

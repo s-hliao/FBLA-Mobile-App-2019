@@ -16,15 +16,19 @@ import java.util.Map;
 
 public class ChapterEvent {
     public static final String FIELD_EVENTNAME = "eventName";
+    public static final String FIELD_LOWER = "lower";
     public static final String FIELD_EVENTTYPE = "eventType";
-    public static final String FIELD_DESCRIPTION = "Description";
+    public static final String FIELD_TYPELOWER = "typeLower";
+    public static final String FIELD_DESCRIPTION = "description";
     public static final String FIELD_DATE = "date";
     public static final String FIELD_CHAPTERNAME = "chapterName";
     public static final String FIELD_SIGNINKEY = "signInKey";
     public static final String FIELD_ATTENDANCEACTIVE = "attendanceActive";
 
     private String eventName;
+    private String lower;
     private String eventType;
+    private String typeLower;
     private String description;
     private Date date;
     private String signInKey;
@@ -32,10 +36,14 @@ public class ChapterEvent {
 
     public ChapterEvent() {}
 
-    public ChapterEvent(String eventName, String eventType, String description,Date date,
+    public ChapterEvent(String eventName, String lower,
+                        String eventType, String typeLower,
+                        String description,Date date,
                         String signInKey, boolean attendanceActive){
         this.eventName = eventName;
+        this.lower = lower;
         this.eventType = eventType;
+        this.typeLower = typeLower;
         this.description = description;
         this.date = date;
         this.signInKey = signInKey;
@@ -45,8 +53,17 @@ public class ChapterEvent {
     public String getEventName(){
         return eventName;
     }
+
     public void setEventName(String eventName){
         this.eventName = eventName;
+    }
+
+    public String getLower() {
+        return lower;
+    }
+
+    public void setLower(String lower) {
+        this.lower = lower;
     }
 
     public String getEventType(){
@@ -55,6 +72,14 @@ public class ChapterEvent {
 
     public void setEventType(String eventType){
         this.eventType = eventType;
+    }
+
+    public String getTypeLower() {
+        return typeLower;
+    }
+
+    public void setTypeLower(String typeLower) {
+        this.typeLower = typeLower;
     }
 
     public String getDescription(){return description;}

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,9 +48,11 @@ import com.hg.mad.dialog.AddChapEventDialogFragment;
 import com.hg.mad.dialog.AddOfficerDialogFragment;
 import com.hg.mad.dialog.AllChapEventDialog;
 import com.hg.mad.dialog.ChapEventDialogFragment;
+import com.hg.mad.dialog.ChapFilters;
 import com.hg.mad.dialog.EditChapEventDialogFragment;
 import com.hg.mad.dialog.EditOfficerDialogFragment;
 import com.hg.mad.dialog.FilterChapDialogFragment;
+import com.hg.mad.dialog.Filters;
 import com.hg.mad.dialog.MenuDialogFragment;
 import com.hg.mad.dialog.SocMediaDialogFragment;
 import com.hg.mad.dialog.TakeAttendanceDialogFragment;
@@ -67,7 +70,9 @@ import java.util.concurrent.CountDownLatch;
 import javax.annotation.Signed;
 
 public class ChapterEventsFragment extends Fragment implements
-        View.OnClickListener, ChapterEventAdapter.OnChapListener{
+        View.OnClickListener,
+        FilterChapDialogFragment.FilterListener,
+        ChapterEventAdapter.OnChapListener{
 
     private LinearLayout addEventButton;
     private LinearLayout resetAllButton;
@@ -94,6 +99,10 @@ public class ChapterEventsFragment extends Fragment implements
     private String chapterName;
 
     private ImageView filterButton;
+    private ChapFilters filters;
+    private SearchView searchView;
+    private String searchText;
+    private String searchLower;
 
     @SuppressLint("WrongViewCast")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -119,6 +128,9 @@ public class ChapterEventsFragment extends Fragment implements
 
         filterButton = root.findViewById(R.id.button_filter);
         filterButton.setOnClickListener(this);
+        filters = ChapFilters.getDefault();
+        searchView = root.findViewById(R.id.search_chapter);
+        initSearch();
 
         // Only show manage to admins
 
@@ -145,7 +157,7 @@ public class ChapterEventsFragment extends Fragment implements
                 DocumentSnapshot ds = queryDocumentSnapshots.getDocuments().get(0);
 
                 chapterRef = ds.getReference();
-                query = chapterRef.collection("ChapterEvent").orderBy("date");
+                query = chapterRef.collection("ChapterEvent").orderBy("date").orderBy("lower").orderBy("typeLower");
 
                 adapter = new ChapterEventAdapter(query, o);
                 adapter.setQuery(query);
@@ -175,6 +187,71 @@ public class ChapterEventsFragment extends Fragment implements
         }
     }
 
+    private void initSearch() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchText = newText;
+                onFilter(filters);
+
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public void onFilter(final ChapFilters newfilters) {
+
+        // Name (contains filter)
+        searchLower = "";
+        if (searchText != null){
+            searchLower = searchText.toLowerCase();
+        }
+
+        firestore.collection("Chapter").whereEqualTo("chapterName", ThisUser.getChapterName())
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        DocumentSnapshot chapter = queryDocumentSnapshots.getDocuments().get(0);
+
+                        query = chapter.getReference().collection("ChapterEvent");
+
+                        query = query.orderBy("date");
+                        if (newfilters.hasStartDate()) {
+                            query = query.startAt("date", newfilters.getStartDate());
+                        }
+                        if (newfilters.hasEndDate()) {
+                            query = query.endAt("date", newfilters.getEndDate());
+                        }
+
+                        if (!searchLower.equals("")) {
+                            query = query.orderBy("lower")
+                                    .startAt("lower", searchLower)
+                                    .endAt("lower", searchLower + "\uf8ff");
+                        }
+
+                        if (newfilters.hasType()) {
+                            String typeLower = newfilters.getType().toLowerCase();
+                            query = query.orderBy("typeLower")
+                                    .startAt("typeLower", typeLower)
+                                    .endAt("typeLower", typeLower + "\uf8ff");
+                        }
+
+                        // Update the query
+                        adapter.setQuery(query);
+
+                        // Save filters
+                        filters = newfilters;
+                    }
+                });
+    }
+
 
     @Override
     public void onClick(View view) {
@@ -192,8 +269,9 @@ public class ChapterEventsFragment extends Fragment implements
                 }
                 break;
             case R.id.button_filter:
+                getFragmentManager().executePendingTransactions();
                 if (!filterDialog.isAdded()) {
-                    filterDialog.show(getFragmentManager(), "allChapEventDialog");
+                    filterDialog.show(getFragmentManager(), "filterDialog");
                 }
                 break;
         }
@@ -267,4 +345,5 @@ public class ChapterEventsFragment extends Fragment implements
             }
         });
     }
+
 }

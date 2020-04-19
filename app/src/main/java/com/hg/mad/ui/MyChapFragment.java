@@ -100,6 +100,7 @@ public class MyChapFragment extends Fragment
                 DocumentSnapshot chapDoc = queryDocumentSnapshots.getDocuments().get(0);
                 Map<String, Map<String, Map<String, Object>>> events = (Map) chapDoc.get("chapterEvents");
 
+                // Show the attendance
                 if (events.containsKey(eventName) && events.get(eventName).containsKey(ThisUser.getUid())) {
 
                     chapDoc.getReference().collection("ChapterEvent").whereEqualTo("eventName", eventName)
@@ -120,7 +121,7 @@ public class MyChapFragment extends Fragment
                     });
                 }
 
-                // Show the signed up dialog
+                // Show the sign up dialog
                 else {
                     ChapEventDialogFragment chapterEventDialog = new ChapEventDialogFragment();
                     chapterEventDialog.setEventName(eventName);
@@ -137,7 +138,7 @@ public class MyChapFragment extends Fragment
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
         final CollectionReference chaptersCollection = fireStore.collection("Chapter");
 
-        // Update Chapter
+        // Decide whether the user has already signed in
         chaptersCollection.whereEqualTo("chapterName", ThisUser.getChapterName())
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

@@ -46,6 +46,8 @@ public class ChapterEventAdapter extends FirestoreAdapter<ChapterEventAdapter.Vi
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
             Date date = event.getDate();
+            if (date == null)
+                System.out.println("wtf how");
             dateText.setText(dateFormat.format(date));
 
             Date now = new Date();
