@@ -215,37 +215,45 @@ public class ChapterEventsFragment extends Fragment implements
     }
 
     @Override
-    public void onFilter(ChapFilters newfilters) {
+    public void onFilter(final ChapFilters newfilters) {
 
-        query = chapterRef.collection("ChapterEvent");
+        firestore.collection("Chapter").whereEqualTo("chapterName", chapterName)
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                DocumentSnapshot chaptersh = queryDocumentSnapshots.getDocuments().get(0);
 
-        query = query.orderBy("date");
-        if (newfilters.hasStartDate()) {
-            query = query.startAt(newfilters.getStartDate());
-        }
-        if (newfilters.hasEndDate()) {
-            query = query.endAt(newfilters.getEndDate());
-        }
+                query = chaptersh.getReference().collection("ChapterEvent");
 
-        if (searchText != null) {
-            searchLower = searchText.toLowerCase();
-            query = query.orderBy("lower")
-                    .startAt(searchLower)
-                    .endAt(searchLower + "\uf8ff");
-        }
+                query = query.orderBy("date");
+                if (newfilters.hasStartDate()) {
+                    query = query.startAt(newfilters.getStartDate());
+                }
+                if (newfilters.hasEndDate()) {
+                    query = query.endAt(newfilters.getEndDate());
+                }
 
-        if (newfilters.hasType()) {
-            String typeLower = newfilters.getType().toLowerCase();
-            query = query.orderBy("typeLower")
-                    .startAt(typeLower)
-                    .endAt(typeLower + "\uf8ff");
-        }
+                if (searchText != null) {
+                    searchLower = searchText.toLowerCase();
+                    query = query.orderBy("lower")
+                            .startAt(searchLower)
+                            .endAt(searchLower + "\uf8ff");
+                }
 
-        // Update the query
-        adapter.setQuery(query);
+                if (newfilters.hasType()) {
+                    String typeLower = newfilters.getType().toLowerCase();
+                    query = query.orderBy("typeLower")
+                            .startAt(typeLower)
+                            .endAt(typeLower + "\uf8ff");
+                }
 
-        // Save filters
-        filters = newfilters;
+                // Update the query
+                adapter.setQuery(query);
+
+                // Save filters
+                filters = newfilters;
+            }
+        });
     }
 
 
