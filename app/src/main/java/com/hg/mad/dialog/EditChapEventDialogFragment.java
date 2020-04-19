@@ -32,6 +32,7 @@ import com.hg.mad.util.ThisUser;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class EditChapEventDialogFragment extends DialogFragment implements View.OnClickListener{
@@ -158,67 +159,74 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
     }
 
     public void onAddClicked(){
-        final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
-
-        CollectionReference usersCollection = fireStore.collection("DatabaseUser");
-        final DocumentReference userRef = usersCollection.document(currentUser.getUid());
-
+        final CollectionReference usersCollection = fireStore.collection("DatabaseUser");
         final CollectionReference chaptersCollection = fireStore.collection("Chapter");
 
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        chaptersCollection.whereEqualTo("chapterName", ThisUser.getChapterName())
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
 
-                    // Update Chapter
-                    chaptersCollection.whereEqualTo("chapterName", ThisUser.getChapterName())
-                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
+                    DocumentSnapshot chapter = task.getResult().getDocuments().get(0);
 
-                                DocumentSnapshot chapter = task.getResult().getDocuments().get(0);
+                    Map<String, Map<String, Attendee>> currentEventsChap = (Map) chapter.get("chapterEvents");
+                    final String previousName = (String) chapterEventSnapshot.get("eventName") ;
+                    final String newName = nameEditText.getText().toString();
 
-                                Map<String, Map<String, Attendee>> currentEventsChap = (Map) chapter.get("chapterEvents");
+                    if (previousName.equals(newName) || !currentEventsChap.containsKey(newName)) {
+                        SimpleDateFormat dateFormat= new SimpleDateFormat("MM/dd/yyyy");
 
-                                if (chapterEventSnapshot.get("eventName").equals(nameEditText.getText().toString())||
-                                        !currentEventsChap.containsKey(nameEditText.getText().toString())) {
-                                    SimpleDateFormat dateFormat= new SimpleDateFormat("MM/dd/yyyy");
+                        try {
 
-                                    try {
+                            Map<String, Object>updates = new HashMap<>();
+                            updates.put("eventName",nameEditText.getText().toString());
+                            updates.put("eventType", typeEditText.getText().toString());
+                            updates.put("description",descriptionEditText.getText().toString());
+                            updates.put("date", dateFormat.parse(dateEditText.getText().toString()));
+                            updates.put("signInKey",passwordEditText.getText().toString()) ;
+                            updates.put("attendanceActive",attendanceCheckBox.isChecked());
 
+                            Map<String, Attendee> attendees = currentEventsChap.remove(chapterEventSnapshot.get("eventName"));
 
-                                        Map<String, Object>updates = new HashMap<>();
-                                        updates.put("eventName",nameEditText.getText().toString());
-                                        updates.put("eventType", typeEditText.getText().toString());
-                                        updates.put("description",descriptionEditText.getText().toString());
-                                        updates.put("date", dateFormat.parse(dateEditText.getText().toString()));
-                                        updates.put("signInKey",passwordEditText.getText().toString()) ;
-                                        updates.put("attendanceActive",attendanceCheckBox.isChecked());
+                            chapterEventSnapshot.getReference().update(updates);
 
-                                        Map<String, Attendee> attendees = currentEventsChap.remove(chapterEventSnapshot.get("eventName"));
+                            currentEventsChap.put(nameEditText.getText().toString(), attendees);
+                            chapter.getReference().update("chapterEvents", currentEventsChap);
 
-                                        chapterEventSnapshot.getReference().update(updates);
-
-                                        currentEventsChap.put(nameEditText.getText().toString(), attendees);
-                                        chapter.getReference().update("chapterEvents", currentEventsChap);
-                                        Toast.makeText(getContext(), "Chapter event updated", Toast.LENGTH_SHORT).show();
-
-                                        dismiss();
-                                    } catch (ParseException e) {
-                                        Toast.makeText(getContext(), "Incorrect date format", Toast.LENGTH_SHORT).show();
-                                    }
-
-                                } else{
-                                    Toast.makeText(getContext(), "Chapter Event name cannot already exist", Toast.LENGTH_SHORT).show();
-                                }
-
-
+                            // Update all users who signed up for this event
+                            if (previousName != newName){
+                                usersCollection.whereEqualTo("chapterName", ThisUser.getChapterName()).get()
+                                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                List<DocumentSnapshot> ds = queryDocumentSnapshots.getDocuments();
+                                                for (DocumentSnapshot s : ds){
+                                                    Map<String, Integer> events = (Map) s.get("chapterEvents");
+                                                    if (events.containsKey(previousName)){
+                                                        events.remove(previousName);
+                                                        events.put(newName, 1);
+                                                    }
+                                                    s.getReference().update("chapterEvents", events);
+                                                }
+                                            }
+                                        });
                             }
+
+                            Toast.makeText(getContext(), "Chapter event updated", Toast.LENGTH_SHORT).show();
+
+                            dismiss();
+                        } catch (ParseException e) {
+                            Toast.makeText(getContext(), "Incorrect date format", Toast.LENGTH_SHORT).show();
                         }
-                    });
+
+                    } else{
+                        Toast.makeText(getContext(), "Chapter Event name cannot already exist", Toast.LENGTH_SHORT).show();
+                    }
+
+
                 }
             }
         });

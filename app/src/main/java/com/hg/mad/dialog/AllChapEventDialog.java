@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -22,6 +23,7 @@ import com.hg.mad.model.Attendee;
 import com.hg.mad.util.ThisUser;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AllChapEventDialog extends DialogFragment implements View.OnClickListener{
@@ -64,12 +66,31 @@ public class AllChapEventDialog extends DialogFragment implements View.OnClickLi
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         DocumentSnapshot chapter = queryDocumentSnapshots.getDocuments().get(0);
 
-                        Map<String, Map<String, Map<String, Object>>>attendees = (Map)chapter.get("chapterEvents");
+                        Map<String, Map<String, Map<String, Object>>> attendees = (Map)chapter.get("chapterEvents");
                         Map<String, Map<String,Attendee>>updates = new HashMap<>();
                         for(String s:attendees.keySet()){
                             updates.put(s, new HashMap<String, Attendee>());
                         }
                         chapter.getReference().update("chapterEvents", updates);
+
+                        for (final String eventName : attendees.keySet()) {
+                            // Remove from all users
+                            CollectionReference usersCollection = FirebaseFirestore.getInstance().collection("DatabaseUser");
+                            usersCollection.whereEqualTo("chapterName", ThisUser.getChapterName()).get()
+                                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                            List<DocumentSnapshot> ds = queryDocumentSnapshots.getDocuments();
+                                            for (DocumentSnapshot s : ds){
+                                                Map<String, Integer> events = (Map) s.get("chapterEvents");
+                                                if (events.containsKey(eventName)) {
+                                                    events.remove(eventName);
+                                                    s.getReference().update("chapterEvents", events);
+                                                }
+                                            }
+                                        }
+                                    });
+                        }
                     }
                 });
         Toast.makeText(getContext(), "Attendees Removed", Toast.LENGTH_SHORT).show();

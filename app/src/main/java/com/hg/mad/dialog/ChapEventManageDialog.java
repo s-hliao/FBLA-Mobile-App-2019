@@ -101,9 +101,26 @@ import java.util.stream.Collectors;
                         Map<String, Map<String, Map<String, Object>>>attendees = (Map)chapter.get("chapterEvents");
                         attendees.put(eventName, new HashMap<String, Map<String, Object>>());
                         chapter.getReference().update("chapterEvents", attendees);
+
+                        // Remove from all users
+                        CollectionReference usersCollection = FirebaseFirestore.getInstance().collection("DatabaseUser");
+                        usersCollection.whereEqualTo("chapterName", ThisUser.getChapterName()).get()
+                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                        List<DocumentSnapshot> ds = queryDocumentSnapshots.getDocuments();
+                                        for (DocumentSnapshot s : ds){
+                                            Map<String, Integer> events = (Map) s.get("chapterEvents");
+                                            if (events.containsKey(eventName)) {
+                                                events.remove(eventName);
+                                                s.getReference().update("chapterEvents", events);
+                                            }
+                                        }
+                                    }
+                                });
                     }
                 });
-        Toast.makeText(getContext(), "Attendees Removed", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Attendees removed", Toast.LENGTH_SHORT).show();
         dismiss();
     }
 

@@ -10,12 +10,14 @@ public class DatabaseUser {
     public static final String FIELD_INCHAPTER = "inChapter";
     public static final String FIELD_ISADMIN = "isAdmin";
     public static final String FIELD_CHAPTERNAME = "chapterName";
+    public static final String FIELD_CHAPTEREVENTS = "chapterEvents";
     public static final String FIELD_COMPETITIVEEVENTS = "competitiveEvents";
 
     private String name;
     private Boolean inChapter;
     private Boolean isAdmin;
     private String chapterName;
+    private HashMap<String, Integer> chapterEvents;
     private HashMap<String, Integer> competitiveEvents;
 
     public DatabaseUser() {}
@@ -25,6 +27,7 @@ public class DatabaseUser {
         this.inChapter = inChapter;
         this.isAdmin = isAdmin;
         this.chapterName = chapterName;
+        this.chapterEvents = new HashMap<>();
         this.competitiveEvents = new HashMap<>();
     }
 
@@ -58,6 +61,14 @@ public class DatabaseUser {
 
     public void setChapterName(String chapterName) {
         this.chapterName = chapterName;
+    }
+
+    public HashMap<String, Integer> getChapterEvents() {
+        return chapterEvents;
+    }
+
+    public void setChapterEvents(HashMap<String, Integer> chapterEvents) {
+        this.chapterEvents = chapterEvents;
     }
 
     public HashMap<String, Integer> getCompetitiveEvents(){

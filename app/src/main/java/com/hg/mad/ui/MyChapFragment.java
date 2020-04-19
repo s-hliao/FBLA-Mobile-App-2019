@@ -19,6 +19,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.hg.mad.R;
+import com.hg.mad.adapter.MyChapEventAdapter;
 import com.hg.mad.adapter.MyCompEventAdapter;
 import com.hg.mad.dialog.CompSUDialogFragment;
 
@@ -27,13 +28,13 @@ import java.util.List;
 import java.util.Map;
 
 public class MyChapFragment extends Fragment
-        implements MyCompEventAdapter.OnMyCompListener {
+        implements MyChapEventAdapter.OnMyChapListner {
 
     private View root;
 
     private RecyclerView myChapRecycler;
     private LinearLayoutManager layoutManager;
-    private MyCompEventAdapter adapter;
+    private MyChapEventAdapter adapter;
     private List<String> myChap;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,7 +47,7 @@ public class MyChapFragment extends Fragment
         myChapRecycler.setLayoutManager(layoutManager);
         myChapRecycler.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
-        updateCompAdapter();
+        updateChapAdapter();
         beganUpdating();
 
         return root;
@@ -56,6 +57,7 @@ public class MyChapFragment extends Fragment
         DocumentReference databaseUserRef = FirebaseFirestore.getInstance().collection("DatabaseUser")
                 .document(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
+        // TODO
         // Set up competitive events listener
         databaseUserRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -66,19 +68,19 @@ public class MyChapFragment extends Fragment
                     Map<String, Integer> events = (Map<String, Integer>) snapshot.get("competitiveEvents");
                     myChap.addAll(events.keySet());
 
-                    updateCompAdapter();
+                    updateChapAdapter();
                 }
             }
         });
     }
 
-    private void updateCompAdapter(){
-        adapter = new MyCompEventAdapter(myChap, this);
+    private void updateChapAdapter(){
+        adapter = new MyChapEventAdapter(myChap, this);
         myChapRecycler.setAdapter(adapter);
     }
 
     @Override
-    public void onMyCompSelected(String eventName) {
+    public void onMyChapSelected(String eventName) {
 
         CompSUDialogFragment compSUDialog = new CompSUDialogFragment();
         compSUDialog.setEventName(eventName);

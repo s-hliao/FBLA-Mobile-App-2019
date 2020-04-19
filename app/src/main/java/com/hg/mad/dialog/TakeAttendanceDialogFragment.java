@@ -154,6 +154,11 @@ public class TakeAttendanceDialogFragment extends DialogFragment implements View
 
                 if (task.isSuccessful()) {
 
+                    DocumentSnapshot ss = task.getResult();
+                    Map<String, Integer> events = (Map) ss.get("chapterEvents");
+                    events.remove(eventName);
+                    userRef.update("chapterEvents", events);
+
                     chaptersCollection.whereEqualTo("chapterName", ThisUser.getChapterName())
                             .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override

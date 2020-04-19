@@ -189,7 +189,6 @@ public class MenuDialogFragment extends DialogFragment implements View.OnClickLi
         getFragmentManager().executePendingTransactions();
         if(!manageSignupsDialog.isAdded())
             manageSignupsDialog.show(getFragmentManager(), "managedSignupsDialog");
-
     }
 
     public void onCancelClicked() {

@@ -77,12 +77,9 @@ public class ChapEventDialogFragment extends DialogFragment implements View.OnCl
 
     public void onYesClicked() {
 
-        final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
-
         CollectionReference usersCollection = fireStore.collection("DatabaseUser");
-        final DocumentReference userRef = usersCollection.document(currentUser.getUid());
-
+        final DocumentReference userRef = usersCollection.document(ThisUser.getUid());
         final CollectionReference chaptersCollection = fireStore.collection("Chapter");
 
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -90,6 +87,11 @@ public class ChapEventDialogFragment extends DialogFragment implements View.OnCl
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
                 if (task.isSuccessful()) {
+
+                    DocumentSnapshot ss = task.getResult();
+                    Map<String, Integer> events = (Map) ss.get("chapterEvents");
+                    events.put(eventName, 1);
+                    userRef.update("chapterEvents", events);
 
                     // Update Chapter
                     chaptersCollection.whereEqualTo("chapterName", ThisUser.getChapterName())
@@ -104,8 +106,8 @@ public class ChapEventDialogFragment extends DialogFragment implements View.OnCl
                                 if (!currentEventsChap.containsKey(eventName)) {
                                     currentEventsChap.put(eventName, new HashMap<String, Attendee>());
                                 }
-                                currentEventsChap.get(eventName).put(currentUser.getUid(),
-                                        new Attendee(currentUser.getDisplayName(), false));
+                                currentEventsChap.get(eventName).put(ThisUser.getUid(),
+                                        new Attendee(ThisUser.getDisplayName(), false));
 
                                 chapter.getReference().update("chapterEvents", currentEventsChap);
                             }
