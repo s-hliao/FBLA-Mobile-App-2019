@@ -70,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="15dp"
-            android:text="Reset All Events"
+            android:text="Reset All Event Signups"
             android:textColor="@color/colorPrimaryTint"
             android:textSize="14sp"
             android:textStyle="bold" />
