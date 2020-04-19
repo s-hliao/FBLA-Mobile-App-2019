@@ -59,7 +59,42 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_chap_events"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="597dp">
 
     </androidx.recyclerview.widget.RecyclerView>
+
+    <LinearLayout
+        android:id="@+id/btn_removeAll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="Reset All Events"
+            android:textColor="@color/colorPrimaryTint"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="237dp"
+            android:layout_height="23dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:paddingRight="10dp"
+            app:srcCompat="@android:drawable/ic_menu_delete" />
+
+    </LinearLayout>
 </LinearLayout>

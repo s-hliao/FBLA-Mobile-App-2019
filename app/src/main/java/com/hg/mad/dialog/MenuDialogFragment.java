@@ -40,11 +40,13 @@ import java.util.Map;
 public class MenuDialogFragment extends DialogFragment implements View.OnClickListener {
     private LinearLayout manageEvent;
     private LinearLayout signIn;
+    private LinearLayout manageSignups;
     private Button cancel;
 
     private ChapEventDialogFragment chapEventDialog;
     private TakeAttendanceDialogFragment  takeAttendanceDialog;
     private EditChapEventDialogFragment editChapEventDialog;
+    private ChapEventManageDialog manageSignupsDialog;
 
     private DocumentSnapshot chapterEventSnapshot;
 
@@ -61,20 +63,17 @@ public class MenuDialogFragment extends DialogFragment implements View.OnClickLi
         takeAttendanceDialog = new TakeAttendanceDialogFragment();
         editChapEventDialog = new EditChapEventDialogFragment();
         chapEventDialog = new ChapEventDialogFragment();
+        manageSignupsDialog = new ChapEventManageDialog();
 
         manageEvent = rootView.findViewById(R.id.layout_edit_event);
         signIn = rootView.findViewById(R.id.layout_sign_up);
         cancel = rootView.findViewById(R.id.button_cancel3);
-
-        if(ThisUser.isAdmin()){
-            manageEvent.setVisibility(View.VISIBLE);
-        } else{
-            manageEvent.setVisibility(View.GONE);
-        }
+        manageSignups = rootView.findViewById(R.id.layout_manage);
 
         cancel.setOnClickListener(this);
         manageEvent.setOnClickListener(this);
         signIn.setOnClickListener(this);
+        manageSignups.setOnClickListener(this);
 
         return rootView;
     }
@@ -94,6 +93,8 @@ public class MenuDialogFragment extends DialogFragment implements View.OnClickLi
                 break;
             case R.id.button_cancel3:
                 onCancelClicked();
+                break;
+            case R.id.layout_manage:
                 break;
         }
     }
@@ -180,6 +181,11 @@ public class MenuDialogFragment extends DialogFragment implements View.OnClickLi
         getFragmentManager().executePendingTransactions();
         if(!chapEventDialog.isAdded())
             chapEventDialog.show(getFragmentManager(), "chapEventDialog");
+    }
+
+    public void onManageClicked(){
+        manageSignupsDialog.setEventName(chapterEventSnapshot.get("eventName").toString());
+
     }
 
     public void onCancelClicked() {

@@ -33,6 +33,8 @@ import java.util.Map;
 public class TakeAttendanceDialogFragment extends DialogFragment implements View.OnClickListener {
     private TextView title;
     private TextView password;
+    private TextView signUpText;
+    private TextView signInText;
     private EditText typePassword;
     private Button no;
     private Button remove;
@@ -56,6 +58,11 @@ public class TakeAttendanceDialogFragment extends DialogFragment implements View
         remove = rootView.findViewById(R.id.button_cancel_yes);
         signIn = rootView.findViewById(R.id.sign_in);
         passwordContainer = rootView.findViewById(R.id.password_container);
+        signInText = rootView.findViewById(R.id.event_name_text);
+        signUpText = rootView.findViewById(R.id.competitive_signedup3);
+
+        signInText.setText("Sign In to "+eventName);
+        signUpText.setText("Cancel Sign Up for "+eventName);
 
         signIn.setOnClickListener(this);
         remove.setOnClickListener(this);
@@ -176,6 +183,9 @@ public class TakeAttendanceDialogFragment extends DialogFragment implements View
     @Override
     public void onResume() {
         super.onResume();
+
+        signInText.setText("Sign In to "+eventName);
+        signUpText.setText("Cancel "+eventName+" sign up");
 
         updateVisibility();
 

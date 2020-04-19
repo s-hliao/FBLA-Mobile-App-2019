@@ -31,20 +31,20 @@ public class MyChapFragment extends Fragment
 
     private View root;
 
-    private RecyclerView myCompRecycler;
+    private RecyclerView myChapRecycler;
     private LinearLayoutManager layoutManager;
     private MyCompEventAdapter adapter;
-    private List<String> myComp;
+    private List<String> myChap;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.root = inflater.inflate(R.layout.fragment_mychap, container, false);
 
         // Recycler Views
-        myComp = new ArrayList<>();
-        myCompRecycler = root.findViewById(R.id.recycler_my_chap);
+        myChap = new ArrayList<>();
+        myChapRecycler = root.findViewById(R.id.recycler_my_chap);
         layoutManager = new LinearLayoutManager(getContext());
-        myCompRecycler.setLayoutManager(layoutManager);
-        myCompRecycler.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        myChapRecycler.setLayoutManager(layoutManager);
+        myChapRecycler.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
         updateCompAdapter();
         beganUpdating();
@@ -62,9 +62,9 @@ public class MyChapFragment extends Fragment
             public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {
 
                 if (snapshot != null && snapshot.exists() && snapshot.get("competitiveEvents") != null) {
-                    myComp = new ArrayList<>();
+                    myChap = new ArrayList<>();
                     Map<String, Integer> events = (Map<String, Integer>) snapshot.get("competitiveEvents");
-                    myComp.addAll(events.keySet());
+                    myChap.addAll(events.keySet());
 
                     updateCompAdapter();
                 }
@@ -73,8 +73,8 @@ public class MyChapFragment extends Fragment
     }
 
     private void updateCompAdapter(){
-        adapter = new MyCompEventAdapter(myComp, this);
-        myCompRecycler.setAdapter(adapter);
+        adapter = new MyCompEventAdapter(myChap, this);
+        myChapRecycler.setAdapter(adapter);
     }
 
     @Override

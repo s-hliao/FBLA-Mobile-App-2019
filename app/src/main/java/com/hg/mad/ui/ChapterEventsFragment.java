@@ -68,6 +68,7 @@ public class ChapterEventsFragment extends Fragment implements
         View.OnClickListener, ChapterEventAdapter.OnChapListener{
 
     private LinearLayout addEventButton;
+    private LinearLayout resetAllButton;
     private View divider;
 
     private RecyclerView eventRV;
@@ -93,8 +94,10 @@ public class ChapterEventsFragment extends Fragment implements
         eventRV = root.findViewById(R.id.recycler_chap_events);
         addEventButton = root.findViewById(R.id.button_add_chap);
         divider = root.findViewById(R.id.divider5);
+        resetAllButton = root.findViewById(R.id.btn_removeAll);
 
         addEventButton.setOnClickListener(this);
+        resetAllButton.setOnClickListener(this);
 
         menuDialog = new MenuDialogFragment();
         addEventDialog = new AddChapEventDialogFragment();
@@ -164,6 +167,8 @@ public class ChapterEventsFragment extends Fragment implements
                 if (!addEventDialog.isAdded()) {
                     addEventDialog.show(getFragmentManager(), "addEventDialog");
                 }
+                break;
+            case R.id.btn_removeAll:
                 break;
         }
     }

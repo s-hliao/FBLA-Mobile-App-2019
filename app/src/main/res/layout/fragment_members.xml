@@ -10,10 +10,10 @@
         android:id="@+id/btn_removeAll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
-        android:focusable="true">
+        android:focusable="true"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/textView6"
@@ -50,6 +50,6 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_members"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="637dp" />
 
 </LinearLayout>
