@@ -261,18 +261,21 @@ public class ChapterEventsFragment extends Fragment implements
     public void onClick(View view) {
         switch(view.getId()) {
             case R.id.button_add_chap:
+                hideKeyboard();
                 getFragmentManager().executePendingTransactions();
                 if (!addEventDialog.isAdded()) {
                     addEventDialog.show(getFragmentManager(), "addEventDialog");
                 }
                 break;
             case R.id.btn_removeAll:
+                hideKeyboard();
                 getFragmentManager().executePendingTransactions();
                 if (!allChapEventDialog.isAdded()) {
                     allChapEventDialog.show(getFragmentManager(), "allChapEventDialog");
                 }
                 break;
             case R.id.button_filter:
+                hideKeyboard();
                 getFragmentManager().executePendingTransactions();
                 if (!filterDialog.isAdded()) {
                     filterDialog.show(getFragmentManager(), "filterDialog");
