@@ -177,19 +177,17 @@ public class ChapterEventsFragment extends Fragment implements
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                             DocumentSnapshot chapRef = queryDocumentSnapshots.getDocuments().get(0);
-                            Map<String,  Map<String, Attendee>> events = (Map) chapRef.get("chapterEvents");
+                            Map<String,  Map<String, Map<String, Object>>> events = (Map) chapRef.get("chapterEvents");
                             String eventName = (String) chapEvent.get("eventName");
 
-                            if (events.get(eventName).containsKey(ThisUser.getUid())){
+                            if (events.containsKey(eventName) && events.get(eventName).containsKey(ThisUser.getUid())){
                                 boolean attendance = chapEvent.getBoolean("attendanceActive");
                                 attendanceDialog.setAttendanceActive(attendance);
                                 attendanceDialog.setEventName(chapEvent.get("eventName").toString());
 
                                 if(attendance)attendanceDialog.setAttendancePassword(chapEvent.get("signInKey").toString());
 
-                                getFragmentManager().executePendingTransactions();
-                                if(!attendanceDialog.isAdded())
-                                    attendanceDialog.show(getFragmentManager(), "addOfficerDialog");
+                                showAttendance(chapEvent);
 
                             } else {
                                 chapEventDialog.setEventName(eventName);
@@ -210,5 +208,32 @@ public class ChapterEventsFragment extends Fragment implements
             }
 
         }
+    }
+
+    private void showAttendance(final DocumentSnapshot s){
+        FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
+        final CollectionReference chaptersCollection = fireStore.collection("Chapter");
+
+        // Update Chapter
+        chaptersCollection.whereEqualTo("chapterName", ThisUser.getChapterName())
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+
+                    DocumentSnapshot chapter = task.getResult().getDocuments().get(0);
+
+                    Map<String, Map<String, Map<String, Object>>> currentEventsChap = (Map) chapter.get("chapterEvents");
+                    Map<String, Object> user = currentEventsChap.get(s.get("eventName")).get(ThisUser.getUid());
+                    if ((boolean) user.get("signedIn")) {
+                        attendanceDialog.setAttendanceActive(false);
+                    }
+
+                    getFragmentManager().executePendingTransactions();
+                    if(!attendanceDialog.isAdded())
+                        attendanceDialog.show(getFragmentManager(), "takeAttendanceDialog");
+                }
+            }
+        });
     }
 }

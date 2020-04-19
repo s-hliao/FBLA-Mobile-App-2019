@@ -149,39 +149,28 @@ public class MenuDialogFragment extends DialogFragment implements View.OnClickLi
     private void showAttendance(){
 
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
-        CollectionReference usersCollection = fireStore.collection("DatabaseUser");
-        final DocumentReference userRef = usersCollection.document(ThisUser.getUid());
         final CollectionReference chaptersCollection = fireStore.collection("Chapter");
 
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        // Update Chapter
+        chaptersCollection.whereEqualTo("chapterName", ThisUser.getChapterName())
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
 
-                    // Update Chapter
-                    chaptersCollection.whereEqualTo("chapterName", ThisUser.getChapterName())
-                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
+                    DocumentSnapshot chapter = task.getResult().getDocuments().get(0);
 
-                                DocumentSnapshot chapter = task.getResult().getDocuments().get(0);
+                    Map<String, Map<String, Map<String, Object>>> currentEventsChap = (Map) chapter.get("chapterEvents");
+                    Map<String, Object> user = currentEventsChap.get(chapterEventSnapshot.get("eventName")).get(ThisUser.getUid());
+                    if ((boolean) user.get("signedIn")) {
+                        takeAttendanceDialog.setAttendanceActive(false);
+                    }
 
-                                Map<String, Map<String, Map<String, Object>>> currentEventsChap = (Map) chapter.get("chapterEvents");
-                                Map<String, Object> user = currentEventsChap.get(chapterEventSnapshot.get("eventName")).get(ThisUser.getUid());
-                                if ((boolean) user.get("signedIn")) {
-                                    takeAttendanceDialog.setAttendanceActive(false);
-                                }
+                    getFragmentManager().executePendingTransactions();
+                    if(!takeAttendanceDialog.isAdded())
+                        takeAttendanceDialog.show(getFragmentManager(), "takeAttendanceDialog");
 
-                                getFragmentManager().executePendingTransactions();
-                                if(!takeAttendanceDialog.isAdded())
-                                    takeAttendanceDialog.show(getFragmentManager(), "takeAttendanceDialog");
-
-                                dismiss();
-                            }
-                        }
-                    });
+                    dismiss();
                 }
             }
         });

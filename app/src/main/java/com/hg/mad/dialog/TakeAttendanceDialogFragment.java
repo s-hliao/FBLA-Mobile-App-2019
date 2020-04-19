@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ public class TakeAttendanceDialogFragment extends DialogFragment implements View
     private Button no;
     private Button remove;
     private Button signIn;
+    private LinearLayout passwordContainer;
 
     private boolean attendanceActive;
     private String attendancePassword;
@@ -53,6 +55,7 @@ public class TakeAttendanceDialogFragment extends DialogFragment implements View
         no = rootView.findViewById(R.id.button_cancel_no);
         remove = rootView.findViewById(R.id.button_cancel_yes);
         signIn = rootView.findViewById(R.id.sign_in);
+        passwordContainer = rootView.findViewById(R.id.password_container);
 
         signIn.setOnClickListener(this);
         remove.setOnClickListener(this);
@@ -184,12 +187,14 @@ public class TakeAttendanceDialogFragment extends DialogFragment implements View
     private void updateVisibility(){
 
         if(!attendanceActive){
-            password.setVisibility(View.GONE);
-            typePassword.setVisibility(View.GONE);
+            passwordContainer.setVisibility(View.GONE);
+            title.setVisibility(View.GONE);
+            signIn.setVisibility(View.GONE);
 
         } else{
-            password.setVisibility(View.VISIBLE);
-            typePassword.setVisibility(View.VISIBLE);
+            passwordContainer.setVisibility(View.VISIBLE);
+            title.setVisibility(View.VISIBLE);
+            signIn.setVisibility(View.VISIBLE);
         }
     }
 }
