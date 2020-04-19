@@ -49,6 +49,7 @@ import com.hg.mad.dialog.AllChapEventDialog;
 import com.hg.mad.dialog.ChapEventDialogFragment;
 import com.hg.mad.dialog.EditChapEventDialogFragment;
 import com.hg.mad.dialog.EditOfficerDialogFragment;
+import com.hg.mad.dialog.FilterChapDialogFragment;
 import com.hg.mad.dialog.MenuDialogFragment;
 import com.hg.mad.dialog.SocMediaDialogFragment;
 import com.hg.mad.dialog.TakeAttendanceDialogFragment;
@@ -87,8 +88,12 @@ public class ChapterEventsFragment extends Fragment implements
     private ChapEventDialogFragment chapEventDialog;
     private AllChapEventDialog allChapEventDialog;
 
+    private FilterChapDialogFragment filterDialog;
+
     private boolean isAdmin;
     private String chapterName;
+
+    private ImageView filterButton;
 
     @SuppressLint("WrongViewCast")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -96,7 +101,6 @@ public class ChapterEventsFragment extends Fragment implements
 
         eventRV = root.findViewById(R.id.recycler_chap_events);
         addEventButton = root.findViewById(R.id.button_add_chap);
-        divider = root.findViewById(R.id.divider5);
         resetAllButton = root.findViewById(R.id.btn_removeAll);
         divider2 = root.findViewById(R.id.divider2);
 
@@ -108,24 +112,28 @@ public class ChapterEventsFragment extends Fragment implements
         attendanceDialog = new TakeAttendanceDialogFragment();
         chapEventDialog = new ChapEventDialogFragment();
         allChapEventDialog = new AllChapEventDialog();
+        filterDialog = new FilterChapDialogFragment();
 
         FirebaseFirestore.setLoggingEnabled(true);
         firestore = FirebaseFirestore.getInstance();
+
+        filterButton = root.findViewById(R.id.button_filter);
+        filterButton.setOnClickListener(this);
 
         // Only show manage to admins
 
         isAdmin = ThisUser.isAdmin();
         if (isAdmin){
             addEventButton.setVisibility(View.VISIBLE);
-            divider.setVisibility(View.VISIBLE);
             resetAllButton.setVisibility(View.VISIBLE);
             divider2.setVisibility(View.VISIBLE);
         } else {
             addEventButton.setVisibility(View.GONE);
-            divider.setVisibility(View.GONE);
             resetAllButton.setVisibility(View.GONE);
             divider2.setVisibility(View.GONE);
         }
+
+
 
         chapterName = ThisUser.getChapterName();
         final ChapterEventAdapter.OnChapListener o = this;
@@ -181,6 +189,11 @@ public class ChapterEventsFragment extends Fragment implements
                 getFragmentManager().executePendingTransactions();
                 if (!allChapEventDialog.isAdded()) {
                     allChapEventDialog.show(getFragmentManager(), "allChapEventDialog");
+                }
+                break;
+            case R.id.button_filter:
+                if (!filterDialog.isAdded()) {
+                    filterDialog.show(getFragmentManager(), "allChapEventDialog");
                 }
                 break;
         }

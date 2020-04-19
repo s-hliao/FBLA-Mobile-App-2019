@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +51,8 @@ import java.util.stream.Collectors;
     private Button cancel;
     private Button reset;
 
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -63,10 +66,13 @@ import java.util.stream.Collectors;
         nameView = rootView.findViewById(R.id.comp_name);
         nameView.setText("Sign ups for "+ eventName);
 
+
+
         rootView.findViewById(R.id.recycler_event);
 
         cancel.setOnClickListener(this);
         reset.setOnClickListener(this);
+
 
         getAttendees();
 
