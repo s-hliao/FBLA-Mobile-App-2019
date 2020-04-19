@@ -81,25 +81,22 @@ public class TakeAttendanceDialogFragment extends DialogFragment implements View
                 break;
             case R.id.sign_in:
                 onSignInClicked();
-                dismiss();
                 break;
             case R.id.button_cancel_yes:
                 onRemoveClicked();
-                dismiss();
+                break;
         }
     }
 
     public void onCancelClicked(){dismiss();}
 
     public void onSignInClicked(){
+        FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
+        CollectionReference usersCollection = fireStore.collection("DatabaseUser");
+        final DocumentReference userRef = usersCollection.document(ThisUser.getUid());
+        final CollectionReference chaptersCollection = fireStore.collection("Chapter");
+
         if(!attendanceActive||typePassword.getText().toString().equals(attendancePassword)){
-            final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-            FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
-
-            CollectionReference usersCollection = fireStore.collection("DatabaseUser");
-            final DocumentReference userRef = usersCollection.document(currentUser.getUid());
-
-            final CollectionReference chaptersCollection = fireStore.collection("Chapter");
 
             userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -117,9 +114,11 @@ public class TakeAttendanceDialogFragment extends DialogFragment implements View
                                     DocumentSnapshot chapter = task.getResult().getDocuments().get(0);
 
                                     Map<String, Map<String, Attendee>> currentEventsChap = (Map) chapter.get("chapterEvents");
-                                    currentEventsChap.get(eventName).put(currentUser.getUid(), new Attendee(currentUser.getDisplayName(), true));
+                                    currentEventsChap.get(eventName).put(ThisUser.getUid(), new Attendee(ThisUser.getDisplayName(), true));
+                                    chapter.getReference().update("chapterEvents", currentEventsChap);
 
-                                    chapter.getReference().update("competitiveEvents", currentEventsChap);
+                                    Toast.makeText(getContext(), "Signed in", Toast.LENGTH_SHORT).show();
+                                    dismiss();
                                 }
                             }
                         });
@@ -127,25 +126,16 @@ public class TakeAttendanceDialogFragment extends DialogFragment implements View
                 }
             });
 
-            if (attendanceActive)
-                Toast.makeText(getContext(), "Signed up", Toast.LENGTH_SHORT).show();
-
-            Toast.makeText(getContext(), "Signed in", Toast.LENGTH_SHORT).show();
-            dismiss();
         } else{
             Toast.makeText(getContext(), "Incorrect password", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     public void onRemoveClicked(){
 
-        final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
-
         CollectionReference usersCollection = fireStore.collection("DatabaseUser");
-        final DocumentReference userRef = usersCollection.document(currentUser.getUid());
-
+        final DocumentReference userRef = usersCollection.document(ThisUser.getUid());
         final CollectionReference chaptersCollection = fireStore.collection("Chapter");
 
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -163,25 +153,36 @@ public class TakeAttendanceDialogFragment extends DialogFragment implements View
                                 DocumentSnapshot chapter = task.getResult().getDocuments().get(0);
 
                                 Map<String, Map<String, Attendee>> currentEventsChap = (Map) chapter.get("chapterEvents");
-                                currentEventsChap.get(eventName).remove(currentUser.getUid());
+                                currentEventsChap.get(eventName).remove(ThisUser.getUid());
 
                                 if(currentEventsChap.get(eventName).isEmpty()){
                                     currentEventsChap.remove(eventName);
                                 }
 
                                 chapter.getReference().update("chapterEvents", currentEventsChap);
+                                dismiss();
                             }
                         }
                     });
                 }
             }
         });
-        Toast.makeText(getContext(), "Removed Signup", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Removed signup", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        updateVisibility();
+
+        getDialog().getWindow().setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
+    private void updateVisibility(){
+
         if(!attendanceActive){
             password.setVisibility(View.GONE);
             typePassword.setVisibility(View.GONE);
@@ -190,9 +191,5 @@ public class TakeAttendanceDialogFragment extends DialogFragment implements View
             password.setVisibility(View.VISIBLE);
             typePassword.setVisibility(View.VISIBLE);
         }
-
-        getDialog().getWindow().setLayout(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 }

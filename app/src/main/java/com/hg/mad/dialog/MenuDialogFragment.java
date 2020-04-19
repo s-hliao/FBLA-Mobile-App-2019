@@ -48,7 +48,6 @@ public class MenuDialogFragment extends DialogFragment implements View.OnClickLi
 
     private DocumentSnapshot chapterEventSnapshot;
 
-
     private View rootView;
 
 
@@ -123,10 +122,10 @@ public class MenuDialogFragment extends DialogFragment implements View.OnClickLi
              @Override
              public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                  DocumentSnapshot chapRef = queryDocumentSnapshots.getDocuments().get(0);
-                 Map<String, Map<String, Attendee>> events = (Map) chapRef.get("chapterEvents");
+                 Map<String, Map<String, Map<String, Object>>> events = (Map) chapRef.get("chapterEvents");
                  String eventName = (String) chapterEventSnapshot.get("eventName");
 
-                 if (events.get(eventName).containsKey(ThisUser.getUid())) {
+                 if (events.containsKey(eventName) && events.get(eventName).containsKey(ThisUser.getUid())) {
                      boolean attendance = chapterEventSnapshot.getBoolean("attendanceActive");
 
                      takeAttendanceDialog.setAttendanceActive(attendance);
@@ -135,7 +134,6 @@ public class MenuDialogFragment extends DialogFragment implements View.OnClickLi
                          takeAttendanceDialog.setAttendancePassword(chapterEventSnapshot.get("signInKey").toString());
 
                      showAttendance();
-                     dismiss();
                  }
 
                  // Show the signed up dialog
@@ -149,9 +147,44 @@ public class MenuDialogFragment extends DialogFragment implements View.OnClickLi
      }
 
     private void showAttendance(){
-        getFragmentManager().executePendingTransactions();
-        if(!takeAttendanceDialog.isAdded())
-            takeAttendanceDialog.show(getFragmentManager(), "takeAttendanceDialog");
+
+        FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
+        CollectionReference usersCollection = fireStore.collection("DatabaseUser");
+        final DocumentReference userRef = usersCollection.document(ThisUser.getUid());
+        final CollectionReference chaptersCollection = fireStore.collection("Chapter");
+
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if (task.isSuccessful()) {
+
+                    // Update Chapter
+                    chaptersCollection.whereEqualTo("chapterName", ThisUser.getChapterName())
+                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+
+                                DocumentSnapshot chapter = task.getResult().getDocuments().get(0);
+
+                                Map<String, Map<String, Map<String, Object>>> currentEventsChap = (Map) chapter.get("chapterEvents");
+                                Map<String, Object> user = currentEventsChap.get(chapterEventSnapshot.get("eventName")).get(ThisUser.getUid());
+                                if ((boolean) user.get("signedIn")) {
+                                    takeAttendanceDialog.setAttendanceActive(false);
+                                }
+
+                                getFragmentManager().executePendingTransactions();
+                                if(!takeAttendanceDialog.isAdded())
+                                    takeAttendanceDialog.show(getFragmentManager(), "takeAttendanceDialog");
+
+                                dismiss();
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 
     private void showChapEvent(){

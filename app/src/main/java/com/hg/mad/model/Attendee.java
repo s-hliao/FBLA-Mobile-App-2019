@@ -10,12 +10,12 @@ public class Attendee {
 
     private String name;
     private boolean isSignedIn;
+
     public Attendee(){}
 
     public Attendee(String name, boolean signedIn){
         this.name = name;
         this.isSignedIn = signedIn;
-
     }
 
 
