@@ -91,12 +91,6 @@ public class ChapEventDialogFragment extends DialogFragment implements View.OnCl
 
                 if (task.isSuccessful()) {
 
-                    // Update DatabaseUser
-                    DocumentSnapshot user = task.getResult();
-                    Map<String, Integer> currentEventsUser = (Map<String, Integer>) user.get("chapterEvents");
-                    currentEventsUser.put(eventName, 1);
-                    userRef.update("chapterEvents", currentEventsUser);
-
                     // Update Chapter
                     chaptersCollection.whereEqualTo("chapterName", ThisUser.getChapterName())
                             .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

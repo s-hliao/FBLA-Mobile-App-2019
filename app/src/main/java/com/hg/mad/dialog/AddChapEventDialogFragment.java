@@ -117,8 +117,6 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
 
                 if (task.isSuccessful()) {
 
-
-
                     // Update Chapter
                     chaptersCollection.whereEqualTo("chapterName", ThisUser.getChapterName())
                             .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

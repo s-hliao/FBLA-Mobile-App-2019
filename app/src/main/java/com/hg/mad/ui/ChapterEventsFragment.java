@@ -51,6 +51,7 @@ import com.hg.mad.dialog.EditOfficerDialogFragment;
 import com.hg.mad.dialog.MenuDialogFragment;
 import com.hg.mad.dialog.SocMediaDialogFragment;
 import com.hg.mad.dialog.TakeAttendanceDialogFragment;
+import com.hg.mad.model.Attendee;
 import com.hg.mad.model.Chapter;
 import com.hg.mad.model.DatabaseUser;
 import com.hg.mad.model.Officer;
@@ -171,49 +172,43 @@ public class ChapterEventsFragment extends Fragment implements
     public void onChapSelected(final DocumentSnapshot chapEvent) {
         if (!isAdmin) {
 
-            DocumentReference userRef = FirebaseFirestore.getInstance().collection("DatabaseUser").document(
-                    ThisUser.getUid()
-            );
+           FirebaseFirestore.getInstance().collection("Chapter")
+                    .whereEqualTo("chapterName", ThisUser.getChapterName()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            DocumentSnapshot chapRef = queryDocumentSnapshots.getDocuments().get(0);
+                            Map<String,  Map<String, Attendee>> events = (Map) chapRef.get("chapterEvents");
+                            String eventName = (String) chapEvent.get("eventName");
 
+                            if (events.get(eventName).containsKey(ThisUser.getUid())){
+                                boolean attendance = chapEvent.getBoolean("attendanceActive");
+                                attendanceDialog.setAttendanceActive(attendance);
+                                attendanceDialog.setEventName(chapEvent.get("eventName").toString());
 
-            userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful() && task.getResult() != null) {
+                                if(attendance)attendanceDialog.setAttendancePassword(chapEvent.get("signInKey").toString());
 
-                        Map<String, Integer> eventsSignedUp = (Map<String, Integer>) task.getResult().get("chapterEvents");
-                        String eventName = chapEvent.get("eventName").toString();
-                        // Show the already signed up dialog
-                        if (eventsSignedUp.containsKey(eventName)) {
-                            boolean attendance = chapEvent.getBoolean("attendanceActive");
-                            attendanceDialog.setAttendanceActive(attendance);
-                            attendanceDialog.setEventName(chapEvent.get("eventName").toString());
-                            if(attendance)attendanceDialog.setAttendancePassword(chapEvent.get("signInKey").toString());
-                            getFragmentManager().executePendingTransactions();
-                            if(!attendanceDialog.isAdded())
-                                attendanceDialog.show(getFragmentManager(), "addOfficerDialog");
+                                getFragmentManager().executePendingTransactions();
+                                if(!attendanceDialog.isAdded())
+                                    attendanceDialog.show(getFragmentManager(), "addOfficerDialog");
 
+                            } else {
+                                chapEventDialog.setEventName(eventName);
+
+                                getFragmentManager().executePendingTransactions();
+                                if (!chapEventDialog.isAdded())
+                                    chapEventDialog.show(getFragmentManager(), "ChapEventsDialog");
+                            }
                         }
+                    });
 
-                        // Show the signed up dialog
-                        else {
-                            chapEventDialog.setEventName(eventName);
-
-                            getFragmentManager().executePendingTransactions();
-                            if (!chapEventDialog.isAdded())
-                                chapEventDialog.show(getFragmentManager(), "ChapEventsDialog");
-
-                        }
-                    }
-                }
-            });
         } else {
-            menuDialog.setChapterEventSnapshot(chapEvent);
 
+            menuDialog.setChapterEventSnapshot(chapEvent);
             getFragmentManager().executePendingTransactions();
             if (!menuDialog.isAdded()) {
                 menuDialog.show(getFragmentManager(), "editEventDialog");
             }
+
         }
     }
 }

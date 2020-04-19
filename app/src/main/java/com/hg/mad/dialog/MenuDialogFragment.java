@@ -63,18 +63,15 @@ public class MenuDialogFragment extends DialogFragment implements View.OnClickLi
         editChapEventDialog = new EditChapEventDialogFragment();
         chapEventDialog = new ChapEventDialogFragment();
 
-
         manageEvent = rootView.findViewById(R.id.layout_edit_event);
         signIn = rootView.findViewById(R.id.layout_sign_up);
         cancel = rootView.findViewById(R.id.button_cancel3);
-
 
         if(ThisUser.isAdmin()){
             manageEvent.setVisibility(View.VISIBLE);
         } else{
             manageEvent.setVisibility(View.GONE);
         }
-
 
         cancel.setOnClickListener(this);
         manageEvent.setOnClickListener(this);
@@ -110,8 +107,8 @@ public class MenuDialogFragment extends DialogFragment implements View.OnClickLi
                  ViewGroup.LayoutParams.WRAP_CONTENT);
      }
 
-     public void onEditClicked(){
-        editChapEventDialog.setChapterEventSnapshot(chapterEventSnapshot);
+     private void onEditClicked(){
+         editChapEventDialog.setChapterEventSnapshot(chapterEventSnapshot);
          getFragmentManager().executePendingTransactions();
          if(!editChapEventDialog.isAdded())
              editChapEventDialog.show(getFragmentManager(), "addOfficerDialog");
@@ -119,48 +116,49 @@ public class MenuDialogFragment extends DialogFragment implements View.OnClickLi
         dismiss();
      }
 
-     public void onSignInClicked(){
-         DocumentReference userRef = FirebaseFirestore.getInstance().collection("DatabaseUser").document(
-                 ThisUser.getUid()
-         );
+     private void onSignInClicked(){
 
-
-         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+         FirebaseFirestore.getInstance().collection("Chapter")
+                 .whereEqualTo("chapterName", ThisUser.getChapterName()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
              @Override
-             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                 if (task.isSuccessful() && task.getResult() != null) {
+             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                 DocumentSnapshot chapRef = queryDocumentSnapshots.getDocuments().get(0);
+                 Map<String, Map<String, Attendee>> events = (Map) chapRef.get("chapterEvents");
+                 String eventName = (String) chapterEventSnapshot.get("eventName");
 
-                     Map<String, Integer> eventsSignedUp = (Map<String, Integer>) task.getResult().get("chapterEvents");
-                     String eventName = chapterEventSnapshot.get("eventName").toString();
-                     // Show the already signed up dialog
-                     if (eventsSignedUp.containsKey(eventName)) {
-                         boolean attendance = chapterEventSnapshot.getBoolean("attendanceActive");
-                         takeAttendanceDialog.setAttendanceActive(attendance);
-                         takeAttendanceDialog.setEventName(chapterEventSnapshot.get("eventName").toString());
-                         if(attendance)takeAttendanceDialog.setAttendancePassword(chapterEventSnapshot.get("signInKey").toString());
-                         getActivity().getSupportFragmentManager().executePendingTransactions();
-                         if(!takeAttendanceDialog.isAdded())
-                             takeAttendanceDialog.show(getActivity().getSupportFragmentManager(), "addOfficerDialog");
+                 if (events.get(eventName).containsKey(ThisUser.getUid())) {
+                     boolean attendance = chapterEventSnapshot.getBoolean("attendanceActive");
 
-                     }
+                     takeAttendanceDialog.setAttendanceActive(attendance);
+                     takeAttendanceDialog.setEventName(chapterEventSnapshot.get("eventName").toString());
+                     if (attendance)
+                         takeAttendanceDialog.setAttendancePassword(chapterEventSnapshot.get("signInKey").toString());
 
-                     // Show the signed up dialog
-                     else {
-                         chapEventDialog.setEventName(eventName);
+                     showAttendance();
+                     dismiss();
+                 }
 
-                         getActivity().getSupportFragmentManager().executePendingTransactions();
-                         if (!chapEventDialog.isAdded())
-                             chapEventDialog.show(getActivity().getSupportFragmentManager(), "ChapEventDialog");
-
-                     }
+                 // Show the signed up dialog
+                 else {
+                     chapEventDialog.setEventName(eventName);
+                     showChapEvent();
+                     dismiss();
                  }
              }
          });
-
-
-
-        dismiss();
      }
+
+    private void showAttendance(){
+        getFragmentManager().executePendingTransactions();
+        if(!takeAttendanceDialog.isAdded())
+            takeAttendanceDialog.show(getFragmentManager(), "takeAttendanceDialog");
+    }
+
+    private void showChapEvent(){
+        getFragmentManager().executePendingTransactions();
+        if(!chapEventDialog.isAdded())
+            chapEventDialog.show(getFragmentManager(), "chapEventDialog");
+    }
 
     public void onCancelClicked() {
 
