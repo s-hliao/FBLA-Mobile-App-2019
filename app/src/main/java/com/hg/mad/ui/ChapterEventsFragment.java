@@ -38,8 +38,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.hg.mad.ManageChapActivity;
-import com.hg.mad.ManageCompActivity;
 import com.hg.mad.R;
 import com.hg.mad.SignedInActivity;
 import com.hg.mad.adapter.ChapterEventAdapter;
@@ -70,9 +68,7 @@ public class ChapterEventsFragment extends Fragment implements
         View.OnClickListener, ChapterEventAdapter.OnChapListener{
 
     private LinearLayout addEventButton;
-    private View manageEventButton;
     private View divider;
-    private View dividerr;
 
     private RecyclerView eventRV;
 
@@ -96,12 +92,9 @@ public class ChapterEventsFragment extends Fragment implements
 
         eventRV = root.findViewById(R.id.recycler_chap_events);
         addEventButton = root.findViewById(R.id.button_add_chap);
-        manageEventButton = root.findViewById(R.id.button_manage_chap);
         divider = root.findViewById(R.id.divider5);
-        dividerr = root.findViewById(R.id.divider3);
 
         addEventButton.setOnClickListener(this);
-        manageEventButton.setOnClickListener(this);
 
         menuDialog = new MenuDialogFragment();
         addEventDialog = new AddChapEventDialogFragment();
@@ -116,14 +109,10 @@ public class ChapterEventsFragment extends Fragment implements
         isAdmin = ThisUser.isAdmin();
         if (isAdmin){
             addEventButton.setVisibility(View.VISIBLE);
-
             divider.setVisibility(View.VISIBLE);
-            dividerr.setVisibility(View.VISIBLE);
         } else {
             addEventButton.setVisibility(View.GONE);
-
             divider.setVisibility(View.GONE);
-            dividerr.setVisibility(View.VISIBLE);
         }
 
         chapterName = ThisUser.getChapterName();
@@ -176,8 +165,6 @@ public class ChapterEventsFragment extends Fragment implements
                     addEventDialog.show(getFragmentManager(), "addEventDialog");
                 }
                 break;
-            case R.id.button_manage_chap:
-                startActivity(ManageChapActivity.createIntent(getContext()));
         }
     }
 
