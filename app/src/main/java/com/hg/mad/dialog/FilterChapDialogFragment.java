@@ -139,12 +139,6 @@ public class FilterChapDialogFragment extends DialogFragment implements View.OnC
     }
 
     @Nullable
-    private String getType() {
-        String type = eventType.getText().toString();
-        return type;
-    }
-
-    @Nullable
     private Date getStartDate() {
         SimpleDateFormat dateFormat= new SimpleDateFormat("MM/dd/yyyy");
         try {
@@ -182,7 +176,6 @@ public class FilterChapDialogFragment extends DialogFragment implements View.OnC
         ChapFilters filters = new ChapFilters();
 
         if (rootView != null) {
-            filters.setType(getType());
             filters.setStartDate(getStartDate());
             filters.setEndDate(getEndDate());
         }

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -108,6 +109,7 @@ public class ChapterEventsFragment extends Fragment implements
     private ImageView filterButton;
     private ChapFilters filters;
     private Spinner typeSpinner;
+    private String spinnerText;
 
     @SuppressLint("WrongViewCast")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -137,7 +139,6 @@ public class ChapterEventsFragment extends Fragment implements
         typeSpinner = root.findViewById(R.id.typeSpinner);
 
         // Only show manage to admins
-
         isAdmin = ThisUser.isAdmin();
         if (isAdmin){
             addEventButton.setVisibility(View.VISIBLE);
@@ -148,6 +149,8 @@ public class ChapterEventsFragment extends Fragment implements
             resetAllButton.setVisibility(View.GONE);
             divider2.setVisibility(View.GONE);
         }
+
+        initSpinner();
 
         chapterName = ThisUser.getChapterName();
         final ChapterEventAdapter.OnChapListener o = this;
@@ -170,6 +173,23 @@ public class ChapterEventsFragment extends Fragment implements
             }
         });
         return root;
+    }
+
+    private void initSpinner() {
+        typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                spinnerText = typeSpinner.getSelectedItem().toString();
+                onFilter(filters);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                spinnerText = "";
+                onFilter(filters);
+            }
+        });
+
     }
 
 
@@ -233,9 +253,10 @@ public class ChapterEventsFragment extends Fragment implements
 
                     query = chapter.collection("ChapterEvent");
 
-                    if(!searchText.equals("") && searchText.equals(null)){
-                        query = query.whereEqualTo("eventType", searchText);
+                    if(!spinnerText.equals("") && !spinnerText.equals("Any Type")){
+                        query = query.whereEqualTo("eventType", spinnerText);
                     }
+
                     query = query.orderBy("date")
                             .startAt(startDate)
                             .endAt(endDate);

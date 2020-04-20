@@ -9,7 +9,6 @@ import java.util.Date;
  */
 public class ChapFilters {
 
-    private String type = null;
     private Date startDate = null;
     private Date endDate = null;
 
@@ -18,18 +17,6 @@ public class ChapFilters {
     public static ChapFilters getDefault() {
         ChapFilters filters = new ChapFilters();
         return filters;
-    }
-
-    public boolean hasType() {
-        return !(type == null) && !type.isEmpty();
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public boolean hasEndDate() {
