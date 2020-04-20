@@ -108,7 +108,6 @@ public class ChapterEventsFragment extends Fragment implements
     private ImageView filterButton;
     private ChapFilters filters;
     private Spinner typeSpinner;
-    private String searchText;
 
     @SuppressLint("WrongViewCast")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -135,8 +134,7 @@ public class ChapterEventsFragment extends Fragment implements
         filterButton = root.findViewById(R.id.button_filter);
         filterButton.setOnClickListener(this);
         filters = ChapFilters.getDefault();
-        typeSpinner = root.findViewById(R.id.spinner3);
-        initSearch();
+        typeSpinner = root.findViewById(R.id.typeSpinner);
 
         // Only show manage to admins
 
@@ -193,28 +191,6 @@ public class ChapterEventsFragment extends Fragment implements
         }
     }
 
-    private void hideKeyboard() {
-
-
-        typeSpinner.clearFocus();
-        View view = getActivity().getCurrentFocus();
-        if (view != null) {
-            ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
-                    .hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-
-    private void initSearch() {
-        typeSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                searchText = typeSpinner.getSelectedItem().toString();
-                onFilter(filters);
-            }
-        });
-
-    }
-
     @Override
     public void onFilter(final ChapFilters newfilters) {
 
@@ -240,8 +216,6 @@ public class ChapterEventsFragment extends Fragment implements
                 if (!documents.isEmpty()) {
                     DocumentSnapshot first = documents.get(0);
                     DocumentSnapshot last = documents.get(documents.size() - 1);
-
-
 
                     Date startDate;
                     if (newfilters.hasStartDate()) {
@@ -280,21 +254,18 @@ public class ChapterEventsFragment extends Fragment implements
     public void onClick(View view) {
         switch(view.getId()) {
             case R.id.button_add_chap:
-                hideKeyboard();
                 getFragmentManager().executePendingTransactions();
                 if (!addEventDialog.isAdded()) {
                     addEventDialog.show(getFragmentManager(), "addEventDialog");
                 }
                 break;
             case R.id.btn_removeAll:
-                hideKeyboard();
                 getFragmentManager().executePendingTransactions();
                 if (!allChapEventDialog.isAdded()) {
                     allChapEventDialog.show(getFragmentManager(), "allChapEventDialog");
                 }
                 break;
             case R.id.button_filter:
-                hideKeyboard();
                 getFragmentManager().executePendingTransactions();
                 if (!filterDialog.isAdded()) {
                     filterDialog.show(getFragmentManager(), "filterDialog");
@@ -305,8 +276,6 @@ public class ChapterEventsFragment extends Fragment implements
 
     @Override
     public void onChapSelected(final DocumentSnapshot chapEvent) {
-
-        hideKeyboard();
 
         if (!isAdmin) {
 

@@ -101,27 +101,34 @@
         android:paddingEnd="12dp"
         android:paddingBottom="12dp">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <Spinner
-                android:id="@+id/spinner3"
-                android:layout_width="332dp"
-                android:layout_height="match_parent"
-                android:entries="@array/categories" />
-
             <ImageView
                 android:id="@+id/button_filter"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|start"
                 android:background="@android:color/background_light"
                 android:elevation="8dp"
                 android:padding="12dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_filter" />
 
-        </LinearLayout>
+            <Spinner
+                android:id="@+id/typeSpinner"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:entries="@array/chapEventTypes"
+                android:background="@android:color/background_light"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/button_filter"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </FrameLayout>
 
