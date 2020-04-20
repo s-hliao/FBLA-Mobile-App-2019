@@ -61,7 +61,7 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
 
         nameEditText = rootView.findViewById(R.id.editText_name);
         dateEditText = rootView.findViewById(R.id.editText_date);
-        typeSpinner = rootView.findViewById(R.id.typeSpinner2);
+        typeSpinner = rootView.findViewById(R.id.typeSpinner3);
         attendanceCheckBox = rootView.findViewById(R.id.checkbox_attendance);
         passwordEditText = rootView.findViewById(R.id.editText_password);
         descriptionEditText = rootView.findViewById(R.id.editText_description);
