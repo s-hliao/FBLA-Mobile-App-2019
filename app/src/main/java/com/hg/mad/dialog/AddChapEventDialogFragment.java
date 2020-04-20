@@ -128,28 +128,32 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
                                 DocumentSnapshot chapter = task.getResult().getDocuments().get(0);
 
                                 Map<String, Map<String, Attendee>> currentEventsChap = (Map) chapter.get("chapterEvents");
-                                if (!currentEventsChap.containsKey(nameEditText.getText().toString())) {
+                                if(typeSpinner.getSelectedItemPosition()!=0) {
+                                    if (!currentEventsChap.containsKey(nameEditText.getText().toString())) {
 
 
-                                    try {
+                                        try {
 
-                                        SimpleDateFormat dateFormat= new SimpleDateFormat("MM/dd/yyyy");
-                                        ChapterEvent event  = new ChapterEvent(
-                                                nameEditText.getText().toString(), typeSpinner.getSelectedItem().toString(),
-                                                descriptionEditText.getText().toString(),
-                                                dateFormat.parse(dateEditText.getText().toString()),
-                                                passwordEditText.getText().toString(),
-                                                attendanceCheckBox.isChecked());
-                                        currentEventsChap.put(nameEditText.getText().toString(), new HashMap<String, Attendee>());
-                                        chapter.getReference().update("chapterEvents", currentEventsChap);
-                                        chapter.getReference().collection("ChapterEvent").add(event);
-                                        Toast.makeText(getContext(), "Chapter event created", Toast.LENGTH_SHORT).show();
-                                        dismiss();
-                                    } catch (ParseException e) {
-                                        Toast.makeText(getContext(), "Incorrect date format", Toast.LENGTH_SHORT).show();
+                                            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                                            ChapterEvent event = new ChapterEvent(
+                                                    nameEditText.getText().toString(), typeSpinner.getSelectedItem().toString(),
+                                                    descriptionEditText.getText().toString(),
+                                                    dateFormat.parse(dateEditText.getText().toString()),
+                                                    passwordEditText.getText().toString(),
+                                                    attendanceCheckBox.isChecked());
+                                            currentEventsChap.put(nameEditText.getText().toString(), new HashMap<String, Attendee>());
+                                            chapter.getReference().update("chapterEvents", currentEventsChap);
+                                            chapter.getReference().collection("ChapterEvent").add(event);
+                                            Toast.makeText(getContext(), "Chapter event created", Toast.LENGTH_SHORT).show();
+                                            dismiss();
+                                        } catch (ParseException e) {
+                                            Toast.makeText(getContext(), "Incorrect date format", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } else {
+                                        Toast.makeText(getContext(), "Chapter Event name cannot already exist", Toast.LENGTH_SHORT).show();
                                     }
                                 } else{
-                                    Toast.makeText(getContext(), "Chapter Event name cannot already exist", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Please Select an Event Type", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }

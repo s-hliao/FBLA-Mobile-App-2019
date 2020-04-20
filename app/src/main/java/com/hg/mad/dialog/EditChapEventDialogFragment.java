@@ -93,15 +93,21 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
                 nameEditText.setText(ds.getEventName());
                 dateEditText.setText(dateFormat.format(ds.getDate()));
 
-                int num = typeSpinner.getAdapter().getCount();
-
-                for(int i=0; i<num; i++){
-                    String s = (String)typeSpinner.getAdapter().getItem(i);
-                    if(s.equals(chapterEventSnapshot.get("eventType"))){
-                        typeSpinner.setSelection(i);
+                switch(ds.getEventType()) {
+                    case "Meeting":
+                        typeSpinner.setSelection(1);
                         break;
-                    }
+                    case "Fundraiser":
+                        typeSpinner.setSelection(2);
+                        break;
+                    case "Community Service":
+                        typeSpinner.setSelection(3);
+                        break;
+                    case "Other":
+                        typeSpinner.setSelection(4);
+                        break;
                 }
+
                 attendanceCheckBox.setChecked(ds.getAttendanceActive());
                 if(ds.getAttendanceActive()){
                     passwordEditText.setText(ds.getSignInKey());
@@ -185,55 +191,58 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
                     Map<String, Map<String, Attendee>> currentEventsChap = (Map) chapter.get("chapterEvents");
                     final String previousName = (String) chapterEventSnapshot.get("eventName") ;
                     final String newName = nameEditText.getText().toString();
+                    if(typeSpinner.getSelectedItemPosition()!=0) {
+                        if (previousName.equals(newName) || !currentEventsChap.containsKey(newName)) {
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
-                    if (previousName.equals(newName) || !currentEventsChap.containsKey(newName)) {
-                        SimpleDateFormat dateFormat= new SimpleDateFormat("MM/dd/yyyy");
+                            try {
 
-                        try {
+                                Map<String, Object> updates = new HashMap<>();
+                                updates.put("eventName", nameEditText.getText().toString());
+                                updates.put("eventType", typeSpinner.getSelectedItem().toString());
+                                updates.put("description", descriptionEditText.getText().toString());
+                                updates.put("date", dateFormat.parse(dateEditText.getText().toString()));
+                                updates.put("signInKey", passwordEditText.getText().toString());
+                                updates.put("attendanceActive", attendanceCheckBox.isChecked());
 
-                            Map<String, Object>updates = new HashMap<>();
-                            updates.put("eventName", nameEditText.getText().toString());
-                            updates.put("eventType", typeSpinner.getSelectedItem().toString());
-                            updates.put("description",descriptionEditText.getText().toString());
-                            updates.put("date", dateFormat.parse(dateEditText.getText().toString()));
-                            updates.put("signInKey",passwordEditText.getText().toString()) ;
-                            updates.put("attendanceActive",attendanceCheckBox.isChecked());
+                                Map<String, Attendee> attendees = currentEventsChap.remove(chapterEventSnapshot.get("eventName"));
 
-                            Map<String, Attendee> attendees = currentEventsChap.remove(chapterEventSnapshot.get("eventName"));
+                                chapterEventSnapshot.getReference().update(updates);
 
-                            chapterEventSnapshot.getReference().update(updates);
+                                currentEventsChap.put(nameEditText.getText().toString(), attendees);
+                                chapter.getReference().update("chapterEvents", currentEventsChap);
 
-                            currentEventsChap.put(nameEditText.getText().toString(), attendees);
-                            chapter.getReference().update("chapterEvents", currentEventsChap);
-
-                            // Update all users who signed up for this event
-                            if (previousName != newName){
-                                usersCollection.whereEqualTo("chapterName", ThisUser.getChapterName()).get()
-                                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                            @Override
-                                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                                List<DocumentSnapshot> ds = queryDocumentSnapshots.getDocuments();
-                                                for (DocumentSnapshot s : ds){
-                                                    Map<String, Integer> events = (Map) s.get("chapterEvents");
-                                                    if (events.containsKey(previousName)){
-                                                        events.remove(previousName);
-                                                        events.put(newName, 1);
+                                // Update all users who signed up for this event
+                                if (previousName != newName) {
+                                    usersCollection.whereEqualTo("chapterName", ThisUser.getChapterName()).get()
+                                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                    List<DocumentSnapshot> ds = queryDocumentSnapshots.getDocuments();
+                                                    for (DocumentSnapshot s : ds) {
+                                                        Map<String, Integer> events = (Map) s.get("chapterEvents");
+                                                        if (events.containsKey(previousName)) {
+                                                            events.remove(previousName);
+                                                            events.put(newName, 1);
+                                                        }
+                                                        s.getReference().update("chapterEvents", events);
                                                     }
-                                                    s.getReference().update("chapterEvents", events);
                                                 }
-                                            }
-                                        });
+                                            });
+                                }
+
+                                Toast.makeText(getContext(), "Chapter event updated", Toast.LENGTH_SHORT).show();
+
+                                dismiss();
+                            } catch (ParseException e) {
+                                Toast.makeText(getContext(), "Incorrect date format", Toast.LENGTH_SHORT).show();
                             }
 
-                            Toast.makeText(getContext(), "Chapter event updated", Toast.LENGTH_SHORT).show();
-
-                            dismiss();
-                        } catch (ParseException e) {
-                            Toast.makeText(getContext(), "Incorrect date format", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Chapter Event name cannot already exist", Toast.LENGTH_SHORT).show();
                         }
-
                     } else{
-                        Toast.makeText(getContext(), "Chapter Event name cannot already exist", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Please Select an Event Type", Toast.LENGTH_SHORT).show();
                     }
 
 

@@ -253,7 +253,7 @@ public class ChapterEventsFragment extends Fragment implements
 
                     query = chapter.collection("ChapterEvent");
 
-                    if(!spinnerText.equals("") && !spinnerText.equals("Any Type")){
+                    if(!spinnerText.equals("") && typeSpinner.getSelectedItemPosition()!=0){
                         query = query.whereEqualTo("eventType", spinnerText);
                     }
 

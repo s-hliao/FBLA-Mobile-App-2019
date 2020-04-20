@@ -23,9 +23,10 @@
     </string-array>
 
     <string-array name="chapEventTypes">
-        <item>Any Type</item>
+        <item>Event Type</item>
         <item>Meeting</item>
         <item>Fundraiser</item>
+        <item>Community Service</item>
         <item>Other</item>
     </string-array>
 
