@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -39,7 +40,7 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
     private View rootView;
     private EditText nameEditText;
     private EditText dateEditText;
-    private EditText typeEditText;
+    private Spinner typeSpinner;
     private CheckBox attendanceCheckBox;
     private EditText passwordEditText;
     private EditText descriptionEditText;
@@ -60,7 +61,7 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
 
         nameEditText = rootView.findViewById(R.id.editText_name);
         dateEditText = rootView.findViewById(R.id.editText_date);
-        typeEditText = rootView.findViewById(R.id.editText_type);
+        typeSpinner = rootView.findViewById(R.id.typeSpinner2);
         attendanceCheckBox = rootView.findViewById(R.id.checkbox_attendance);
         passwordEditText = rootView.findViewById(R.id.editText_password);
         descriptionEditText = rootView.findViewById(R.id.editText_description);
@@ -91,7 +92,16 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
                 ChapterEvent ds = documentSnapshot.toObject(ChapterEvent.class);
                 nameEditText.setText(ds.getEventName());
                 dateEditText.setText(dateFormat.format(ds.getDate()));
-                typeEditText.setText(ds.getEventType());
+
+                int num = typeSpinner.getAdapter().getCount();
+
+                for(int i=0; i<num; i++){
+                    String s = (String)typeSpinner.getAdapter().getItem(i);
+                    if(s.equals(chapterEventSnapshot.get("eventType"))){
+                        typeSpinner.setSelection(i);
+                        break;
+                    }
+                }
                 attendanceCheckBox.setChecked(ds.getAttendanceActive());
                 if(ds.getAttendanceActive()){
                     passwordEditText.setText(ds.getSignInKey());
@@ -183,7 +193,7 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
 
                             Map<String, Object>updates = new HashMap<>();
                             updates.put("eventName", nameEditText.getText().toString());
-                            updates.put("eventType", typeEditText.getText().toString());
+                            updates.put("eventType", typeSpinner.getSelectedItem().toString());
                             updates.put("description",descriptionEditText.getText().toString());
                             updates.put("date", dateFormat.parse(dateEditText.getText().toString()));
                             updates.put("signInKey",passwordEditText.getText().toString()) ;

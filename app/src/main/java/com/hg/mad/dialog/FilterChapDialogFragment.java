@@ -38,7 +38,6 @@ public class FilterChapDialogFragment extends DialogFragment implements View.OnC
 
     private View rootView;
 
-    private EditText eventType;
     private EditText startDate;
     private EditText endDate;
 
@@ -57,7 +56,6 @@ public class FilterChapDialogFragment extends DialogFragment implements View.OnC
                              @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.dialog_filter_chap, container, false);
 
-        eventType = rootView.findViewById(R.id.type_text);
         startDate = rootView.findViewById(R.id.start_text);
         endDate = rootView.findViewById(R.id.end_text);
 

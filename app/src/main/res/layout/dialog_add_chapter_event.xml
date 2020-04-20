@@ -76,14 +76,16 @@
             android:text="Event Type:"
             android:textSize="18sp" />
 
-        <EditText
-            android:id="@+id/editText_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <Spinner
+            android:id="@+id/typeSpinner2"
+            android:layout_width="270dp"
+            android:layout_height="40dp"
             android:layout_weight="1"
-            android:ems="10"
-            android:hint="Fundraiser, Meeting, etc."
-            android:inputType="textPersonName" />
+            android:entries="@array/chapEventTypes"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/button_filter"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </LinearLayout>
 

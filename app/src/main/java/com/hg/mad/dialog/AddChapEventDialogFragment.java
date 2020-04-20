@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -36,7 +37,7 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
     private View rootView;
     private EditText nameEditText;
     private EditText dateEditText;
-    private EditText typeEditText;
+    private Spinner typeSpinner;
     private CheckBox attendanceCheckBox;
     private EditText passwordEditText;
     private EditText descriptionEditText;
@@ -54,7 +55,7 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
 
         nameEditText = rootView.findViewById(R.id.editText_name);
         dateEditText = rootView.findViewById(R.id.editText_date);
-        typeEditText = rootView.findViewById(R.id.editText_type);
+        typeSpinner = rootView.findViewById(R.id.typeSpinner2);
         attendanceCheckBox = rootView.findViewById(R.id.checkbox_attendance);
         passwordEditText = rootView.findViewById(R.id.editText_password);
         descriptionEditText = rootView.findViewById(R.id.editText_description);
@@ -134,7 +135,7 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
 
                                         SimpleDateFormat dateFormat= new SimpleDateFormat("MM/dd/yyyy");
                                         ChapterEvent event  = new ChapterEvent(
-                                                nameEditText.getText().toString(), typeEditText.getText().toString(),
+                                                nameEditText.getText().toString(), typeSpinner.getSelectedItem().toString(),
                                                 descriptionEditText.getText().toString(),
                                                 dateFormat.parse(dateEditText.getText().toString()),
                                                 passwordEditText.getText().toString(),
@@ -165,7 +166,6 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
     private void reset(){
         nameEditText.setText("");
         dateEditText.setText("");
-        typeEditText.setText("");
         attendanceCheckBox.setSelected(false);
         passwordEditText.setText("");
         descriptionEditText.setText("");
