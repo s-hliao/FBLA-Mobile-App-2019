@@ -12,10 +12,12 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -105,7 +107,7 @@ public class ChapterEventsFragment extends Fragment implements
 
     private ImageView filterButton;
     private ChapFilters filters;
-    private SearchView searchView;
+    private Spinner typeSpinner;
     private String searchText;
 
     @SuppressLint("WrongViewCast")
@@ -133,7 +135,7 @@ public class ChapterEventsFragment extends Fragment implements
         filterButton = root.findViewById(R.id.button_filter);
         filterButton.setOnClickListener(this);
         filters = ChapFilters.getDefault();
-        searchView = root.findViewById(R.id.search_chapter);
+        typeSpinner = root.findViewById(R.id.spinner3);
         initSearch();
 
         // Only show manage to admins
@@ -192,7 +194,9 @@ public class ChapterEventsFragment extends Fragment implements
     }
 
     private void hideKeyboard() {
-        searchView.clearFocus();
+
+
+        typeSpinner.clearFocus();
         View view = getActivity().getCurrentFocus();
         if (view != null) {
             ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
@@ -201,21 +205,14 @@ public class ChapterEventsFragment extends Fragment implements
     }
 
     private void initSearch() {
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        typeSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                hideKeyboard();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                searchText = newText;
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                searchText = typeSpinner.getSelectedItem().toString();
                 onFilter(filters);
-
-                return false;
             }
         });
+
     }
 
     @Override
@@ -261,6 +258,10 @@ public class ChapterEventsFragment extends Fragment implements
                     }
 
                     query = chapter.collection("ChapterEvent");
+
+                    if(!searchText.equals("") && searchText.equals(null)){
+                        query = query.whereEqualTo("eventType", searchText);
+                    }
                     query = query.orderBy("date")
                             .startAt(startDate)
                             .endAt(endDate);
