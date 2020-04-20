@@ -26,6 +26,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.hg.mad.R;
 import com.hg.mad.model.Attendee;
 import com.hg.mad.model.ChapterEvent;
+import com.hg.mad.ui.ChapterEventsFragment;
 import com.hg.mad.util.ThisUser;
 
 import java.text.ParseException;
@@ -51,6 +52,7 @@ public class MenuDialogFragment extends DialogFragment implements View.OnClickLi
     private DocumentSnapshot chapterEventSnapshot;
 
     private View rootView;
+    private ChapterEventsFragment chapterEventsFragment;
 
 
     @Nullable
@@ -112,6 +114,7 @@ public class MenuDialogFragment extends DialogFragment implements View.OnClickLi
          editChapEventDialog.setChapterEventSnapshot(chapterEventSnapshot);
          getFragmentManager().executePendingTransactions();
          if(!editChapEventDialog.isAdded())
+             editChapEventDialog.setChapterEventsFragment(chapterEventsFragment);
              editChapEventDialog.show(getFragmentManager(), "addOfficerDialog");
 
         dismiss();
@@ -196,5 +199,7 @@ public class MenuDialogFragment extends DialogFragment implements View.OnClickLi
         dismiss();
     }
 
-
-}
+     public void setChapterEventsFragment(ChapterEventsFragment chapterEventsFragment) {
+         this.chapterEventsFragment = chapterEventsFragment;
+     }
+ }

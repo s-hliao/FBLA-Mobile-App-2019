@@ -28,6 +28,7 @@ import com.hg.mad.R;
 import com.hg.mad.model.Attendee;
 import com.hg.mad.model.Chapter;
 import com.hg.mad.model.ChapterEvent;
+import com.hg.mad.ui.ChapterEventsFragment;
 import com.hg.mad.util.ThisUser;
 
 import java.text.ParseException;
@@ -51,6 +52,7 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
 
     private DocumentSnapshot chapterEventSnapshot;
 
+    private ChapterEventsFragment chapterEventsFragment;
 
     @Nullable
     @Override
@@ -159,11 +161,11 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
             }
         });
 
-
-
         chapterEventSnapshot.getReference().delete();
         Toast.makeText(getContext(), "Event Removed", Toast.LENGTH_SHORT).show();
         dismiss();
+
+
     }
 
     public void onAttendanceClicked(){
@@ -172,6 +174,10 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
         } else{
             passwordEditText.setVisibility(View.INVISIBLE);
         }
+    }
+
+    public void setChapterEventsFragment(ChapterEventsFragment chapterEventsFragment) {
+        this.chapterEventsFragment = chapterEventsFragment;
     }
 
     public void onAddClicked(){
@@ -232,8 +238,8 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
                                 }
 
                                 Toast.makeText(getContext(), "Chapter event updated", Toast.LENGTH_SHORT).show();
-
                                 dismiss();
+                                chapterEventsFragment.resetQuery();
                             } catch (ParseException e) {
                                 Toast.makeText(getContext(), "Incorrect date format", Toast.LENGTH_SHORT).show();
                             }

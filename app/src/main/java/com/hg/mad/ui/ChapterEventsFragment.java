@@ -271,12 +271,17 @@ public class ChapterEventsFragment extends Fragment implements
         });
     }
 
+    public void resetQuery(){
+        adapter.setQuery(query);
+    }
+
     @Override
     public void onClick(View view) {
         switch(view.getId()) {
             case R.id.button_add_chap:
                 getFragmentManager().executePendingTransactions();
                 if (!addEventDialog.isAdded()) {
+                    addEventDialog.setChapterEventsFragment(this);
                     addEventDialog.show(getFragmentManager(), "addEventDialog");
                 }
                 break;
@@ -332,6 +337,7 @@ public class ChapterEventsFragment extends Fragment implements
             menuDialog.setChapterEventSnapshot(chapEvent);
             getFragmentManager().executePendingTransactions();
             if (!menuDialog.isAdded()) {
+                menuDialog.setChapterEventsFragment(this);
                 menuDialog.show(getFragmentManager(), "editEventDialog");
             }
 

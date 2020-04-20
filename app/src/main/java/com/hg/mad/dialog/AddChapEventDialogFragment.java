@@ -26,6 +26,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.hg.mad.R;
 import com.hg.mad.model.Attendee;
 import com.hg.mad.model.ChapterEvent;
+import com.hg.mad.ui.ChapterEventsFragment;
 import com.hg.mad.util.ThisUser;
 
 import java.text.ParseException;
@@ -44,7 +45,7 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
 
     private Button add;
     private Button cancel;
-
+    private ChapterEventsFragment chapterEventsFragment;
 
     @Nullable
     @Override
@@ -103,6 +104,10 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
         }
     }
 
+    public void setChapterEventsFragment(ChapterEventsFragment chapterEventsFragment) {
+        this.chapterEventsFragment = chapterEventsFragment;
+    }
+
     public void onAddClicked(){
         final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
@@ -131,9 +136,7 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
                                 if(typeSpinner.getSelectedItemPosition()!=0) {
                                     if (!currentEventsChap.containsKey(nameEditText.getText().toString())) {
 
-
                                         try {
-
                                             SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
                                             ChapterEvent event = new ChapterEvent(
                                                     nameEditText.getText().toString(), typeSpinner.getSelectedItem().toString(),
@@ -146,6 +149,7 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
                                             chapter.getReference().collection("ChapterEvent").add(event);
                                             Toast.makeText(getContext(), "Chapter event created", Toast.LENGTH_SHORT).show();
                                             dismiss();
+                                            chapterEventsFragment.resetQuery();
                                         } catch (ParseException e) {
                                             Toast.makeText(getContext(), "Incorrect date format", Toast.LENGTH_SHORT).show();
                                         }
