@@ -41,7 +41,8 @@ public class AuthUiActivity extends AppCompatActivity {
         // A list of providers enabled for sign in
         providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),
-                new AuthUI.IdpConfig.GoogleBuilder().build()
+                new AuthUI.IdpConfig.GoogleBuilder().build(),
+                new AuthUI.IdpConfig.FacebookBuilder().build()
         );
 
         // When the continue button is clicked, show sign in options
