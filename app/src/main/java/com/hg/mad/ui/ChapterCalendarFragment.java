@@ -83,13 +83,6 @@ public class ChapterCalendarFragment extends Fragment implements ChapterEventAda
         chapEventDialog = new ChapEventDialogFragment();
 
         eventCalendar.setHeaderColor(Color.parseColor("#3666a8"));
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.YEAR, 4);
-        eventCalendar.setMaximumDate(c);
-        c = Calendar.getInstance();
-
-        c.add(Calendar.YEAR,-4);
-        eventCalendar.setMinimumDate(c);
 
         final ChapterEventAdapter.OnChapListener o = this;
 
