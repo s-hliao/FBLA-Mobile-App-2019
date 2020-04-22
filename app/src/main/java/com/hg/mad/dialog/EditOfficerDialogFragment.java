@@ -92,9 +92,9 @@ public class EditOfficerDialogFragment extends DialogFragment implements View.On
          camera.setOnClickListener(this);
          remove.setOnClickListener(this);
 
-         name.setText(officer.get("name").toString());
-         position.setText(officer.get("position").toString());
-         contact.setText(officer.get("contact").toString());
+         name.setText((String) officer.get("name"));
+         position.setText((String) officer.get("position"));
+         contact.setText((String) officer.get("contact"));
 
          storage = FirebaseStorage.getInstance();
          storageReference = storage.getReference();
