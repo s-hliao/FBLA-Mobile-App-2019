@@ -102,11 +102,14 @@ public class EditChapEventDialogFragment extends DialogFragment implements View.
                     case "Fundraiser":
                         typeSpinner.setSelection(2);
                         break;
-                    case "Community Service":
+                    case "Conference":
                         typeSpinner.setSelection(3);
                         break;
-                    case "Other":
+                    case "Community Service":
                         typeSpinner.setSelection(4);
+                        break;
+                    case "Other":
+                        typeSpinner.setSelection(5);
                         break;
                 }
 

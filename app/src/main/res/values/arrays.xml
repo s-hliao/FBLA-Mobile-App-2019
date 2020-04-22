@@ -26,6 +26,7 @@
         <item>Select Event Type</item>
         <item>Meeting</item>
         <item>Fundraiser</item>
+        <item>Conference</item>
         <item>Community Service</item>
         <item>Other</item>
     </string-array>

@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.hg.mad.ui.ChapterCalendarFragment;
 import com.hg.mad.ui.ChapterFragment;
 import com.hg.mad.ui.LinksFragment;
 import com.hg.mad.ui.MembersFragment;
@@ -31,6 +32,8 @@ public class ChapterPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return new ChapterFragment();
             case 1:
+                return new ChapterCalendarFragment();
+            case 2:
                 return new MembersFragment();
             default:
                 return null;
@@ -39,7 +42,7 @@ public class ChapterPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     @Nullable
@@ -49,6 +52,8 @@ public class ChapterPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return "Chapter Info";
             case 1:
+                return "Calendar";
+            case 2:
                 return "Members";
             default:
                 return null;
