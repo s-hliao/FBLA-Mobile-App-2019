@@ -17,5 +17,5 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/event_recycler"
         android:layout_width="match_parent"
-        android:layout_height="126dp" />
+        android:layout_height="match_parent" />
 </LinearLayout>
