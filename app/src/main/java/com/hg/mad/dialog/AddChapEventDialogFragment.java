@@ -109,59 +109,45 @@ public class AddChapEventDialogFragment extends DialogFragment implements View.O
     }
 
     public void onAddClicked(){
-        final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
-
-        CollectionReference usersCollection = fireStore.collection("DatabaseUser");
-        final DocumentReference userRef = usersCollection.document(currentUser.getUid());
-
         final CollectionReference chaptersCollection = fireStore.collection("Chapter");
 
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        // Update Chapter
+        chaptersCollection.whereEqualTo("chapterName", ThisUser.getChapterName())
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
 
-                    // Update Chapter
-                    chaptersCollection.whereEqualTo("chapterName", ThisUser.getChapterName())
-                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
+                    DocumentSnapshot chapter = task.getResult().getDocuments().get(0);
 
-                                DocumentSnapshot chapter = task.getResult().getDocuments().get(0);
+                    Map<String, Map<String, Attendee>> currentEventsChap = (Map) chapter.get("chapterEvents");
+                    if(typeSpinner.getSelectedItemPosition()!=0) {
+                        if (!currentEventsChap.containsKey(nameEditText.getText().toString())) {
 
-                                Map<String, Map<String, Attendee>> currentEventsChap = (Map) chapter.get("chapterEvents");
-                                if(typeSpinner.getSelectedItemPosition()!=0) {
-                                    if (!currentEventsChap.containsKey(nameEditText.getText().toString())) {
-
-                                        try {
-                                            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-                                            ChapterEvent event = new ChapterEvent(
-                                                    nameEditText.getText().toString(), typeSpinner.getSelectedItem().toString(),
-                                                    descriptionEditText.getText().toString(),
-                                                    dateFormat.parse(dateEditText.getText().toString()),
-                                                    passwordEditText.getText().toString(),
-                                                    attendanceCheckBox.isChecked());
-                                            currentEventsChap.put(nameEditText.getText().toString(), new HashMap<String, Attendee>());
-                                            chapter.getReference().update("chapterEvents", currentEventsChap);
-                                            chapter.getReference().collection("ChapterEvent").add(event);
-                                            Toast.makeText(getContext(), "Chapter event created", Toast.LENGTH_SHORT).show();
-                                            dismiss();
-                                            chapterEventsFragment.resetQuery();
-                                        } catch (ParseException e) {
-                                            Toast.makeText(getContext(), "Incorrect date format", Toast.LENGTH_SHORT).show();
-                                        }
-                                    } else {
-                                        Toast.makeText(getContext(), "Chapter Event name cannot already exist", Toast.LENGTH_SHORT).show();
-                                    }
-                                } else{
-                                    Toast.makeText(getContext(), "Please Select an Event Type", Toast.LENGTH_SHORT).show();
-                                }
+                            try {
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                                ChapterEvent event = new ChapterEvent(
+                                        nameEditText.getText().toString(), typeSpinner.getSelectedItem().toString(),
+                                        descriptionEditText.getText().toString(),
+                                        dateFormat.parse(dateEditText.getText().toString()),
+                                        passwordEditText.getText().toString(),
+                                        attendanceCheckBox.isChecked());
+                                currentEventsChap.put(nameEditText.getText().toString(), new HashMap<String, Attendee>());
+                                chapter.getReference().update("chapterEvents", currentEventsChap);
+                                chapter.getReference().collection("ChapterEvent").add(event);
+                                Toast.makeText(getContext(), "Chapter event created", Toast.LENGTH_SHORT).show();
+                                dismiss();
+                                chapterEventsFragment.resetQuery();
+                            } catch (ParseException e) {
+                                Toast.makeText(getContext(), "Incorrect date format", Toast.LENGTH_SHORT).show();
                             }
+                        } else {
+                            Toast.makeText(getContext(), "Chapter Event name cannot already exist", Toast.LENGTH_SHORT).show();
                         }
-                    });
+                    } else{
+                        Toast.makeText(getContext(), "Please Select an Event Type", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
