@@ -228,49 +228,28 @@ public class ChapterEventsFragment extends Fragment implements
 
     private void filter(final ChapFilters newfilters){
 
-        chapter.collection("ChapterEvent").orderBy("date")
-                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+        Date startDate = null;
+        if (newfilters.hasStartDate())
+            startDate = newfilters.getStartDate();
 
-                if (!documents.isEmpty()) {
-                    DocumentSnapshot first = documents.get(0);
-                    DocumentSnapshot last = documents.get(documents.size() - 1);
+        Date endDate = null;
+        if (newfilters.hasEndDate())
+            endDate = newfilters.getEndDate();
 
-                    boolean filteredStart = false;
-                    boolean filteredEnd = false;
+        query = chapter.collection("ChapterEvent").orderBy("date");
 
-                    Date startDate = null;
-                    if (newfilters.hasStartDate()) {
-                        startDate = newfilters.getStartDate();
-                        filteredStart = true;
-                    }
+        if(!spinnerText.equals("") && typeSpinner.getSelectedItemPosition()!=0){
+            query = query.whereEqualTo("eventType", spinnerText);
+        }
 
-                    Date endDate = null;
-                    if (newfilters.hasEndDate()) {
-                        endDate = newfilters.getEndDate();
-                        filteredEnd  = true;
-                    }
-                    query = chapter.collection("ChapterEvent");
+        if(!(startDate == null)) query = query.startAt(startDate);
+        if(!(endDate == null)) query = query.endAt(endDate);
 
-                    if(!spinnerText.equals("") && typeSpinner.getSelectedItemPosition()!=0){
-                        query = query.whereEqualTo("eventType", spinnerText);
-                    }
+        // Update the query
+        adapter.setQuery(query);
 
-                    query = query.orderBy("date");
-
-                    if(filteredStart) query = query.startAt(startDate);
-                    if(filteredEnd) query = query.endAt(endDate);
-
-                    // Update the query
-                    adapter.setQuery(query);
-
-                    // Save filters
-                    filters = newfilters;
-                }
-            }
-        });
+        // Save filters
+        filters = newfilters;
     }
 
     public void resetQuery(){
