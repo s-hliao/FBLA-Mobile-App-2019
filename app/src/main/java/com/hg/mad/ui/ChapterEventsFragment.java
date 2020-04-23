@@ -90,7 +90,7 @@ public class ChapterEventsFragment extends Fragment implements
 
     private DocumentReference chapterRef;
     private FirebaseFirestore firestore;
-    private Query query;
+    public Query query;
     private DocumentReference chapter;
 
     private ChapterEventAdapter adapter;
@@ -107,7 +107,7 @@ public class ChapterEventsFragment extends Fragment implements
     private String chapterName;
 
     private ImageView filterButton;
-    private ChapFilters filters;
+    public ChapFilters filters;
     private Spinner typeSpinner;
     private String spinnerText;
 
@@ -163,6 +163,7 @@ public class ChapterEventsFragment extends Fragment implements
 
                 chapterRef = ds.getReference();
                 query = chapterRef.collection("ChapterEvent").orderBy("date").orderBy("lower").orderBy("typeLower");
+                onFilter(filters);
 
                 adapter = new ChapterEventAdapter(query, o);
                 adapter.setQuery(query);
@@ -237,29 +238,30 @@ public class ChapterEventsFragment extends Fragment implements
                     DocumentSnapshot first = documents.get(0);
                     DocumentSnapshot last = documents.get(documents.size() - 1);
 
-                    Date startDate;
+                    boolean filteredStart = false;
+                    boolean filteredEnd = false;
+
+                    Date startDate = null;
                     if (newfilters.hasStartDate()) {
                         startDate = newfilters.getStartDate();
-                    } else {
-                        startDate = ((com.google.firebase.Timestamp) first.get("date")).toDate();
+                        filteredStart = true;
                     }
 
-                    Date endDate;
+                    Date endDate = null;
                     if (newfilters.hasEndDate()) {
                         endDate = newfilters.getEndDate();
-                    } else {
-                        endDate = ((com.google.firebase.Timestamp) last.get("date")).toDate();
+                        filteredEnd  = true;
                     }
-
                     query = chapter.collection("ChapterEvent");
 
                     if(!spinnerText.equals("") && typeSpinner.getSelectedItemPosition()!=0){
                         query = query.whereEqualTo("eventType", spinnerText);
                     }
 
-                    query = query.orderBy("date")
-                            .startAt(startDate)
-                            .endAt(endDate);
+                    query = query.orderBy("date");
+
+                    if(filteredStart) query = query.startAt(startDate);
+                    if(filteredEnd) query = query.endAt(endDate);
 
                     // Update the query
                     adapter.setQuery(query);
@@ -273,6 +275,16 @@ public class ChapterEventsFragment extends Fragment implements
 
     public void resetQuery(){
         adapter.setQuery(query);
+
+
+        onFilter(filters);
+        adapter.notifyDataSetChanged();
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                System.out.println(queryDocumentSnapshots.size());
+            }
+        });
     }
 
     @Override
