@@ -4,7 +4,7 @@ Riot Robotics  <br />
 Contributors:George Zhang & Henry Liao <br />
 Version:1.0 <br />
 Date: 04/21/2020 <br />
-Contact Us: (425)-918-2029	s-gezhang02@lwsd.org <br />
+Contact Us: (425)-918-2029	s-jiazhang@lwsd.org <br />
 
 
 # Usage Notes
